@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+{% block breadcrumb %}
+  <!-- <li class="breadcrumb-item active">Sign up</li> -->
+  <!-- <li class="breadcrumb-item active" aria-current="page">Library</li> -->
+  <!-- <li class="breadcrumb-item"><a href="#">Home</a></li>
+  <li class="breadcrumb-item active" aria-current="page">Library</li> -->
+{% endblock %}
+
+{% block primary_navbar %}
+	<div class="">
+		<a href="{% url 'accounts:login' %}" class="d-flex align-items-center ms-5 mb-3 text-white text-decoration-none">
+			<!-- <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2"> -->
+			<span class="ms-1">Log in</span>
+		</a>
+	</div>
+	<div class="">
+		<a href="{% url 'accounts:signup' %}" class="d-flex align-items-center ms-5 mb-3 text-white text-decoration-none">
+			<!-- <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2"> -->
+			<span class="ms-1">Sign up</span>
+		</a>
+	</div>
+{% endblock %}
+
+
+{# at the terminal, run pip install django-bootstrap5 #}
+{% load django_bootstrap5 %}
+
+{% block content %}
+<div class="container">
+  <!-- <h1>Sign Up</h1> -->
+  <form method="POST" class="form">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    {% bootstrap_button button_type="submit" class="btn btn-primary" content="Sign Up" %}
+  </form>
+</div>
+
+<script>
+  $(document).ready(function(){
+      $('#v-sidebar').removeClass('d-md-block');
+      $('#h-sidebar').addClass('d-none');
+  });
+</script>
+{% endblock %}

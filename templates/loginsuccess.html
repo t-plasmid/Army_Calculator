@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block content %}
+
+  <div class="container">
+    <p class="lead">You are now logged in!</p>
+    <!-- <h2><a href="% url 'groups:all'%}">Go to Groups</a></h2> -->
+  </div>
+
+  <script>
+    $(document).ready(function(){
+        $('#v-sidebar').removeClass('d-md-block');
+        $('#h-sidebar').addClass('d-none');      
+    });
+  </script>
+{% endblock %}

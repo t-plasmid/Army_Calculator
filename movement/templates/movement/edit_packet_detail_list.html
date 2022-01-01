@@ -1,0 +1,142 @@
+{% extends "layout.html" %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item active"><a href="{% url 'movement:movement_base' %}">Movement</a></li>
+	<li class="breadcrumb-item active">Update/Delete Packet Detail List</li>
+  <!-- <li class="breadcrumb-item active" aria-current="page">Library</li> -->
+  <!-- <li class="breadcrumb-item"><a href="#">Home</a></li>
+  <li class="breadcrumb-item active" aria-current="page">Library</li> -->
+{% endblock %}
+
+{% block primary_navbar %}
+	<div class="dropdown">
+		<a href="#" class="d-flex align-items-center ms-5 mb-3 text-white text-decoration-none dropdown-toggle bi bi-plus-square-dotted" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+			<!-- <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2"> -->
+			<span class="ms-1">Create</span>
+		</a>
+		<ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+			<li><a class="dropdown-item" href="{% url 'movement:create_movement_plan' %}">New Movement Plan</a></li>
+      <li><hr class="dropdown-divider"></li>
+			<li><a class="dropdown-item" href="{% url 'movement:allocate_new_cp' %}">Allocate New CP</a></li>
+			<li><a class="dropdown-item" href="{% url 'movement:allocate_new_unit' %}">Allocate New Unit</a></li>
+			<li><a class="dropdown-item" href="{% url 'movement:allocate_new_packet' %}">Allocate New Packet</a></li>
+			<li><hr class="dropdown-divider"></li>
+			<li><a class="dropdown-item" href="{% url 'movement:create_brigade' %}">New Brigade</a></li>
+			<li><a class="dropdown-item" href="{% url 'movement:create_unit' %}">New Unit</a></li>
+		</ul>
+	</div>
+	<div class="dropdown">
+		<a href="#" class="d-flex align-items-center ms-5 mb-3 text-white text-decoration-none dropdown-toggle bi bi-pencil-square" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+			<!-- <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2"> -->
+			<span class="ms-1">Update/Delete</span>
+		</a>
+		<ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+			<li><a class="dropdown-item" href="{% url 'movement:update_delete_movement_plan_list' %}">Movement Plan</a></li>
+			<li><a class="dropdown-item" href="{% url 'movement:update_delete_cp_detail_list' %}">CP Allocation</a></li>
+			<li><a class="dropdown-item" href="{% url 'movement:update_delete_unit_detail_list' %}">Unit Allocation</a></li>
+			<li><a class="dropdown-item" href="{% url 'movement:update_delete_packet_detail_list' %}">Packet Allocation</a></li>
+			<li><hr class="dropdown-divider"></li>
+			<li><a class="dropdown-item" href="{% url 'movement:update_delete_brigade_list' %}">Brigade</a></li>
+			<li><a class="dropdown-item" href="{% url 'movement:update_delete_unit_list' %}">Unit</a></li>
+		</ul>
+	</div>
+	<div class="dropdown">
+		<a href="#" class="d-flex align-items-center ms-5 mb-3 text-white text-decoration-none dropdown-toggle bi bi-view-list" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+			<!-- <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2"> -->
+			<span class="ms-1">View</span>
+		</a>
+		<ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+			<li><a class="dropdown-item" href="{% url 'movement:all' %}">Movement Plan</a></li>
+		</ul>
+	</div>
+{% endblock %}
+
+{% block content %}
+{% if request.user.is_authenticated %}
+<div class="alert alert-warning lead" role="alert">
+	Update/Delete- Packet Detail List
+</div>
+	{% if packet_detail_list %}
+
+  {% regroup packet_detail_list by u_id as packet_detail_group %}
+  <div class="accordion accordion-flush" id="accordionFlushAC">
+
+    {% for p_d_g in packet_detail_group %}
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="flush-heading{% cycle 'One' 'Two' 'Three' 'Four' 'Five' 'Six' 'Seven' 'Eight' 'Nine' 'Ten' 'Eleven' 'Twelve'%}">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{% cycle 'One' 'Two' 'Three' 'Four' 'Five' 'Six' 'Seven' 'Eight' 'Nine' 'Ten' 'Eleven' 'Twelve'%}" aria-expanded="false" aria-controls="flush-collapse{% cycle 'One' 'Two' 'Three' 'Four' 'Five' 'Six' 'Seven' 'Eight' 'Nine' 'Ten' 'Eleven' 'Twelve'%}">
+            {{ p_d_g.grouper }}
+          </button>
+        </h2>
+        <div id="flush-collapse{% cycle 'One' 'Two' 'Three' 'Four' 'Five' 'Six' 'Seven' 'Eight' 'Nine' 'Ten' 'Eleven' 'Twelve'%}" class="accordion-collapse collapse" aria-labelledby="flush-heading{% cycle 'One' 'Two' 'Three' 'Four' 'Five' 'Six' 'Seven' 'Eight' 'Nine' 'Ten' 'Eleven' 'Twelve'%}" data-bs-parent="#accordionFlushAC">
+          <div class="accordion-body">
+
+            <div class="row">
+              {% for packet_detail in p_d_g.list %}
+                <div class="col-sm-6">
+                  <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title">{{ packet_detail.u_id }}</h5>
+                      <p class="card-text">Subunit: {{ packet_detail.subunit }}</p>
+                      <a href="{{ packet_detail.get_custom_url }}" class="btn btn-primary btn-sm bi bi-pen"></a>
+                      <a href="{{ packet_detail.get_custom_delete_url }}" class="btn btn-danger btn-sm bi bi-x-square"></a>
+                    </div>
+                  </div>
+                </div>
+        		  {% endfor %}
+            </div>
+
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+    {% if is_paginated %}
+      <nav aria-label="CP pagination" class="mb-3 mt-3">
+        <ul class="pagination">
+          {% if page_obj.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+            </li>
+          {% else %}
+            <li class="page-item disabled">
+              <span class="page-link">Previous</span>
+            </li>
+          {% endif %}
+
+          {% for page_num in paginator.page_range %}
+            {% if page_obj.number == page_num %}
+              <li class="page-item active">
+                <span class="page-link">
+                  {{ page_num }}
+                  <span class="sr-only">*</span>
+                </span>
+              </li>
+            {% else %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+              </li>
+            {% endif %}
+          {% endfor %}
+
+          {% if page_obj.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+            </li>
+          {% else %}
+            <li class="page-item disabled">
+              <span class="page-link">Next</span>
+            </li>
+          {% endif %}
+        </ul>
+      </nav>
+    {% endif %}
+
+	{% else %}
+		<p>There are no packet detail records!</p>
+	{% endif %}
+  {% else %}
+    <h1> You are not logged in</h1>
+	{% endif %}
+{% endblock %}

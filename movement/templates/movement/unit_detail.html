@@ -1,0 +1,398 @@
+{% extends "layout.html" %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item active"><a href="{% url 'movement:movement_base' %}">Movement</a></li>
+	<li class="breadcrumb-item active"><a href="{% url 'movement:all' %}">Movement Plan</a></li>
+  <li class="breadcrumb-item active">Unit Plan Detail</li>
+  <!-- <li class="breadcrumb-item active" aria-current="page">Library</li> -->
+  <!-- <li class="breadcrumb-item"><a href="#">Home</a></li>
+  <li class="breadcrumb-item active" aria-current="page">Library</li> -->
+{% endblock %}
+
+{% block primary_navbar %}
+	<div class="dropdown">
+		<a href="#" class="d-flex align-items-center ms-5 mb-3 text-white text-decoration-none dropdown-toggle bi bi-plus-square-dotted" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+			<!-- <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2"> -->
+			<span class="ms-1">Create</span>
+		</a>
+		<ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+			<li><a class="dropdown-item" href="{% url 'movement:create_movement_plan' %}">New Movement Plan</a></li>
+      <li><hr class="dropdown-divider"></li>
+			<li><a class="dropdown-item" href="{% url 'movement:allocate_new_cp' %}">Allocate New CP</a></li>
+			<li><a class="dropdown-item" href="{% url 'movement:allocate_new_unit' %}">Allocate New Unit</a></li>
+			<li><a class="dropdown-item" href="{% url 'movement:allocate_new_packet' %}">Allocate New Packet</a></li>
+			<li><hr class="dropdown-divider"></li>
+			<li><a class="dropdown-item" href="{% url 'movement:create_brigade' %}">New Brigade</a></li>
+			<li><a class="dropdown-item" href="{% url 'movement:create_unit' %}">New Unit</a></li>
+		</ul>
+	</div>
+	<div class="dropdown">
+		<a href="#" class="d-flex align-items-center ms-5 mb-3 text-white text-decoration-none dropdown-toggle bi bi-pencil-square" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+			<!-- <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2"> -->
+			<span class="ms-1">Update/Delete</span>
+		</a>
+    <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+      <li><a class="dropdown-item" href="{% url 'movement:update_delete_movement_plan_list' %}">Movement Plan</a></li>
+			<li><a class="dropdown-item" href="{% url 'movement:update_delete_cp_detail_list' %}">CP Allocation</a></li>
+			<li><a class="dropdown-item" href="{% url 'movement:update_delete_unit_detail_list' %}">Unit Allocation</a></li>
+			<li><a class="dropdown-item" href="{% url 'movement:update_delete_packet_detail_list' %}">Packet Allocation</a></li>
+			<li><hr class="dropdown-divider"></li>
+			<li><a class="dropdown-item" href="{% url 'movement:update_delete_brigade_list' %}">Brigade</a></li>
+			<li><a class="dropdown-item" href="{% url 'movement:update_delete_unit_list' %}">Unit</a></li>
+		</ul>
+	</div>
+	<div class="dropdown">
+		<a href="#" class="d-flex align-items-center ms-5 mb-3 text-white text-decoration-none dropdown-toggle bi bi-view-list" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+			<!-- <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2"> -->
+			<span class="ms-1">View</span>
+		</a>
+		<ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+			<li><a class="dropdown-item" href="{% url 'movement:all' %}">Movement Plan</a></li>
+		</ul>
+	</div>
+{% endblock %}
+
+{% block content %}
+	{% if request.user.is_authenticated %}
+    <div class="container">
+      <script>
+        const params = new URLSearchParams(window.location.search);
+        var start_date = new Date(params.get("start_date"));
+        var start_date_formatted = start_date.toLocaleTimeString('en-GB', {hour12: false});
+        var hidden_p = '<p hidden id="my_date">{{unit_detail.m_id.start_date|date:"Y-m-d"}}T' + start_date_formatted + '.000Z</p>'
+        document.write(hidden_p);
+      </script>
+		    <p class="text-end mb-0"><strong>{{ unit_detail.m_id.serial }}</strong></p>
+				<p class="text-end"><strong>{{ unit_detail.m_id.exercise_name }}</strong></p>
+				<h4 class="text-center">{{ unit_detail.m_id.route_name }}</h4>
+				<p class="text-center lead"><mark>{{ unit_detail.unit }}</mark></p>
+		</div>
+
+    <div class="container">
+			<div class="row g-0">
+	        <div class="col-md-6 col-lg-4 col-xl-3">
+							<table class = 'table table-borderless'>
+								<tr>
+									<td width="160px"><strong>Start time:</strong></td>
+									<td>{{ unit_detail.m_id.start_time|time:"H:i:s" }}</td>
+								</tr>
+								<tr>
+									<td><strong>Route type:</strong></td>
+									<td>{{ unit_detail.m_id.route_type }}</td>
+								</tr>
+							</table>
+	        </div>
+	        <div class="col-md-6 col-lg-4 col-xl-3">
+						<table class = 'table table-borderless'>
+							<tr>
+								<td width="160px"><strong>Start date:</strong></td>
+								<td>{{ unit_detail.m_id.start_date|date:"j/n/y" }}</td>
+							</tr>
+							<tr>
+								<td><strong>Pkt gap (min):</strong></td>
+								<td>{{ unit_detail.m_id.packet_gap }}</td>
+							</tr>
+						</table>
+					</div>
+	        <div class="col-md-6 col-lg-4 col-xl-3">
+						<table class = 'table table-borderless'>
+							<tr>
+								<td width="160px"><strong>Avg speed (km/h):</strong></td>
+								<td>{{ unit_detail.m_id.speed }}</td>
+							</tr>
+							<tr>
+								<td><strong>Unit's pkt size:</strong></td>
+								{% if unit_detail.packet_auto_populted %}
+									<td>{{ unit_detail.m_id.packet_size}} (Auto set)</td>
+								{% else %}
+									<td>Manually set</td>
+								{% endif %}
+							</tr>
+						</table>
+					</div>
+	        <div class="col-md-6 col-lg-4 col-xl-3">
+						<table class = 'table table-borderless'>
+							<tr>
+								<td width="160px"><strong>Tfc density (veh/km):</strong></td>
+								<td>{{ unit_detail.m_id.traffic_density }}</td>
+							</tr>
+							<tr>
+								<td></td>
+								<td></td>
+							</tr>
+						</table>
+	        </div>
+	    </div>
+		</div>
+
+		<div class="container">
+			<div class="p-3 mb-3 bg-light border rounded-3">
+				<h5>Description</h5>
+				<p class="lead"> {{ unit_detail.m_id.description }}</p>
+			</div>
+		</div>
+
+    <div class="container">
+			<div class="table-responsive">
+			  <table class="table table-bordered" style="text-align: center;">
+				  <thead>
+				    <tr class = "table-secondary align-middle">
+				      <th rowspan ="2" scope="col">Pkt No</th>
+				      <th rowspan ="2" scope="col">Vehicle Qty</th>
+				      <th rowspan ="2" scope="col">Unit</th>
+				      <th rowspan ="2" scope="col">Pass Time (min)</th>
+							<th colspan ="2" scope="col">SP</th>
+							{% for cp in cp_detail %}
+                {% if cp.m_id == unit_detail.m_id %}
+  								{% if forloop.last %}
+  									<th scope="col">RP</th>
+  								{% else %}
+  									<th colspan ="2" scope="col">CP {{cp.cp_no}}</th>
+  								{% endif %}
+                {% endif %}
+							{% endfor %}
+				      <th rowspan ="2" scope="col">Running Time (min)</th>
+				      <th rowspan ="2" scope="col">Total Time (min)</th>
+				      <!-- <th rowspan ="2" scope="col">View</th> -->
+
+				    </tr>
+            <tr class = "table-secondary align-middle" style="text-align: center;">
+							<th scope="col">Start</th>
+							<th scope="col">Clear</th>
+							{% for cp in cp_detail %}
+                {% if cp.m_id == unit_detail.m_id %}
+  								{% if forloop.last %}
+  									<th scope="col">ETA</th>
+  								{% else %}
+  								<th scope="col">ETA</th>
+  								<th scope="col">Clear</th>
+  								{% endif %}
+                {% endif %}
+							{% endfor %}
+						</tr>
+				  </thead>
+				  <tbody id='main_tbody'>
+            <script async>
+  						var previous_pass_time = 0;
+  						var route_type = "{{ unit_detail.m_id.route_type }}";
+  						{% for packet in packet_detail %}
+  							document.write("<tr>");
+  							document.write("<th scope='row'>{{ packet.packet_no }}</th>");
+  							document.write("<td class ='unit_veh_qty_cal'>{{ packet.vehicle_qty }}</td>");
+  							document.write("<td>{{ packet.subunit }}</td>");
+
+  							// Pass Time calculation
+  							var density = parseInt({{ unit_detail.m_id.traffic_density }});
+								var speed = parseInt({{ unit_detail.m_id.speed }});
+								var vehicle_qty = parseInt({{ packet.vehicle_qty }});
+								var pass_time = (60 * vehicle_qty)/(density * speed);
+  							document.write("<td>" + pass_time + "</td>");
+
+  							// SP - Start time calculation
+  							var packet_gap = parseInt({{ unit_detail.m_id.packet_gap }});
+  							var datetime = new Date(Date.parse($("#my_date").text()));
+
+								// Adds hours, minutes and seconds to the Date stored in the datetime variable
+								function datetime_adder(param1) {
+									datetime.setHours(datetime.getHours() + Math.floor(param1 / 60));
+									datetime.setMinutes(datetime.getMinutes() + param1);
+									datetime.setSeconds(datetime.getSeconds() + param1 % 1 * 60);
+								}
+
+								// Subtracts hours, minutes and seconds from the Date stored in the datetime variable
+								function datetime_subtractor(param1) {
+									datetime.setHours(datetime.getHours() - Math.floor(param1 / 60));
+									datetime.setMinutes(datetime.getMinutes() - param1);
+									datetime.setSeconds(datetime.getSeconds() - param1 % 1 * 60);
+								}
+
+  							{% if packet.packet_no != 1 %}
+                  datetime_adder(packet_gap);
+  							{% endif %}
+                datetime_adder(previous_pass_time);
+  							document.write("<td>" + datetime.toLocaleTimeString('en-GB', {hour12: false}) + "</td>");
+
+  							// SP - Clear time calculation
+                datetime_adder(pass_time);
+  							document.write("<td>" + datetime.toLocaleTimeString('en-GB', {hour12: false}) + "</td>");
+                datetime_subtractor(pass_time);
+
+  							var packet_total_distance = 0;
+  							var packet_total_time = 0;
+  							var packet_total_halts = 0;
+  							var gap = 0;
+  							{% for cp in cp_detail %}
+
+  								// Calculates clear time for each unit.
+                  {% if cp.m_id == unit_detail.m_id %}
+    								var halt_time = parseInt({{ cp.halt_time }});
+    								var distance = parseInt({{ cp.distance }});
+    								var delta_time = ((distance * 60) / speed);
+    									{% if forloop.last %}
+    										// RP - ETA calculation
+                        datetime_adder(delta_time);
+    										document.write("<td>" + datetime.toLocaleTimeString('en-GB', {hour12: false}) + "</td>");
+    									{% else %}
+    										// CP - ETA calculation
+                        datetime_adder(delta_time);
+    										document.write("<td>" + datetime.toLocaleTimeString('en-GB', {hour12: false}) + "</td>");
+    										// CP - Clear time calculation
+                        datetime_adder(pass_time);
+    										document.write("<td>" + datetime.toLocaleTimeString('en-GB', {hour12: false}) + "</td>");
+                        datetime_subtractor(pass_time);
+    									{% endif %}
+                      datetime_adder(halt_time);
+
+    									// Running Time (min) calculation
+    									packet_total_distance += distance;
+    									{% if forloop.last %}
+                      var running_time = 60 * packet_total_distance / speed;
+                      document.write("<td>" + running_time + "</td>");
+
+    										packet_total_time = running_time;
+    									{% else %}
+    										packet_total_halts += halt_time;
+    									{% endif %}
+                    {% endif %}
+
+  								{% endfor %}
+  								// Total Time (min) calculation
+  								if (route_type == "Motorway"){
+  									gap = pass_time * 0.15
+  								} else if(route_type == "Urban"){
+  									gap = pass_time * 0.2
+  								} else {
+  									gap = 0;
+  								}
+  								packet_total_time += pass_time + packet_total_halts + gap;
+  								document.write("<td>" + Math.round(packet_total_time) + "</td>")
+
+                  // Store pass time of current unit so that it can be used for the next unit's calculations.
+  								previous_pass_time += pass_time;
+
+  								document.write("</tr>");
+  							{% endfor %}
+  						</script>
+          </tbody>
+        </table>
+
+				<table class="mt-5 table table-borderless">
+					<tr style="text-align: center;">
+			      <th scope="col" style="text-align: right;">Halt time (min):</th>
+			      <td scope="col"></td>
+						{% for cp in cp_detail %}
+							{% if cp.m_id == unit_detail.m_id %}
+								{% if forloop.last %}
+									<td scope="col"></td>
+									<td scope="col"></td>
+								{% else %}
+									<td scope="col"></td>
+									<td scope="col">{{cp.halt_time}}</td>
+								{% endif %}
+							{% endif %}
+						{% endfor %}
+			    </tr>
+					<tr style="text-align: center;">
+			      <th rowspan = "2" style="text-align: right;">Critical point:</th>
+			      <th rowspan = "2" scope="col">SP</th>
+						{% for cp in cp_detail %}
+							{% if cp.m_id == unit_detail.m_id %}
+								{% if forloop.last %}
+									<td style="border-bottom: 1px solid black;"></td>
+									<th rowspan="2" scope="col">RP</th>
+								{% else %}
+									<td style="border-bottom: 1px solid black;"></td>
+									<th rowspan ="2" scope="col">CP {{cp.cp_no}}</th>
+								{% endif %}
+							{% endif %}
+						{% endfor %}
+			    </tr>
+					<tr>
+						<th></th>
+						<td></td>
+			      <td></td>
+			      <td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr style="text-align: center;">
+			      <th scope="col" style="text-align: right;">Distance (km):</th>
+			      <td scope="col"></td>
+						{% for cp in cp_detail %}
+							{% if cp.m_id == unit_detail.m_id %}
+								{% if forloop.last %}
+									<td scope="col">{{cp.distance}}</td>
+									<td scope="col"></td>
+								{% else %}
+									<td scope="col">{{cp.distance}}</td>
+									<td scope="col"></td>
+								{% endif %}
+							{% endif %}
+						{% endfor %}
+			    </tr>
+			  </table>
+				<table class="mt-5 table table-borderless" style="width: auto;">
+					<tr class = "table-secondary align-middle" style="text-align: center;">
+			      <th colspan="2" scope="col">Other Details</th>
+			    </tr>
+					<tr style="text-align: left; width: 1%;">
+			      <th scope="col">Traffic flow (veh/hr):</th>
+						<td scope = "col" id="traffic_flow"></td>
+			    </tr>
+					<tr style="text-align: left; width: 1%;">
+			      <th scope="col">Convoy length (km):</th>
+						<td scope = "col" id="total_length_convoy"></td>
+			    </tr>
+					<tr style="text-align: left; width: 1%;">
+			      <th scope="col">Total vehicle qty:</th>
+						<td scope = "col" id="total_no_vehicle"></td>
+			    </tr>
+					<tr style="text-align: left; width: 1%;">
+			      <th scope="col">Total distance (km):</th>
+						<td scope = "col" id="total_distance"></td>
+			    </tr>
+					<tr style="text-align: left; width: 1%;">
+			      <th scope="col">Total halt time (min):</th>
+						<td scope = "col" id="total_halt_time"></td>
+			    </tr>
+			  </table>
+
+      </div>
+    </div>
+	{% else %}
+		<h1> You are not logged in</h1>
+	{% endif %}
+	<script>
+		$( document ).ready(function() {
+			var total_vehicle_qty = 0;
+			var total_distance = 0.0;
+			var total_halt = 0;
+			var total_vehicle_qty = 0;
+			{% for cp in cp_detail %}
+				{% if cp.m_id == unit_detail.m_id %}
+					{% if forloop.last %}
+						total_distance += parseFloat({{ cp.distance }});
+					{% else %}
+						total_distance += parseFloat({{ cp.distance }});
+						total_halt += {{cp.halt_time}};
+					{% endif %}
+				{% endif %}
+			{% endfor %}
+
+			{% for packet in packet_detail %}
+				var density = {{ unit_detail.m_id.traffic_density }};
+				var speed = {{ unit_detail.m_id.speed }};
+				total_vehicle_qty += {{ packet.vehicle_qty }};
+			{% endfor %}
+			var traffic_flow = speed * density;
+			var total_length_convoy = total_vehicle_qty / density;
+			$("#traffic_flow").text(traffic_flow);
+			$("#total_no_vehicle").text(total_vehicle_qty);
+			$("#total_length_convoy").text(total_length_convoy);
+			$("#total_distance").text(total_distance);
+			$("#total_halt_time").text(total_halt);
+		});
+	</script>
+{% endblock %}
