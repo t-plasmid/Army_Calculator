@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }} - Army Calculator</title>
+    {% load staticfiles %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'army_calculator/content/css/master.css' %}" />
+
+        <!-- Latest compiled and minified jQuery -->
+        <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+
+        <!-- Activate navigation item of horizontal navbar based on the current page. -->
+        <script>
+          $(document).ready(function(){
+            var title = $(document).attr('title');
+            var title_split = title.split(' ');
+            $('.h-nav').removeClass('active');
+            $(('#h-nav-'+title_split[0]).toLowerCase()).addClass('active');
+            if (title_split[0] == 'Home' || title_split[0] == 'About' || title_split[0] == 'Contact'){
+              $('#v-sidebar').removeClass('d-md-block');
+              $('#h-sidebar').addClass('d-none');
+            }
+            else{
+              $('#v-sidebar').addClass('d-md-block');
+              $('#h-sidebar').removeClass('d-none');
+            }
+
+            // Prevent the screen flicker.
+            $("#main_tbody").css("display", "none");
+            $("#main_tbody").fadeIn(500);
+          });
+        </script>
+    </head>
+    <body>
+      <!-- Primary Navbar -->
+        <div class="navbar navbar-expand-lg navbar-dark bg-success fixed-top">
+            <div class="container-fluid">
+                <!-- Navbar brand starts -->
+                <a href="/" class="navbar-brand bi bi-calculator" href="{% url 'home' %}">Army Calculator</a>
+                <!-- Ends -->
+
+                <!--Navbar toggler icon starts -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <!-- Ends -->
+
+                <!-- Collapsable navbar items starts        -->
+                <div class="navbar-collapse collapse" id="navbarSupportedContent">
+
+                    <!-- Navbar items start -->
+                    {% if user.is_authenticated %}
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item"><a class="h-nav nav-link" href="{% url 'home' %}" id="h-nav-home">Home</a></li>
+                        <li class="nav-item"><a class="h-nav nav-link" href="" id="h-nav-vehicle">StartEx</a></li>
+                        <li class="nav-item"><a class="h-nav nav-link" href="{% url 'movement:movement_base' %}" id="h-nav-movement">Movement</a></li>
+                        <!-- <li class="nav-item"><a class="h-nav nav-link" href="" id="h-nav-report">Report</a></li> -->
+                        <li class="nav-item"><a class="h-nav nav-link" href="{% url 'about' %}" id="h-nav-about">About</a></li>
+                        <li class="nav-item"><a class="h-nav nav-link" href="{% url 'contact' %}" id="h-nav-contact">Contact</a></li>
+                    </ul>
+                    {% else %}
+                      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                          <li class="nav-item"><a class="h-nav nav-link" href="{% url 'home' %}" id="h-nav-home">Home</a></li>
+                          <li class="nav-item"><a class="h-nav nav-link" href="{% url 'about' %}" id="h-nav-about">About</a></li>
+                          <li class="nav-item"><a class="h-nav nav-link" href="{% url 'contact' %}" id="h-nav-contact">Contact</a></li>
+                      </ul>
+                    {% endif %}
+                    <!-- End -->
+
+                    <!-- Search bar section starts -->
+                    <form class="d-flex" method="POST">
+                      {% csrf_token %}
+                      <input class="form-control me-2" type="search" placeholder="ToDo - Search" aria-label="Search">
+                      <button class="btn btn-success me-2" type="submit">Search</button>
+                    </form>
+                    <!-- Ends -->
+
+                    <!-- Login section starts -->
+                    {% if user.is_authenticated %}
+                    <form class="d-flex" id="logoutForm" action="/accounts/logout/" method="POST">
+                        {% csrf_token %}
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item dropdown">
+                              <a class="nav-link dropdown-toggle bi bi-person-circle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"><span class="ms-2">Welcome {{ user.username }}!</span></a>
+                              <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+                              </ul>
+                            </li>
+                        </ul>
+                    </form>
+                    {% else %}
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="h-nav nav-item"><a class="nav-link" href="{% url 'accounts:login' %}" id="h-nav-log">Log in</a></li>
+                        <li class="h-nav nav-item"><a class="nav-link" href="{% url 'accounts:signup' %}" id="h-nav-sign">Sign up</a></li>
+                    </ul>
+                    {% endif %}
+                    <!-- Ends -->
+
+                </div>
+                <!-- Ends -->
+
+            </div>
+        </div>
+        <!-- Primary Navbar - Ends -->
+
+        <!-- Secondary Navbar - This bar displays when display < medium -->
+        <div class="d-md-none nav-scroller shadow-sm text-white bg-dark fixed-bottom" id='h-sidebar'>
+          <nav class="nav nav-underline" aria-label="Secondary navigation">
+            <a class="nav-link text-white active lead" aria-current="page" href="#">Movement</a>
+            <div class="dropdown align-middle pt-3">
+          		<a href="#" class="d-flex align-items-center ms-5 mb-3 text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+          			<!-- <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2"> -->
+          			<span class="ms-1">Create</span>
+          		</a>
+          		<ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+          			<li><a class="dropdown-item" href="{% url 'movement:create_movement_plan' %}">New Movement Plan</a></li>
+                <li><hr class="dropdown-divider"></li>
+          			<li><a class="dropdown-item" href="{% url 'movement:allocate_new_cp' %}">Allocate New CP</a></li>
+          			<li><a class="dropdown-item" href="{% url 'movement:allocate_new_unit' %}">Allocate New Unit</a></li>
+          			<li><a class="dropdown-item" href="{% url 'movement:allocate_new_packet' %}">Allocate New Packet</a></li>
+          			<li><hr class="dropdown-divider"></li>
+          			<li><a class="dropdown-item" href="{% url 'movement:create_brigade' %}">New Brigade</a></li>
+          			<li><a class="dropdown-item" href="{% url 'movement:create_unit' %}">New Unit</a></li>
+          		</ul>
+          	</div>
+          	<div class="dropdown align-middle pt-3">
+          		<a href="#" class="d-flex align-items-center ms-5 mb-3 text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+          			<!-- <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2"> -->
+          			<span class="ms-1">Update/Delete</span>
+          		</a>
+              <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+                <li><a class="dropdown-item" href="{% url 'movement:update_delete_movement_plan_list' %}">Movement Plan</a></li>
+          			<li><a class="dropdown-item" href="{% url 'movement:update_delete_cp_detail_list' %}">CP Allocation</a></li>
+          			<li><a class="dropdown-item" href="{% url 'movement:update_delete_unit_detail_list' %}">Unit Allocation</a></li>
+          			<li><a class="dropdown-item" href="{% url 'movement:update_delete_packet_detail_list' %}">Packet Allocation</a></li>
+          			<li><hr class="dropdown-divider"></li>
+          			<li><a class="dropdown-item" href="{% url 'movement:update_delete_brigade_list' %}">Brigade</a></li>
+          			<li><a class="dropdown-item" href="{% url 'movement:update_delete_unit_list' %}">Unit</a></li>
+          		</ul>
+          	</div>
+          	<div class="dropdown align-middle pt-3">
+          		<a href="#" class="d-flex align-items-center ms-5 mb-3 text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+          			<!-- <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2"> -->
+          			<span class="ms-1">View</span>
+          		</a>
+          		<ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+          			<li><a class="dropdown-item" href="{% url 'movement:all' %}">Movement Plan List</a></li>
+          		</ul>
+          	</div>
+            <!-- <a class="nav-link text-white" href="#">Create
+              <span class="badge bg-light text-dark rounded-pill align-text-bottom">27</span>
+            </a>
+            <a class="nav-link text-white" href="#">Update/Delete</a>
+            <a class="nav-link text-white" href="#">View</a> -->
+          </nav>
+        </div>
+        <!-- Secondary Navbar - Ends -->
+
+        <!-- Body -->
+        <div class="d-flex flex-row mb-3">
+
+          <div class="d-flex flex-column d-none d-md-block flex-shrink-0 p-3 text-white bg-dark" id = "v-sidebar" style="width: 230px;">
+            <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+              <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
+              <span class="fs-4">{{ sidebar }}</span>
+            </a>
+            <hr>
+            {% block primary_navbar %}
+
+            {% endblock %}
+            <!-- <ul class="nav nav-pills flex-column mb-auto">
+              <li class="nav-item">
+                <a href="#" class="nav-link active" aria-current="page">
+                  <svg class="bi me-2" width="16" height="16"><use xlink:href="#home"/></svg>
+                  Home
+                </a>
+              </li>
+              <li>
+                <a href="#" class="nav-link text-white">
+                  <svg class="bi me-2" width="16" height="16"><use xlink:href="#speedometer2"/></svg>
+                  Dashboard
+                </a>
+              </li>
+              <li>
+                <a href="#" class="nav-link text-white">
+                  <svg class="bi me-2" width="16" height="16"><use xlink:href="#table"/></svg>
+                  Orders
+                </a>
+              </li>
+              <li>
+                <a href="#" class="nav-link text-white">
+                  <svg class="bi me-2" width="16" height="16"><use xlink:href="#grid"/></svg>
+                  Products
+                </a>
+              </li>
+              <li>
+                <a href="#" class="nav-link text-white">
+                  <svg class="bi me-2" width="16" height="16"><use xlink:href="#people-circle"/></svg>
+                  Customers
+                </a>
+              </li>
+            </ul>
+            <hr>
+            <div class="dropdown">
+              <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2">
+                <strong>mdo</strong>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+                <li><a class="dropdown-item" href="#">New project...</a></li>
+                <li><a class="dropdown-item" href="#">Settings</a></li>
+                <li><a class="dropdown-item" href="#">Profile</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="#">Sign out</a></li>
+              </ul>
+            </div> -->
+          </div>
+
+          <div class="b-vert-divider"></div>
+          <div class="col d-flex flex-column bd-highlight">
+
+            <div class="b-hori-divider"></div>
+            <!-- Breadcrumb starts-->
+            <div class="shadow-sm p-3 mb-3 bg-light rounded">
+              <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  {% block breadcrumb %}
+
+                  {% endblock %}
+                </ol>
+              </nav>
+            </div>
+            <!-- Ends -->
+            <div class="p-2 bd-highlight">
+              <div class="d-flex-container">
+                {% block content %}
+
+                {% endblock %}
+              </div>
+            </div>
+          </div>
+
+          <div class="b-vert-divider"></div>
+
+        </div>
+
+        <div class="container-fluid">
+            <hr/>
+            <footer>
+                <p>&copy; {{ year }} - Army Calculator</p>
+            </footer>
+        </div>
+
+        <!-- Master script for the site -->
+        <script src="{% static "army_calculator/scripts/master.js"%}" type="text/javascript" ></script>
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    {% block scripts %}{% endblock %}
+
+    </body>
+    </html>

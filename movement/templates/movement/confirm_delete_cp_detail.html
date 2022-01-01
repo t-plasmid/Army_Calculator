@@ -1,0 +1,73 @@
+{% extends "layout.html" %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item active"><a href="{% url 'movement:movement_base' %}">Movement</a></li>
+  <li class="breadcrumb-item active">Confirm Delete CP Detail</li>
+  <!-- <li class="breadcrumb-item active" aria-current="page">Library</li> -->
+  <!-- <li class="breadcrumb-item"><a href="#">Home</a></li>
+  <li class="breadcrumb-item active" aria-current="page">Library</li> -->
+{% endblock %}
+
+{% block primary_navbar %}
+	<div class="dropdown">
+		<a href="#" class="d-flex align-items-center ms-5 mb-3 text-white text-decoration-none dropdown-toggle bi bi-plus-square-dotted" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+			<!-- <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2"> -->
+			<span class="ms-1">Create</span>
+		</a>
+		<ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+			<li><a class="dropdown-item" href="{% url 'movement:create_movement_plan' %}">New Movement Plan</a></li>
+			<li><a class="dropdown-item" href="{% url 'movement:allocate_new_cp' %}">Allocate New CP</a></li>
+			<li><a class="dropdown-item" href="{% url 'movement:allocate_new_unit' %}">Allocate New Unit</a></li>
+			<li><a class="dropdown-item" href="{% url 'movement:allocate_new_packet' %}">Allocate New Packet</a></li>
+			<li><hr class="dropdown-divider"></li>
+			<li><a class="dropdown-item" href="{% url 'movement:create_brigade' %}">New Brigade</a></li>
+			<li><a class="dropdown-item" href="{% url 'movement:create_unit' %}">New Unit</a></li>
+		</ul>
+	</div>
+	<div class="dropdown">
+		<a href="#" class="d-flex align-items-center ms-5 mb-3 text-white text-decoration-none dropdown-toggle bi bi-pencil-square" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+			<!-- <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2"> -->
+			<span class="ms-1">Update/Delete</span>
+		</a>
+    <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+      <li><a class="dropdown-item" href="{% url 'movement:update_delete_movement_plan_list' %}">Movement Plan</a></li>
+      <li><hr class="dropdown-divider"></li>
+			<li><a class="dropdown-item" href="{% url 'movement:update_delete_cp_detail_list' %}">CP Allocation</a></li>
+			<li><a class="dropdown-item" href="{% url 'movement:update_delete_unit_detail_list' %}">Unit Allocation</a></li>
+			<li><a class="dropdown-item" href="{% url 'movement:update_delete_packet_detail_list' %}">Packet Allocation</a></li>
+			<li><hr class="dropdown-divider"></li>
+			<li><a class="dropdown-item" href="{% url 'movement:update_delete_brigade_list' %}">Brigade</a></li>
+			<li><a class="dropdown-item" href="{% url 'movement:update_delete_unit_list' %}">Unit</a></li>
+		</ul>
+	</div>
+	<div class="dropdown">
+		<a href="#" class="d-flex align-items-center ms-5 mb-3 text-white text-decoration-none dropdown-toggle bi bi-view-list" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+			<!-- <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2"> -->
+			<span class="ms-1">View</span>
+		</a>
+		<ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+			<li><a class="dropdown-item" href="{% url 'movement:all' %}">Movement Plan</a></li>
+		</ul>
+	</div>
+{% endblock %}
+
+{% block content %}
+{% if request.user.is_authenticated %}
+<div class="container">
+  <div class="alert alert-danger lead" role="alert">
+    Confirm Delete CP Detail
+  </div>
+  {% load django_bootstrap5 %}
+  	<div class="container">
+  		<form method="POST" class="form">
+  			{% csrf_token %}
+          <p>Are you sure you want to delete CP "{{ object.cp_no }}" of "{{ object.m_id }}"?</p>
+  			{% bootstrap_button button_type="submit" class="btn btn-primary" content="Confirm" %}
+  			<a class="ms-3 btn btn-primary" href="{% url cancel_url %}" role="button">Cancel</a>
+      </form>
+  	</div>
+  {% else %}
+    <h1> You are not logged in</h1>
+  {% endif %}
+</div>
+{% endblock %}
