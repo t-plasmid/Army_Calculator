@@ -3,7 +3,7 @@ from . import models
 
 import datetime
 from django.core.exceptions import ValidationError
-from django.utils.translation import ugettext_lazy as _
+# from django.utils.translation import ugettext_lazy as _
 
 
 class Movement_PlanForm(forms.ModelForm):
@@ -45,7 +45,7 @@ class Movement_PlanForm(forms.ModelForm):
 
         # check if a date is not in the past.
         if data < datetime.date.today():
-            raise ValidationError(_('Invalid date - date in past'))
+            raise ValidationError('Invalid date - date in past')
 
         # return cleaned data.
         return data
