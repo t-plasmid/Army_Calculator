@@ -1,0 +1,105 @@
+{% extends "layout.html" %}
+
+{% block breadcrumb %}
+  	<li class="breadcrumb-item active"><a href="{% url 'startex:startex_plan_base' %}">StartEx</a></li>
+    <li class="breadcrumb-item active"><a href="{% url 'startex:list_startex_plan' %}">List StartEX Plan</a></li>
+  	<li class="breadcrumb-item active">Detail StartEx Plan</li>
+  <!-- <li class="breadcrumb-item active" aria-current="page">Library</li> -->
+  <!-- <li class="breadcrumb-item"><a href="#">Home</a></li>
+  <li class="breadcrumb-item active" aria-current="page">Library</li> -->
+{% endblock %}
+
+{% block primary_navbar %}
+	<div class="dropdown">
+		<a href="#" class="d-flex align-items-center ms-5 mb-3 text-white text-decoration-none dropdown-toggle bi bi-patch-plus" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+			<span class="ms-1">Create/Update</span>
+		</a>
+		<ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+			<li><a class="dropdown-item" href="{% url 'startex:create_startex_plan' %}">startex Plan</a></li>
+            <li><hr class="dropdown-divider"></li>
+			<li><a class="dropdown-item" href="{% url 'startex:create_list_sx_vehicle_data' %}">New Vehicle Entry</a></li>
+		</ul>
+	</div>
+	<div class="dropdown">
+		<a href="#" class="d-flex align-items-center ms-5 mb-3 text-white text-decoration-none dropdown-toggle bi bi-view-list" id="dropdownUser3" data-bs-toggle="dropdown" aria-expanded="false">
+			<span class="ms-1">View</span>
+		</a>
+		<ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+			<li><a class="dropdown-item" href="{% url 'startex:list_startex_plan' %}">StartEx Plan</a></li>
+		</ul>
+	</div>
+{% endblock %}
+
+{% block content %}
+	{% if request.user.is_authenticated %}
+		<div class="container">
+			<p hidden id="id_veh_found"></p>
+		 	<p class="text-start mb-0"><strong>ID: </strong>{{ detail_startex_plan.id }}</p>
+			<h4 class="text-center"><strong>{{ detail_startex_plan.name }}</strong></h4>
+			<p class="text-center lead"><mark>{{ detail_startex_plan.brigade }}</mark></p>
+			<div class="col-md-6 col-lg-4 col-xl-3">
+				<table class = 'table table-borderless'>
+					<tr>
+						<td width="95px" class = "mb-0"><small>Created At:</small></td>
+						<td><small>{{ detail_startex_plan.created_at }}</small></td>
+					</tr>
+					<tr>
+						<td><small>Created By:</small></td>
+						<td><small>{{ detail_startex_plan.created_by }}</small></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+
+		<div class="container">
+			<div class="p-3 mb-3 bg-light border rounded-3">
+				<h5>Description</h5>
+				<p class="lead"> {{ detail_startex_plan.description }}</p>
+			</div>
+		</div>
+
+		<div class="container">
+			<div class="table-responsive">
+			  <table class="table table-bordered" style="text-align: center;">
+				  <thead>
+				    <tr class = "table-secondary align-middle">
+				      <th scope="col"></th>
+						{% for vehicle_data in sx_vehicle_data %}
+							<th scope="col">{{ vehicle_data.name }}</th>
+						{% endfor %}
+				    </tr>
+				  </thead>
+				  <tbody id='main_tbody'>
+				  	{% for unit_detail in sx_unit_detail %}
+						<tr>
+							<td class = "table-secondary"><strong>{{ unit_detail.u_id }}</strong></td>
+							{% for vehicle_data in sx_vehicle_data %}
+
+								{% for vehicle_detail in sx_vehicle_detail %}
+									{% if vehicle_detail.sx_u_id.id == unit_detail.id and vehicle_data.id == vehicle_detail.sx_v_id.id %}
+										<td class="bg-info text-white">{{vehicle_detail.qty}}</td>
+										<script>
+											if ({{vehicle_detail.qty}} > 0){
+												$("#id_veh_found").text('set');
+											}
+										</script>
+									{% endif %}
+								{% endfor %}
+
+								<script>
+									if ($("#id_veh_found").text() != 'set'){
+										document.write("<td></td>");
+									}
+									$("#id_veh_found").text('');
+								</script>
+							{% endfor %}
+						</tr>
+				  	{% endfor %}
+				  </tbody>
+			  </table>
+			</div>
+		</div>
+	{% else %}
+		<h1> You are not logged in</h1>
+	{% endif %}
+{% endblock %}

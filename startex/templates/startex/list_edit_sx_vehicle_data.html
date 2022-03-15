@@ -1,0 +1,100 @@
+{% extends "layout.html" %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item active"><a href="{% url 'movement:movement_base' %}">Movement</a></li>
+	<li class="breadcrumb-item active">Update/Delete Brigade List</li>
+  <!-- <li class="breadcrumb-item active" aria-current="page">Library</li> -->
+  <!-- <li class="breadcrumb-item"><a href="#">Home</a></li>
+  <li class="breadcrumb-item active" aria-current="page">Library</li> -->
+{% endblock %}
+
+{% block primary_navbar %}
+	<div class="dropdown">
+		<a href="#" class="d-flex align-items-center ms-5 mb-3 text-white text-decoration-none dropdown-toggle bi bi-patch-plus" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+			<span class="ms-1">Create/Update</span>
+		</a>
+		<ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+			<li><a class="dropdown-item" href="{% url 'startex:create_startex_plan' %}">startex Plan</a></li>
+            <li><hr class="dropdown-divider"></li>
+			<li><a class="dropdown-item" href="{% url 'startex:create_list_sx_vehicle_data' %}">New Vehicle Entry</a></li>
+		</ul>
+	</div>
+	<div class="dropdown">
+		<a href="#" class="d-flex align-items-center ms-5 mb-3 text-white text-decoration-none dropdown-toggle bi bi-view-list" id="dropdownUser3" data-bs-toggle="dropdown" aria-expanded="false">
+			<span class="ms-1">View</span>
+		</a>
+		<ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+			<li><a class="dropdown-item" href="{% url 'startex:list_startex_plan' %}">StartEx Plan</a></li>
+		</ul>
+	</div>
+{% endblock %}
+
+{% block content %}
+{% if request.user.is_authenticated %}
+<div class="alert alert-warning lead" role="alert">
+	Update/Delete- Brigade List
+</div>
+	{% if brigade_list %}
+    <div class="row">
+      {% for brigade in brigade_list %}
+        <div class="col-sm-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">{{ brigade.unit }}</h5>
+              <p class="card-text">Acronym: {{ brigade.acronym }}</p>
+              <a href="{{ brigade.get_custom_url }}" class="btn btn-primary btn-sm bi bi-pen"></a>
+              <a href="{{ brigade.get_custom_delete_url }}" class="btn btn-danger btn-sm bi-x-square"></a>
+            </div>
+          </div>
+        </div>
+		  {% endfor %}
+    </div>
+
+    {% if is_paginated %}
+      <nav aria-label="CP pagination" class="mb-3 mt-3">
+        <ul class="pagination">
+          {% if page_obj.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+            </li>
+          {% else %}
+            <li class="page-item disabled">
+              <span class="page-link">Previous</span>
+            </li>
+          {% endif %}
+
+          {% for page_num in paginator.page_range %}
+            {% if page_obj.number == page_num %}
+              <li class="page-item active">
+                <span class="page-link">
+                  {{ page_num }}
+                  <span class="sr-only">*</span>
+                </span>
+              </li>
+            {% else %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+              </li>
+            {% endif %}
+          {% endfor %}
+
+          {% if page_obj.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+            </li>
+          {% else %}
+            <li class="page-item disabled">
+              <span class="page-link">Next</span>
+            </li>
+          {% endif %}
+        </ul>
+      </nav>
+    {% endif %}
+
+	{% else %}
+		<p>There are no brigade records!</p>
+	{% endif %}
+  {% else %}
+    <h1> You are not logged in</h1>
+	{% endif %}
+{% endblock %}

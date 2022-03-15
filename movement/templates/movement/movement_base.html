@@ -9,31 +9,27 @@
 
 {% block primary_navbar %}
 	<div class="dropdown">
-		<a href="#" class="d-flex align-items-center ms-5 mb-3 text-white text-decoration-none dropdown-toggle bi bi-plus-square-dotted" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+		<a href="#" class="d-flex align-items-center ms-5 mb-3 text-white text-decoration-none dropdown-toggle bi bi-patch-plus" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
 			<!-- <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2"> -->
-			<span class="ms-1">Create</span>
+			<span class="ms-1">Create/Update</span>
 		</a>
 		<ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-			<li><a class="dropdown-item" href="{% url 'movement:create_movement_plan' %}">New Movement Plan</a></li>
-      <li><hr class="dropdown-divider"></li>
-			<li><a class="dropdown-item" href="{% url 'movement:allocate_new_cp' %}">Allocate New CP</a></li>
-			<li><a class="dropdown-item" href="{% url 'movement:allocate_new_unit' %}">Allocate New Unit</a></li>
-			<li><a class="dropdown-item" href="{% url 'movement:allocate_new_packet' %}">Allocate New Packet</a></li>
-			<li><hr class="dropdown-divider"></li>
-			<li><a class="dropdown-item" href="{% url 'movement:create_brigade' %}">New Brigade</a></li>
-			<li><a class="dropdown-item" href="{% url 'movement:create_unit' %}">New Unit</a></li>
+			<li><a class="dropdown-item" href="{% url 'movement:create_movement_plan' %}">Movement Plan</a></li>
+            <li><hr class="dropdown-divider"></li>
+			<li><a class="dropdown-item" href="{% url 'movement:create_brigade' %}">New Brigade Entry</a></li>
+			<li><a class="dropdown-item" href="{% url 'movement:create_unit' %}">New Unit Entry</a></li>
 		</ul>
 	</div>
 	<div class="dropdown">
 		<a href="#" class="d-flex align-items-center ms-5 mb-3 text-white text-decoration-none dropdown-toggle bi bi-pencil-square" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
 			<!-- <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2"> -->
-			<span class="ms-1">Update/Delete</span>
+			<span class="ms-1">Edit</span>
 		</a>
     <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
       <li><a class="dropdown-item" href="{% url 'movement:update_delete_movement_plan_list' %}">Movement Plan</a></li>
-			<li><a class="dropdown-item" href="{% url 'movement:update_delete_cp_detail_list' %}">CP Allocation</a></li>
-			<li><a class="dropdown-item" href="{% url 'movement:update_delete_unit_detail_list' %}">Unit Allocation</a></li>
-			<li><a class="dropdown-item" href="{% url 'movement:update_delete_packet_detail_list' %}">Packet Allocation</a></li>
+			<li><a class="dropdown-item" href="{% url 'movement:update_delete_cp_detail_list' %}">Allocated CP</a></li>
+			<li><a class="dropdown-item" href="{% url 'movement:update_delete_unit_detail_list' %}">Allocated Unit</a></li>
+			<li><a class="dropdown-item" href="{% url 'movement:update_delete_packet_detail_list' %}">Allocated Packet</a></li>
 			<li><hr class="dropdown-divider"></li>
 			<li><a class="dropdown-item" href="{% url 'movement:update_delete_brigade_list' %}">Brigade</a></li>
 			<li><a class="dropdown-item" href="{% url 'movement:update_delete_unit_list' %}">Unit</a></li>

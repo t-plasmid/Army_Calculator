@@ -1,0 +1,66 @@
+{% extends "layout.html" %}
+{% block breadcrumb %}
+  <!-- <li class="breadcrumb-item active">Contact</li> -->
+  <!-- <li class="breadcrumb-item active" aria-current="page">Library</li> -->
+  <!-- <li class="breadcrumb-item"><a href="#">Home</a></li>
+  <li class="breadcrumb-item active" aria-current="page">Library</li> -->
+{% endblock %}
+
+{% block content %}
+
+<!-- ======= Contact Section ======= -->
+   <section id="contact" class="contact section-bg">
+     <div class="container" data-aos="fade-up">
+
+       <div class="section-title">
+         <h2>Contact</h2>
+         <p>Please contact us if you have any problems, concerns, or suggestions. We would make every effort to address each of them carefully. Thank you.</p>
+       </div>
+
+       <div class="row">
+
+         <div class="col-lg-6">
+
+           <div class="row">
+             <div class="col-md-12">
+               <div class="info-box" data-aos="fade-up">
+                 <i class="bi bi-geo-alt"></i>
+                 <h3>Our Address</h3>
+                 <p>11 (RSS) Signal Regiment, Blandford</p>
+               </div>
+             </div>
+             <div class="col-md-6">
+               <div class="info-box mt-4" data-aos="fade-up" data-aos-delay="100">
+                 <i class="bi bi-envelope"></i>
+                 <h3>Email Us</h3>
+                 <p>ModNet email address</p>
+               </div>
+             </div>
+             <div class="col-md-6">
+               <div class="info-box mt-4" data-aos="fade-up" data-aos-delay="100">
+                 <i class="bi bi-telephone"></i>
+                 <h3>Call Us</h3>
+                 <p>ModNet Skype call</p>
+               </div>
+             </div>
+           </div>
+
+         </div>
+
+         <div class="col-lg-6 mt-4 mt-lg-0">
+           {% load django_bootstrap5 %}
+              <div class="container">
+                  <form method="POST" class="form">
+                      {% csrf_token %}
+                      {% bootstrap_form form layout='horizontal' %}
+                      {% bootstrap_button button_type="submit" class="btn btn-primary" content="Submit" %}
+                  </form>
+              </div>
+         </div>
+
+       </div>
+
+     </div>
+   </section><!-- End Contact Section -->
+
+{% endblock %}

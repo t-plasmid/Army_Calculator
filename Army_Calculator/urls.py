@@ -18,6 +18,7 @@ urlpatterns = [
     path('accounts/', include("accounts.urls", namespace="accounts")),
     path('accounts/', include("django.contrib.auth.urls")),
     path('movement/', include("movement.urls", namespace="movement")),
+    path('startex/', include("startex.urls", namespace="startex")),
     # path('login/',
     #      LoginView.as_view
     #      (

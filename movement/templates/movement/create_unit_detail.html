@@ -1,8 +1,10 @@
 {% extends "layout.html" %}
 
 {% block breadcrumb %}
-  <li class="breadcrumb-item active"><a href="{% url 'movement:movement_base' %}">Movement</a></li>
-  <li class="breadcrumb-item active">Allocate New Unit</li>
+    <li class="breadcrumb-item active"><a href="{% url 'movement:movement_base' %}">Movement</a></li>
+    <li class="breadcrumb-item active"><a href="{% url 'movement:create_movement_plan' %}">Create Movement Plan</a></li>
+    <li class="breadcrumb-item active"><a href="{% url 'movement:allocate_new_cp' %}">CP Allocation</a></li>
+    <li class="breadcrumb-item active">Unit Allocate</li>
   <!-- <li class="breadcrumb-item active" aria-current="page">Library</li> -->
   <!-- <li class="breadcrumb-item"><a href="#">Home</a></li>
   <li class="breadcrumb-item active" aria-current="page">Library</li> -->
@@ -10,31 +12,27 @@
 
 {% block primary_navbar %}
 	<div class="dropdown">
-		<a href="#" class="d-flex align-items-center ms-5 mb-3 text-white text-decoration-none dropdown-toggle bi bi-plus-square-dotted" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+		<a href="#" class="d-flex align-items-center ms-5 mb-3 text-white text-decoration-none dropdown-toggle bi bi-patch-plus" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
 			<!-- <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2"> -->
-			<span class="ms-1">Create</span>
+			<span class="ms-1">Create/Update</span>
 		</a>
 		<ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-			<li><a class="dropdown-item" href="{% url 'movement:create_movement_plan' %}">New Movement Plan</a></li>
-      <li><hr class="dropdown-divider"></li>
-			<li><a class="dropdown-item" href="{% url 'movement:allocate_new_cp' %}">Allocate New CP</a></li>
-			<li><a class="dropdown-item" href="{% url 'movement:allocate_new_unit' %}">Allocate New Unit</a></li>
-			<li><a class="dropdown-item" href="{% url 'movement:allocate_new_packet' %}">Allocate New Packet</a></li>
-			<li><hr class="dropdown-divider"></li>
-			<li><a class="dropdown-item" href="{% url 'movement:create_brigade' %}">New Brigade</a></li>
-			<li><a class="dropdown-item" href="{% url 'movement:create_unit' %}">New Unit</a></li>
+			<li><a class="dropdown-item" href="{% url 'movement:create_movement_plan' %}">Movement Plan</a></li>
+            <li><hr class="dropdown-divider"></li>
+			<li><a class="dropdown-item" href="{% url 'movement:create_brigade' %}">New Brigade Entry</a></li>
+			<li><a class="dropdown-item" href="{% url 'movement:create_unit' %}">New Unit Entry</a></li>
 		</ul>
 	</div>
 	<div class="dropdown">
 		<a href="#" class="d-flex align-items-center ms-5 mb-3 text-white text-decoration-none dropdown-toggle bi bi-pencil-square" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
 			<!-- <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2"> -->
-			<span class="ms-1">Update/Delete</span>
+			<span class="ms-1">Edit</span>
 		</a>
     <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
       <li><a class="dropdown-item" href="{% url 'movement:update_delete_movement_plan_list' %}">Movement Plan</a></li>
-			<li><a class="dropdown-item" href="{% url 'movement:update_delete_cp_detail_list' %}">CP Allocation</a></li>
-			<li><a class="dropdown-item" href="{% url 'movement:update_delete_unit_detail_list' %}">Unit Allocation</a></li>
-			<li><a class="dropdown-item" href="{% url 'movement:update_delete_packet_detail_list' %}">Packet Allocation</a></li>
+			<li><a class="dropdown-item" href="{% url 'movement:update_delete_cp_detail_list' %}">Allocated CP</a></li>
+			<li><a class="dropdown-item" href="{% url 'movement:update_delete_unit_detail_list' %}">Allocated Unit</a></li>
+			<li><a class="dropdown-item" href="{% url 'movement:update_delete_packet_detail_list' %}">Allocated Packet</a></li>
 			<li><hr class="dropdown-divider"></li>
 			<li><a class="dropdown-item" href="{% url 'movement:update_delete_brigade_list' %}">Brigade</a></li>
 			<li><a class="dropdown-item" href="{% url 'movement:update_delete_unit_list' %}">Unit</a></li>
@@ -54,58 +52,81 @@
 {% block content %}
 {% if request.user.is_authenticated %}
 <div class="container">
-  <div class="alert alert-info lead" role="alert">
-    Allocate New Unit
-  </div>
+  <div class="alert alert-info lead" role="alert">Unit Allocation</div>
   {% load django_bootstrap5 %}
   	<div class="container">
   		<form method="POST" class="form">
   			{% csrf_token %}
   			{% bootstrap_form form layout='horizontal' %}
-  			{% bootstrap_button button_type="submit" class="btn btn-primary" content="Add" %}
-        <!-- <button type="submit" name="submit" class="btn btn-primary">Create</button> -->
+  			{% bootstrap_button button_type="submit" class="btn btn-primary" content="Allocate" %}
   			<a id = 'id_done' class="ms-3 btn btn-primary" href="{% url done_url %}" role="button">{{ done_text }}</a>
       </form>
   	</div>
 
     <div class="mt-5 alert alert-secondary lead" role="alert">
-    	List of allocated Units
+    	List of allocated units
     </div>
   	{% if unit_detail_create_list %}
       <table id="id_u_list_view" class="table table-responsive table-striped table-bordered border-secondary mb-4">
         <thead class="table-dark">
           <tr>
-            <th>Route ID</th>
-            <th>Route</th>
-            <th>Exercise</th>
-            <th>Serial</th>
+            <th>ID</th>
             <th>Unit</th>
-            <th>Packet no</th>
-            <th>Vehicle qty</th>
-            <th>Packet allocated</th>
+            <th>Packet No</th>
+            <th>Vehicle Qty</th>
+            <th>Packet Allocated</th>
+            <th>Packet Auto Allocated</th>
             <th>Action</th>
           </tr>
         </thead>
         <tbody>
-          {% for unit_detail in unit_detail_create_list %}
-            <tr>
-              <td>{{ unit_detail.m_id.id }}</td>
-              <td>{{ unit_detail.m_id.route_name }}</td>
-              <td>{{ unit_detail.m_id.exercise_name }}</td>
-              <td>{{ unit_detail.m_id.serial }}</td>
-              <td>{{ unit_detail.unit }}</td>
-              <td>{{ unit_detail.packet_no }}</td>
-              <td>{{ unit_detail.vehicle_qty }}</td>
-              {% if unit_detail.packet_allocated %}
-                <td>Yes</td>
-              {% else %}
-                <td>No</td>
-              {% endif %}
-              <td><a href="{{ unit_detail.get_custom_delete_url2 }}" class="btn btn-danger btn-sm bi bi-x-square"></a>
-                <a href="{% url 'movement:allocate_new_packet' %}?u_id={{unit_detail.id}}" class="btn btn-success btn-sm bi bi-node-plus"> Pkt</a>
-                <a href="{{ unit_detail.get_update_url2 }}?reverse=true" class="btn btn-primary btn-sm bi bi-pen"></a></td>
-            </tr>
-          {% endfor %}
+            {% if unit_detail_create_list %}
+                {% regroup unit_detail_create_list by m_id as unit_detail_create_list_by_m_id %}
+                    {% for m_id in unit_detail_create_list_by_m_id %}
+                        <tr>
+                            <td>{{ m_id.grouper }}</td>
+
+                            <td>
+                                {% for name in m_id.list %}
+                                    <div class="border-bottom" style="height:40px;">{{name.unit}}</div>
+                                {% endfor %}
+                            </td>
+                            <td>
+                                {% for name in m_id.list %}
+                                    <div class="border-bottom" style="height:40px;">{{name.packet_no}}</div>
+                                {% endfor %}
+                            </td>
+                            <td>
+                                {% for name in m_id.list %}
+                                    <div class="border-bottom" style="height:40px;">{{name.vehicle_qty}}</div>
+                                {% endfor %}
+                            </td>
+                            <td>
+                                {% for name in m_id.list %}
+                                    <div class="border-bottom" style="height:40px;">{{name.packet_allocated}}</div>
+                                {% endfor %}
+                            </td>
+                            <td>
+                                {% for name in m_id.list %}
+                                    <div class="border-bottom" style="height:40px;">{{name.packet_auto_populated}}</div>
+                                {% endfor %}
+                            </td>
+
+                            <td>
+                            {% for unit_detail in unit_detail_create_list %}
+                                <div class="border-bottom" style="height:40px;">
+                                    <a href="{{ unit_detail.get_delete_url2 }}" class="btn btn-danger btn-sm bi bi-x-square"></a>
+                                    <a href="{{ unit_detail.get_update_url2 }}" class="btn btn-primary btn-sm bi bi-pen"></a>
+                                    <form class="ajax_open_form btn">
+                                        {% csrf_token %}
+                                        <input type="submit" id="uid-{{unit_detail.id}}" class="btn btn-primary btn-sm" value="Open" />
+                                    </form>
+                                </div>
+                            {% endfor %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+            {% endif %}
         </tbody>
       </table>
 
@@ -167,3 +188,49 @@
   {% endif %}
 </div>
 {% endblock %}
+
+{% block scripts %}
+<script>
+    $("#id_m_id").change(function (e) {
+        e.preventDefault();
+        // get the nickname
+        var m_id = $(this).val();
+        // GET AJAX request
+        $.ajax({
+            type: 'GET',
+            url: "{% url 'movement:get_unit_detail' %}",
+            data: {"m_id": m_id},
+            success: function (response) {
+                location.reload();
+            },
+            error: function (response) {
+                console.log(response)
+            }
+        })
+    })
+
+    $(".ajax_open_form").submit(function (e) {
+        var m_plan_id = $(this).closest('tr').children('td:first').text().split(" - ")[0];
+        var m_unit_id = $(this).children('input:last').attr("id").split("-")[1];
+        // preventing from page reload and default actions
+        e.preventDefault();
+        // serialize the data for sending the form data.
+        var serializedData = $(this).serialize() + '&m_plan_id=' + m_plan_id + '&m_unit_id=' + m_unit_id;
+        // Url
+        var url = "{% url 'movement:allocate_new_packet' %}"
+        // make POST ajax call
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'movement:post_unit_detail' %}",
+            data: serializedData,
+            success: function (response) {
+                window.location = url
+            },
+            error: function (response) {
+                // alert the error if any error occured
+                alert(response["responseJSON"]["error"]);
+            }
+        })
+    })
+</script>
+{% endblock scripts %}

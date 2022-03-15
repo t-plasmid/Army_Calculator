@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+{% block breadcrumb %}
+ <li class="breadcrumb-item active"><a href="{% url 'startex:startex_plan_base' %}">StartEx</a></li>
+  <li class="breadcrumb-item active">Update Unit Detail</li>
+  <!-- <li class="breadcrumb-item active" aria-current="page">Library</li> -->
+  <!-- <li class="breadcrumb-item"><a href="#">Home</a></li>
+  <li class="breadcrumb-item active" aria-current="page">Library</li> -->
+{% endblock %}
+
+{% block primary_navbar %}
+	<div class="dropdown">
+		<a href="#" class="d-flex align-items-center ms-5 mb-3 text-white text-decoration-none dropdown-toggle bi bi-patch-plus" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+			<span class="ms-1">Create/Update</span>
+		</a>
+		<ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+			<li><a class="dropdown-item" href="{% url 'startex:create_startex_plan' %}">startex Plan</a></li>
+            <li><hr class="dropdown-divider"></li>
+			<li><a class="dropdown-item" href="{% url 'startex:create_list_sx_vehicle_data' %}">New Vehicle Entry</a></li>
+		</ul>
+	</div>
+	<div class="dropdown">
+		<a href="#" class="d-flex align-items-center ms-5 mb-3 text-white text-decoration-none dropdown-toggle bi bi-view-list" id="dropdownUser3" data-bs-toggle="dropdown" aria-expanded="false">
+			<span class="ms-1">View</span>
+		</a>
+		<ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+			<li><a class="dropdown-item" href="{% url 'startex:list_startex_plan' %}">StartEx Plan</a></li>
+		</ul>
+	</div>
+{% endblock %}
+
+{% block content %}
+	{% if request.user.is_authenticated %}
+		<div class="container">
+	  		<div class="alert alert-warning lead" role="alert">Update Unit Detail</div>
+	  		{% load django_bootstrap5 %}
+			<div class="container">
+				<form method="POST" class="form">
+					{% csrf_token %}
+					{% bootstrap_form form layout='horizontal' %}
+					{% bootstrap_button button_type="submit" class="btn btn-primary" content="Save" %}
+				<a href="{% url 'startex:create_list_sx_unit_detail' %}" class="btn btn-primary">Cancel</a>
+			  </form>
+			</div>
+  	{% else %}
+		<h1> You are not logged in</h1>
+  	{% endif %}
+		</div>
+{% endblock %}
