@@ -260,7 +260,7 @@ class Unit_DetailView(LoginRequiredMixin, generic.DetailView):
 # Edit
 class Edit_Unit_ListView(LoginRequiredMixin, generic.ListView):
     model = models.Unit
-    template_name = 'movement/edit_unit_list.html'
+    template_name = 'movement/list_edit_unit.html'
     context_object_name = 'unit_list'
     paginate_by = 8
 
@@ -273,12 +273,19 @@ class Edit_Unit_ListView(LoginRequiredMixin, generic.ListView):
         context['title'] = 'Movement - Edit Unit'
         context['sidebar'] = 'Movement'
         context['year'] = datetime.now().year
+        search_post = self.request.GET.get('search')
+        if search_post:
+            context['units'] = models.Unit.objects.filter(
+                Q(unit__icontains=search_post) | Q(acronym__icontains=search_post))
+            context['searchbool'] = 1
+        else:
+            context['searchbool'] = 0
         return context
 
 
 class Edit_Brigade_ListView(LoginRequiredMixin, generic.ListView):
     model = models.Brigade
-    template_name = 'movement/edit_brigade_list.html'
+    template_name = 'movement/list_edit_brigade.html'
     context_object_name = 'brigade_list'
     paginate_by = 8
 
@@ -291,12 +298,19 @@ class Edit_Brigade_ListView(LoginRequiredMixin, generic.ListView):
         context['title'] = 'Movement - Edit Brigade'
         context['sidebar'] = 'Movement'
         context['year'] = datetime.now().year
+        search_post = self.request.GET.get('search')
+        if search_post:
+            context['brigades'] = models.Brigade.objects.filter(
+                Q(brigade__icontains=search_post) | Q(acronym__icontains=search_post))
+            context['searchbool'] = 1
+        else:
+            context['searchbool'] = 0
         return context
 
 
 class Edit_Movement_PlanListView(LoginRequiredMixin, generic.ListView):
     model = models.Movement_Data
-    template_name = 'movement/edit_movement_plan_list.html'
+    template_name = 'movement/list_edit_movement_plan.html'
     context_object_name = 'movement_plan_list'
     paginate_by = 8
 
@@ -309,12 +323,25 @@ class Edit_Movement_PlanListView(LoginRequiredMixin, generic.ListView):
         context['title'] = 'Movement - Edit Movement Plan'
         context['sidebar'] = 'Movement'
         context['year'] = datetime.now().year
+        search_post = self.request.GET.get('search')
+        if search_post:
+            context['movement_plans'] = models.Movement_Data.objects.filter(
+                Q(serial__icontains=search_post) | Q(exercise_name__icontains=search_post) | Q(
+                    route_name__icontains=search_post) | Q(description__icontains=search_post) | Q(
+                    speed__icontains=search_post) | Q(traffic_density__icontains=search_post) | Q(
+                    packet_gap__icontains=search_post) | Q(unit_gap__icontains=search_post) | Q(
+                    packet_size__icontains=search_post) | Q(route_type__route_type__icontains=search_post) | Q(
+                    route_type__acronym__icontains=search_post) | Q(brigade__brigade__icontains=search_post) | Q(
+                    brigade__acronym__icontains=search_post) | Q(id__icontains=search_post))
+            context['searchbool'] = 1
+        else:
+            context['searchbool'] = 0
         return context
 
 
 class Edit_CP_DetailListView(LoginRequiredMixin, generic.ListView):
     model = models.CP_Detail
-    template_name = 'movement/edit_cp_detail_list.html'
+    template_name = 'movement/list_edit_cp_detail.html'
     context_object_name = 'cp_detail_list'
     paginate_by = 8
 
@@ -327,12 +354,21 @@ class Edit_CP_DetailListView(LoginRequiredMixin, generic.ListView):
         context['title'] = 'Movement - Edit Allocated CP'
         context['sidebar'] = 'Movement'
         context['year'] = datetime.now().year
+        search_post = self.request.GET.get('search')
+        if search_post:
+            context['cp_details'] = models.CP_Detail.objects.filter(
+                Q(m_id__id__icontains=search_post) | Q(m_id__route_name__icontains=search_post) | Q(
+                    cp_no__icontains=search_post) | Q(distance__icontains=search_post) | Q(
+                    halt_time__icontains=search_post))
+            context['searchbool'] = 1
+        else:
+            context['searchbool'] = 0
         return context
 
 
 class Edit_Unit_DetailListView(LoginRequiredMixin, generic.ListView):
     model = models.Unit_Detail
-    template_name = 'movement/edit_unit_detail_list.html'
+    template_name = 'movement/list_edit_unit_detail.html'
     context_object_name = 'unit_detail_list'
     paginate_by = 20
 
@@ -345,12 +381,22 @@ class Edit_Unit_DetailListView(LoginRequiredMixin, generic.ListView):
         context['title'] = 'Movement - Edit Allocated Unit'
         context['sidebar'] = 'Movement'
         context['year'] = datetime.now().year
+        search_post = self.request.GET.get('search')
+        if search_post:
+            context['unit_details'] = models.Unit_Detail.objects.filter(
+                Q(m_id__id__icontains=search_post) | Q(m_id__route_name__icontains=search_post) | Q(
+                    unit__unit__icontains=search_post) | Q(unit__acronym__icontains=search_post) | Q(
+                    packet_no__icontains=search_post) | Q(
+                    vehicle_qty__icontains=search_post))
+            context['searchbool'] = 1
+        else:
+            context['searchbool'] = 0
         return context
 
 
 class Edit_Packet_DetailListView(LoginRequiredMixin, generic.ListView):
     model = models.Packet_Detail
-    template_name = 'movement/edit_packet_detail_list.html'
+    template_name = 'movement/list_edit_packet_detail.html'
     context_object_name = 'packet_detail_list'
     paginate_by = 20
 
@@ -363,6 +409,16 @@ class Edit_Packet_DetailListView(LoginRequiredMixin, generic.ListView):
         context['title'] = 'Movement - Edit Allocated Packet'
         context['sidebar'] = 'Movement'
         context['year'] = datetime.now().year
+        search_post = self.request.GET.get('search')
+        if search_post:
+            context['packet_details'] = models.Packet_Detail.objects.filter(
+                Q(u_id__id__icontains=search_post) | Q(u_id__unit__unit__icontains=search_post) | Q(
+                    id__icontains=search_post) | Q(subunit__icontains=search_post) | Q(
+                    packet_no__icontains=search_post) | Q(
+                    vehicle_qty__icontains=search_post) | Q(u_id__unit__acronym__icontains=search_post))
+            context['searchbool'] = 1
+        else:
+            context['searchbool'] = 0
         return context
 
 
@@ -412,7 +468,7 @@ class Create_Movement_PlanView(LoginRequiredMixin, generic.CreateView, generic.L
 
 
 class Create_CP_DetailCreateListView(LoginRequiredMixin, generic.CreateView, generic.ListView):
-    template_name = 'movement/create_cp_detail.html'
+    template_name = 'movement/create_mov_cp_detail.html'
     model = models.CP_Detail
     form_class = forms.CP_DetailForm
     context_object_name = 'cp_detail_create_list'
@@ -458,7 +514,7 @@ class Create_CP_DetailCreateListView(LoginRequiredMixin, generic.CreateView, gen
 
 
 class Create_Unit_DetailCreateListView(LoginRequiredMixin, generic.CreateView, generic.ListView):
-    template_name = 'movement/create_unit_detail.html'
+    template_name = 'movement/create_mov_unit_detail.html'
     model = models.Unit_Detail
     form_class = forms.Unit_DetailForm
     context_object_name = 'unit_detail_create_list'
@@ -505,7 +561,7 @@ class Create_Unit_DetailCreateListView(LoginRequiredMixin, generic.CreateView, g
 
 
 class Create_Packet_DetailCreateListView(LoginRequiredMixin, generic.CreateView, generic.ListView):
-    template_name = 'movement/create_packet_detail.html'
+    template_name = 'movement/create_mov_packet_detail.html'
     model = models.Packet_Detail
     form_class = forms.Packet_DetailForm
     context_object_name = 'packet_detail_create_list'
@@ -575,6 +631,13 @@ class Create_BrigadeCreateListView(LoginRequiredMixin, generic.CreateView, gener
         context['title'] = 'Movement - Add New Brigade'
         context['sidebar'] = 'Movement'
         context['year'] = datetime.now().year
+        search_post = self.request.GET.get('search')
+        if search_post:
+            context['brigades'] = models.Brigade.objects.filter(
+                Q(brigade__icontains=search_post) | Q(acronym__icontains=search_post))
+            context['searchbool'] = 1
+        else:
+            context['searchbool'] = 0
         return context
 
     def get_queryset(self):
@@ -600,6 +663,13 @@ class Create_UnitCreateListView(LoginRequiredMixin, generic.CreateView, generic.
         context['title'] = 'Movement - Add New Unit'
         context['sidebar'] = 'Movement'
         context['year'] = datetime.now().year
+        search_post = self.request.GET.get('search')
+        if search_post:
+            context['units'] = models.Unit.objects.filter(
+                Q(unit__icontains=search_post) | Q(acronym__icontains=search_post))
+            context['searchbool'] = 1
+        else:
+            context['searchbool'] = 0
         return context
 
     def get_queryset(self):

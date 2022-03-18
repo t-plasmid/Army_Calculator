@@ -1,0 +1,62 @@
+{% extends "movement/movement_layout.html" %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item active"><a href="{% url 'movement:movement_plan_base' %}">Movement</a></li>
+	<li class="breadcrumb-item active">Update/Delete Unit List</li>
+{% endblock %}
+
+{% block searchbar %}
+    <form class="d-flex" action="{% url 'movement:list_edit_unit' %}">
+      {% csrf_token %}
+      <input class="form-control me-2" type="search" placeholder="Movement - Search" aria-label="Search" name="search">
+      <button class="btn btn-success me-2" type="submit">Search</button>
+    </form>
+{% endblock %}
+
+{% block content %}
+    {% if request.user.is_authenticated %}
+        {% if searchbool %}
+            <div class="container">
+                <hr class="bg-danger border-2 border-top border-danger">
+                <h2>Search Result</h2><br>
+                {% if units %}
+                    {% for unit in units %}
+                        <h3>{{forloop.counter}}. {{unit.acronym}}</h3>
+                        <p class="lead">ID: {{unit.id}}</p>
+                        <p>Name: {{unit.brigade}}</p>
+                    {% endfor %}
+                {% else %}
+                    <p>Not found </p>
+                {% endif %}
+                <hr class="bg-danger border-2 border-top border-danger">
+            </div>
+        {% endif %}
+
+        <div class="alert alert-warning lead" role="alert">
+            Update/Delete- Unit List
+        </div>
+        {% if unit_list %}
+        <div class="row">
+          {% for unit in unit_list %}
+            <div class="col-sm-6">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">{{ unit.unit }}</h5>
+                  <p class="card-text">Acronym: {{ unit.acronym }}</p>
+                  <a href="{{ unit.get_update_url }}" class="btn btn-primary btn-sm bi bi-pen"></a>
+                  <a href="{{ unit.get_delete_url }}" class="btn btn-danger btn-sm bi bi-x-square"></a>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+
+        {% include 'movement/pagination.html' %}
+
+        {% else %}
+            <p>There are no records!</p>
+        {% endif %}
+    {% else %}
+        <h1> You are not logged in</h1>
+    {% endif %}
+{% endblock %}

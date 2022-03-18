@@ -5,58 +5,82 @@
   <li class="breadcrumb-item active">New Unit</li>
 {% endblock %}
 
+{% block searchbar %}
+    <form class="d-flex" action="{% url 'movement:create_list_unit' %}">
+      {% csrf_token %}
+      <input class="form-control me-2" type="search" placeholder="Movement - Search" aria-label="Search" name="search">
+      <button class="btn btn-success me-2" type="submit">Search</button>
+    </form>
+{% endblock %}
+
 {% block content %}
-{% if request.user.is_authenticated %}
-<div class="container">
-  <div class="alert alert-info lead" role="alert">
-    Add New Unit
-  </div>
-  {% load django_bootstrap5 %}
-  	<div class="container">
-  		<form method="POST" class="form">
-  			{% csrf_token %}
-  			{% bootstrap_form form layout='horizontal' %}
-  			{% bootstrap_button button_type="submit" class="btn btn-primary" content="Add" %}
-  			<a class="ms-3 btn btn-primary" href="{% url 'movement:movement_plan_base' %}" role="button">Done</a>
-      </form>
-  	</div>
+    {% if request.user.is_authenticated %}
+        {% if searchbool %}
+            <div class="container">
+                <hr class="bg-danger border-2 border-top border-danger">
+                <h2>Search Result</h2><br>
+                {% if units %}
+                    {% for unit in units %}
+                        <h3>{{forloop.counter}}. {{unit.acronym}}</h3>
+                        <p class="lead">ID: {{unit.id}}</p>
+                        <p>Name: {{unit.brigade}}</p>
+                    {% endfor %}
+                {% else %}
+                    <p>Not found </p>
+                {% endif %}
+                <hr class="bg-danger border-2 border-top border-danger">
+            </div>
+        {% endif %}
 
-    <div class="mt-5 alert alert-secondary lead" role="alert">
-    	List of units
-    </div>
-  	{% if unit_create_list %}
-      <table id = "id_brigade_list_view" class="table table-responsive table-striped table-bordered border-secondary mb-4">
-        <thead class="table-dark">
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Acronym</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for unit in unit_create_list %}
-            <tr>
-              <td>{{ unit.id }}</td>
-              <td>{{ unit.unit }}</td>
-              <td>{{ unit.acronym }}</td>
-              <td><a href="{{ unit.get_delete_url }}" class="btn btn-danger btn-sm bi bi-x-square"></a>
-                  <a href="{{ unit.get_update_url }}" class="btn btn-primary btn-sm bi bi-pen"></a></td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+        <div class="container">
+          <div class="alert alert-info lead" role="alert">
+            Add New Unit
+          </div>
+          {% load django_bootstrap5 %}
+            <div class="container">
+                <form method="POST" class="form">
+                    {% csrf_token %}
+                    {% bootstrap_form form layout='horizontal' %}
+                    {% bootstrap_button button_type="submit" class="btn btn-primary" content="Add" %}
+                    <a class="ms-3 btn btn-primary" href="{% url 'movement:movement_plan_base' %}" role="button">Done</a>
+              </form>
+            </div>
 
-      {% include 'movement/pagination.html' %}
+            <div class="mt-5 alert alert-secondary lead" role="alert">
+                List of units
+            </div>
+            {% if unit_create_list %}
+              <table id = "id_brigade_list_view" class="table table-responsive table-striped table-bordered border-secondary mb-4">
+                <thead class="table-dark">
+                  <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Acronym</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for unit in unit_create_list %}
+                    <tr>
+                      <td>{{ unit.id }}</td>
+                      <td>{{ unit.unit }}</td>
+                      <td>{{ unit.acronym }}</td>
+                      <td><a href="{{ unit.get_delete_url }}" class="btn btn-danger btn-sm bi bi-x-square"></a>
+                          <a href="{{ unit.get_update_url }}" class="btn btn-primary btn-sm bi bi-pen"></a></td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
 
-  	{% else %}
-  		<p>Please submit the form to refresh the records.</p>
-  	{% endif %}
+              {% include 'movement/pagination.html' %}
 
-  {% else %}
-    <h1> You are not logged in</h1>
-  {% endif %}
-</div>
+            {% else %}
+                <p>There are no records!</p>
+            {% endif %}
+            </div>
+      {% else %}
+		<h1> You are not logged in</h1>
+	{% endif %}
 {% endblock %}
 
 {% block scripts %}

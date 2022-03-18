@@ -5,8 +5,33 @@
     <li class="breadcrumb-item active">New Brigade</li>
 {% endblock %}
 
+{% block searchbar %}
+    <form class="d-flex" action="{% url 'movement:create_list_brigade' %}">
+      {% csrf_token %}
+      <input class="form-control me-2" type="search" placeholder="Movement - Search" aria-label="Search" name="search">
+      <button class="btn btn-success me-2" type="submit">Search</button>
+    </form>
+{% endblock %}
+
 {% block content %}
     {% if request.user.is_authenticated %}
+        {% if searchbool %}
+            <div class="container">
+                <hr class="bg-danger border-2 border-top border-danger">
+                <h2>Search Result</h2><br>
+                {% if brigades %}
+                    {% for brigade in brigades %}
+                        <h3>{{forloop.counter}}. {{brigade.acronym}}</h3>
+                        <p class="lead">ID: {{brigade.id}}</p>
+                        <p>Name: {{brigade.brigade}}</p>
+                    {% endfor %}
+                {% else %}
+                    <p>Not found </p>
+                {% endif %}
+                <hr class="bg-danger border-2 border-top border-danger">
+            </div>
+        {% endif %}
+
         <div class="container">
           <div class="alert alert-info lead" role="alert">
             New Brigade Entry

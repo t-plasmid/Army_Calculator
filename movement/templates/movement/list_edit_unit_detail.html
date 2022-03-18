@@ -1,0 +1,84 @@
+{% extends "movement/movement_layout.html" %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item active"><a href="{% url 'movement:movement_plan_base' %}">Movement</a></li>
+	<li class="breadcrumb-item active">Update/Delete Unit Detail List</li>
+{% endblock %}
+
+{% block searchbar %}
+    <form class="d-flex" action="{% url 'movement:list_edit_mov_unit_detail' %}">
+      {% csrf_token %}
+      <input class="form-control me-2" type="search" placeholder="Movement - Search" aria-label="Search" name="search">
+      <button class="btn btn-success me-2" type="submit">Search</button>
+    </form>
+{% endblock %}
+
+{% block content %}
+    {% if request.user.is_authenticated %}
+        {% if searchbool %}
+            <div class="container">
+                <hr class="bg-danger border-2 border-top border-danger">
+                <h2>Search Result</h2><br>
+                {% if unit_details %}
+                    {% for unit_detail in unit_details %}
+                        <h3>{{forloop.counter}}. {{unit_detail.m_id}}</h3>
+                        <p class="lead">ID: {{unit_detail.id}}</p>
+                        <p>Unit: {{unit_detail.unit}}</p>
+                        <p>Packet No: {{unit_detail.packet_no}}</p>
+                        <p>Vehicle Qty: {{unit_detail.vehicle_qty}}</p>
+                    {% endfor %}
+                {% else %}
+                    <p>Not found </p>
+                {% endif %}
+                <hr class="bg-danger border-2 border-top border-danger">
+            </div>
+        {% endif %}
+
+        <div class="alert alert-warning lead" role="alert">
+            Update/Delete- Unit Detail List
+        </div>
+        {% if unit_detail_list %}
+
+            {% regroup unit_detail_list by m_id as unit_detail_group %}
+            <div class="accordion accordion-flush" id="accordionFlushAC">
+
+              {% for u_d_g in unit_detail_group %}
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="flush-heading{% cycle 'One' 'Two' 'Three' 'Four' 'Five' 'Six' 'Seven' 'Eight' 'Nine' 'Ten' 'Eleven' 'Twelve'%}">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{% cycle 'One' 'Two' 'Three' 'Four' 'Five' 'Six' 'Seven' 'Eight' 'Nine' 'Ten' 'Eleven' 'Twelve'%}" aria-expanded="false" aria-controls="flush-collapse{% cycle 'One' 'Two' 'Three' 'Four' 'Five' 'Six' 'Seven' 'Eight' 'Nine' 'Ten' 'Eleven' 'Twelve'%}">
+                      {{ u_d_g.grouper }}
+                    </button>
+                  </h2>
+                  <div id="flush-collapse{% cycle 'One' 'Two' 'Three' 'Four' 'Five' 'Six' 'Seven' 'Eight' 'Nine' 'Ten' 'Eleven' 'Twelve'%}" class="accordion-collapse collapse" aria-labelledby="flush-heading{% cycle 'One' 'Two' 'Three' 'Four' 'Five' 'Six' 'Seven' 'Eight' 'Nine' 'Ten' 'Eleven' 'Twelve'%}" data-bs-parent="#accordionFlushAC">
+                    <div class="accordion-body">
+
+                      <div class="row">
+                        {% for unit_detail in u_d_g.list %}
+                          <div class="col-sm-6">
+                            <div class="card mt-3">
+                              <div class="card-body">
+                                <h5 class="card-title">{{ unit_detail.m_id }}</h5>
+                                <p class="card-text">Unit: {{ unit_detail.unit }}</p>
+                                <a href="{{ unit_detail.get_update_url }}" class="btn btn-primary btn-sm bi bi-pen"></a>
+                                <a href="{{ unit_detail.get_delete_url }}" class="btn btn-danger btn-sm bi bi-x-square"></a>
+                              </div>
+                            </div>
+                          </div>
+                            {% endfor %}
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+
+        {% include 'movement/pagination.html' %}
+
+        {% else %}
+            <p>There are no records!</p>
+        {% endif %}
+    {% else %}
+      <h1> You are not logged in</h1>
+    {% endif %}
+{% endblock %}

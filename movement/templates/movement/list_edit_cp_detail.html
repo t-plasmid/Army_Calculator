@@ -5,8 +5,35 @@
 	<li class="breadcrumb-item active">Update/Delete CP Detail List</li>
 {% endblock %}
 
+{% block searchbar %}
+    <form class="d-flex" action="{% url 'movement:list_edit_mov_cp_detail' %}">
+      {% csrf_token %}
+      <input class="form-control me-2" type="search" placeholder="Movement - Search" aria-label="Search" name="search">
+      <button class="btn btn-success me-2" type="submit">Search</button>
+    </form>
+{% endblock %}
+
 {% block content %}
     {% if request.user.is_authenticated %}
+        {% if searchbool %}
+            <div class="container">
+                <hr class="bg-danger border-2 border-top border-danger">
+                <h2>Search Result</h2><br>
+                {% if cp_details %}
+                    {% for cp_detail in cp_details %}
+                        <h3>{{forloop.counter}}. {{cp_detail.m_id}}</h3>
+                        <p class="lead">ID: {{cp_detail.id}}</p>
+                        <p>CP: {{cp_detail.cp_no}}</p>
+                        <p>Distance: {{cp_detail.distance}}</p>
+                        <p>Halt Time: {{cp_detail.halt_time}}</p>
+                    {% endfor %}
+                {% else %}
+                    <p>Not found </p>
+                {% endif %}
+                <hr class="bg-danger border-2 border-top border-danger">
+            </div>
+        {% endif %}
+
         <div class="alert alert-warning lead" role="alert">
             Edit - CP Detail
         </div>
