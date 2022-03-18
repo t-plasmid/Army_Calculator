@@ -14,6 +14,7 @@ urlpatterns = [
     path('contact/', views.ContactView.as_view(), name='contact'),
     path('about/', views.AboutView.as_view(), name='about'),
     path('loginsuccess/', views.LoginsuccessView.as_view(), name='loginsuccess'),
+    path('contactsuccess/', views.ContactsuccessView.as_view(), name='contactsuccess'),
     path('thanks/', views.ThanksView.as_view(), name='thanks'),
     path('accounts/', include("accounts.urls", namespace="accounts")),
     path('accounts/', include("django.contrib.auth.urls")),

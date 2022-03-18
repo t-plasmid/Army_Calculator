@@ -32,7 +32,7 @@ class Brigade(models.Model):
     def __str__(self):
         return self.acronym
 
-    def get_custom_url(self):
+    def get_update_url(self):
         return reverse(
             "movement:update_brigade",
             kwargs={
@@ -40,25 +40,9 @@ class Brigade(models.Model):
             }
         )
 
-    def get_update_url2(self):
-        return reverse(
-            "movement:_update_brigade",
-            kwargs={
-                "pk": self.pk,
-            }
-        )
-
-    def get_custom_delete_url(self):
+    def get_delete_url(self):
         return reverse(
             "movement:delete_brigade",
-            kwargs={
-                "pk": self.pk,
-            }
-        )
-
-    def get_custom_delete_url2(self):
-        return reverse(
-            "movement:_delete_brigade",
             kwargs={
                 "pk": self.pk,
             }
@@ -98,7 +82,7 @@ class Movement_Data(models.Model):
             }
         )
 
-    def get_custom_url(self):
+    def get_update_url(self):
         return reverse(
             "movement:update_movement_plan",
             kwargs={
@@ -106,25 +90,9 @@ class Movement_Data(models.Model):
             }
         )
 
-    def get_custom_delete_url(self):
+    def get_delete_url(self):
         return reverse(
             "movement:delete_movement_plan",
-            kwargs={
-                "pk": self.pk,
-            }
-        )
-
-    def get_update_url2(self):
-        return reverse(
-            "movement:_update_movement_plan",
-            kwargs={
-                "pk": self.pk,
-            }
-        )
-
-    def get_delete_url2(self):
-        return reverse(
-            "movement:_delete_movement_plan",
             kwargs={
                 "pk": self.pk,
             }
@@ -144,7 +112,7 @@ class Unit(models.Model):
     def __str__(self):
         return self.acronym
 
-    def get_custom_url(self):
+    def get_update_url(self):
         return reverse(
             "movement:update_unit",
             kwargs={
@@ -152,25 +120,9 @@ class Unit(models.Model):
             }
         )
 
-    def get_update_url2(self):
-        return reverse(
-            "movement:_update_unit",
-            kwargs={
-                "pk": self.pk,
-            }
-        )
-
-    def get_custom_delete_url(self):
+    def get_delete_url(self):
         return reverse(
             "movement:delete_unit",
-            kwargs={
-                "pk": self.pk,
-            }
-        )
-
-    def get_custom_delete_url2(self):
-        return reverse(
-            "movement:_delete_unit",
             kwargs={
                 "pk": self.pk,
             }
@@ -189,7 +141,7 @@ class CP_Detail(models.Model):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
 
-    def get_custom_url(self):
+    def get_update_url(self):
         return reverse(
             "movement:update_cp_detail",
             kwargs={
@@ -197,54 +149,13 @@ class CP_Detail(models.Model):
             }
         )
 
-    def get_update_url2(self):
-        return reverse(
-            "movement:_update_cp_detail",
-            kwargs={
-                "pk": self.pk,
-            }
-        )
-
-    def get_custom_delete_url(self):
+    def get_delete_url(self):
         return reverse(
             "movement:delete_cp_detail",
             kwargs={
                 "pk": self.pk,
             }
         )
-
-    def get_custom_delete_url2(self):
-        return reverse(
-            "movement:_delete_cp_detail",
-            kwargs={
-                "pk": self.pk,
-            }
-        )
-
-    def get_update_url2(self):
-        return reverse(
-            "movement:_update_cp_detail",
-            kwargs={
-                "pk": self.pk,
-            }
-        )
-
-    def get_delete_url2(self):
-        return reverse(
-            "movement:_delete_cp_detail",
-            kwargs={
-                "pk": self.pk,
-            }
-        )
-
-    # def get_absolute_url(self):
-    #     return reverse(
-    #         "movement:cp_detail",
-    #         kwargs={
-    #             "username": self.user.username,
-    #             "pk": self.pk
-    #         }
-    #     )
 
     class Meta:
         ordering = ["id"]
@@ -274,7 +185,7 @@ class Unit_Detail(models.Model):
             }
         )
 
-    def get_custom_url(self):
+    def get_update_url(self):
         return reverse(
             "movement:update_unit_detail",
             kwargs={
@@ -282,46 +193,13 @@ class Unit_Detail(models.Model):
             }
         )
 
-    def get_update_url2(self):
-        return reverse(
-            "movement:_update_unit_detail",
-            kwargs={
-                "pk": self.pk,
-            }
-        )
-
-    def get_delete_url2(self):
-        return reverse(
-            "movement:_delete_unit_detail",
-            kwargs={
-                "pk": self.pk,
-            }
-        )
-
-    def get_custom_delete_url(self):
+    def get_delete_url(self):
         return reverse(
             "movement:delete_unit_detail",
             kwargs={
                 "pk": self.pk,
             }
         )
-
-    def get_custom_delete_url2(self):
-        return reverse(
-            "movement:_delete_unit_detail",
-            kwargs={
-                "pk": self.pk,
-            }
-        )
-
-    # def get_absolute_url(self):
-    #     return reverse(
-    #         "movement:unit_detail",
-    #         kwargs={
-    #             "username": self.user.username,
-    #             "pk": self.pk
-    #         }
-    #     )
 
     class Meta:
         ordering = ["id"]
@@ -339,7 +217,7 @@ class Packet_Detail(models.Model):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
 
-    def get_custom_url(self):
+    def get_update_url(self):
         return reverse(
             "movement:update_packet_detail",
             kwargs={
@@ -347,46 +225,13 @@ class Packet_Detail(models.Model):
             }
         )
 
-    def get_update_url2(self):
-        return reverse(
-            "movement:_update_packet_detail",
-            kwargs={
-                "pk": self.pk,
-            }
-        )
-
-    def get_delete_url2(self):
-        return reverse(
-            "movement:_delete_packet_detail",
-            kwargs={
-                "pk": self.pk,
-            }
-        )
-
-    def get_custom_delete_url(self):
+    def get_delete_url(self):
         return reverse(
             "movement:delete_packet_detail",
             kwargs={
                 "pk": self.pk,
             }
         )
-
-    def get_custom_delete_url2(self):
-        return reverse(
-            "movement:_delete_packet_detail",
-            kwargs={
-                "pk": self.pk,
-            }
-        )
-
-    # def get_absolute_url(self):
-    #     return reverse(
-    #         "movement:packet_detail",
-    #         kwargs={
-    #             "username": self.user.username,
-    #             "pk": self.pk
-    #         }
-    #     )
 
     class Meta:
         ordering = ["id"]

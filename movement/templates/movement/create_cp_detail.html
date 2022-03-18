@@ -1,48 +1,9 @@
-{% extends "layout.html" %}
+{% extends "movement/movement_layout.html" %}
 
 {% block breadcrumb %}
     <li class="breadcrumb-item active"><a href="{% url 'movement:movement_base' %}">Movement</a></li>
     <li class="breadcrumb-item active"><a href="{% url 'movement:create_movement_plan' %}">Create Movement Plan</a></li>
     <li class="breadcrumb-item active">CP Allocation</li>
-{% endblock %}
-
-{% block primary_navbar %}
-	<div class="dropdown">
-		<a href="#" class="d-flex align-items-center ms-5 mb-3 text-white text-decoration-none dropdown-toggle bi bi-patch-plus" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-			<!-- <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2"> -->
-			<span class="ms-1">Create/Update</span>
-		</a>
-		<ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-			<li><a class="dropdown-item" href="{% url 'movement:create_movement_plan' %}">Movement Plan</a></li>
-            <li><hr class="dropdown-divider"></li>
-			<li><a class="dropdown-item" href="{% url 'movement:create_brigade' %}">New Brigade Entry</a></li>
-			<li><a class="dropdown-item" href="{% url 'movement:create_unit' %}">New Unit Entry</a></li>
-		</ul>
-	</div>
-	<div class="dropdown">
-		<a href="#" class="d-flex align-items-center ms-5 mb-3 text-white text-decoration-none dropdown-toggle bi bi-pencil-square" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-			<!-- <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2"> -->
-			<span class="ms-1">Edit</span>
-		</a>
-    <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-      <li><a class="dropdown-item" href="{% url 'movement:update_delete_movement_plan_list' %}">Movement Plan</a></li>
-			<li><a class="dropdown-item" href="{% url 'movement:update_delete_cp_detail_list' %}">Allocated CP</a></li>
-			<li><a class="dropdown-item" href="{% url 'movement:update_delete_unit_detail_list' %}">Allocated Unit</a></li>
-			<li><a class="dropdown-item" href="{% url 'movement:update_delete_packet_detail_list' %}">Allocated Packet</a></li>
-			<li><hr class="dropdown-divider"></li>
-			<li><a class="dropdown-item" href="{% url 'movement:update_delete_brigade_list' %}">Brigade</a></li>
-			<li><a class="dropdown-item" href="{% url 'movement:update_delete_unit_list' %}">Unit</a></li>
-		</ul>
-	</div>
-	<div class="dropdown">
-		<a href="#" class="d-flex align-items-center ms-5 mb-3 text-white text-decoration-none dropdown-toggle bi bi-view-list" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-			<!-- <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2"> -->
-			<span class="ms-1">View</span>
-		</a>
-		<ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-			<li><a class="dropdown-item" href="{% url 'movement:all' %}">Movement Plan</a></li>
-		</ul>
-	</div>
 {% endblock %}
 
 {% block content %}
@@ -101,8 +62,8 @@
                                     <td>
                                     {% for cp_detail in cp_detail_create_list %}
                                         <div class="border-bottom" style="height:40px;">
-                                            <a href="{{ cp_detail.get_delete_url2 }}" class="btn btn-danger btn-sm bi bi-x-square"></a>
-                                            <a href="{{ cp_detail.get_update_url2 }}" class="btn btn-primary btn-sm bi bi-pen"></a>
+                                            <a href="{{ cp_detail.get_delete_url }}" class="btn btn-danger btn-sm bi bi-x-square"></a>
+                                            <a href="{{ cp_detail.get_update_url }}" class="btn btn-primary btn-sm bi bi-pen"></a>
                                             <form class="ajax_open_form btn">
                                                 {% csrf_token %}
                                                 <input type="submit" id="uid-{{cp_detail.id}}" class="btn btn-primary btn-sm" value="Open" />
@@ -116,46 +77,7 @@
                 </tbody>
               </table>
 
-              {% if is_paginated %}
-                <nav id="id_pagination" aria-label="CP pagination" class="mt-3 mb-3">
-                  <ul class="pagination">
-                    {% if page_obj.has_previous %}
-                      <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
-                      </li>
-                    {% else %}
-                      <li class="page-item disabled">
-                        <span class="page-link">Previous</span>
-                      </li>
-                    {% endif %}
-
-                    {% for page_num in paginator.page_range %}
-                      {% if page_obj.number == page_num %}
-                        <li class="page-item active">
-                          <span class="page-link">
-                            {{ page_num }}
-                            <span class="sr-only">*</span>
-                          </span>
-                        </li>
-                      {% else %}
-                        <li class="page-item">
-                          <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
-                        </li>
-                      {% endif %}
-                    {% endfor %}
-
-                    {% if page_obj.has_next %}
-                      <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
-                      </li>
-                    {% else %}
-                      <li class="page-item disabled">
-                        <span class="page-link">Next</span>
-                      </li>
-                    {% endif %}
-                  </ul>
-                </nav>
-              {% endif %}
+              {% include 'movement/pagination.html' %}
 
             {% else %}
                 <p>There are no records!</p>

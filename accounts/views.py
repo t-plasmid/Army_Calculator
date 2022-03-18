@@ -20,5 +20,10 @@ class SignUp(CreateView):
 class ContactView(CreateView):
     template_name = 'accounts/contact.html'
     form_class = forms.ContactForm
-    success_url = reverse_lazy("accounts:contact")
+    success_url = reverse_lazy("contactsuccess")
+    extra_context = {
+        'title': 'Contact',
+        'sidebar': 'Account',
+        'year': datetime.now().year,
+    }
 

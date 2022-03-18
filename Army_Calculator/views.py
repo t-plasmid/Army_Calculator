@@ -51,6 +51,12 @@ class LoginsuccessView(TemplateView):
         'year': datetime.now().year,
     }
 
+class ContactsuccessView(TemplateView):
+    template_name = 'contactsuccess.html'
+    extra_context = {
+        'year': datetime.now().year,
+    }
+
 
 class ThanksView(TemplateView):
     template_name = 'thanks.html'

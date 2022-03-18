@@ -1,25 +1,23 @@
-from django.shortcuts import render
 from datetime import datetime
-from django.contrib.auth.mixins import (
-    LoginRequiredMixin,
-    PermissionRequiredMixin
-)
-from django.views import generic
-from django.urls import reverse_lazy
-from django.http import HttpResponseRedirect
-from startex import models
-from movement import models as mm
-from startex import forms
+
 from django.contrib.auth import get_user_model
+from django.contrib.auth.mixins import (
+    LoginRequiredMixin
+)
+from django.http import HttpResponseRedirect
 from django.http import JsonResponse
-from django.core import serializers
+from django.urls import reverse_lazy
+from django.views import generic
+
+from startex import forms
+from startex import models
 
 User = get_user_model()
 
 
 # Create your views here.
 
-#FBV
+# FBV
 
 def post_StartEx_Plan(request):
     if request.is_ajax and request.method == "POST":
@@ -29,6 +27,7 @@ def post_StartEx_Plan(request):
         return JsonResponse({"instance": ""}, status=200)
     # some error occured
     return JsonResponse({"error": ""}, status=400)
+
 
 def post_Unit_Detail(request):
     if request.is_ajax and request.method == "POST":
@@ -40,6 +39,7 @@ def post_Unit_Detail(request):
         return JsonResponse({"instance": ""}, status=200)
     # some error occured
     return JsonResponse({"error": ""}, status=400)
+
 
 def get_Unit_Detail(request):
     if request.is_ajax and request.method == "GET":
@@ -56,6 +56,7 @@ def get_Unit_Detail(request):
     # some error occured
     return JsonResponse({"error": ""}, status=400)
 
+
 def get_Vehicle_Detail(request):
     if request.is_ajax and request.method == "GET":
         if request.GET.get('sx_unit_id'):
@@ -66,11 +67,12 @@ def get_Vehicle_Detail(request):
             print(sx_unit_id)
             request.session['session_sx_u_id'] = sx_unit_id
         else:
-            request.session['session_sx_u_id']= 0
+            request.session['session_sx_u_id'] = 0
 
         return JsonResponse({"instance": ""}, status=200)
     # some error occured
     return JsonResponse({"error": ""}, status=400)
+
 
 def validate_Vehicle_Name(request):
     vehicle_name = request.GET.get('vehicle_name', None)
@@ -82,7 +84,7 @@ def validate_Vehicle_Name(request):
     return JsonResponse(data)
 
 
-#CBV
+# CBV
 # Base
 class StartEx_PlanBaseView(LoginRequiredMixin, generic.TemplateView):
     template_name = 'startex/startex_plan_base.html'
@@ -95,7 +97,7 @@ class StartEx_PlanBaseView(LoginRequiredMixin, generic.TemplateView):
         return context
 
 
-# View
+# List and Detail
 class List_StartEx_PlanView(LoginRequiredMixin, generic.ListView):
     model = models.StartEx_Plan
     template_name = 'startex/list_startex_plan.html'
@@ -108,7 +110,7 @@ class List_StartEx_PlanView(LoginRequiredMixin, generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super(List_StartEx_PlanView, self).get_context_data(**kwargs)
-        context['title'] = 'StartEx - List StartEx Plan'
+        context['title'] = 'StartEx - StartEx Plan List'
         context['sidebar'] = 'StartEx'
         context['year'] = datetime.now().year
         return context
@@ -132,7 +134,7 @@ class Detail_StartEx_PlanView(LoginRequiredMixin, generic.DetailView):
         context["sx_unit_detail"] = models.SX_Unit_Detail.objects.filter(
             sx_id__exact=self.kwargs.get("pk")
         ).order_by('id')
-        context['title'] = 'StartEx - Plan Detail View'
+        context['title'] = 'StartEx - StartEx Plan Detail'
         context['sidebar'] = 'StartEx'
         context['year'] = datetime.now().year
         return context
@@ -240,12 +242,6 @@ class Create_List_SX_Vehicle_DataView(LoginRequiredMixin, generic.CreateView, ge
         return context
 
     def get_queryset(self):
-        # self.request.session['session_chain'] = 1
-        # if self.request.session.get('session_sx_u_id', 0) == 0:
-        #     return models.SX_Vehicle_Data.objects.all().order_by('id')
-        # else:
-        #     return models.SX_Vehicle_Data.objects.filter(sx_u_id_id=self.request.session.get('session_sx_u_id', 0)).order_by(
-        #         'id')
         return models.SX_Vehicle_Data.objects.all().order_by('id')
 
 
@@ -277,6 +273,7 @@ class Create_StartEx_PlanView(LoginRequiredMixin, generic.CreateView, generic.Li
     def get_queryset(self):
         self.request.session['session_chain'] = 1
         return models.StartEx_Plan.objects.all().order_by('-created_at')
+
 
 class Create_List_SX_Unit_DetailView(LoginRequiredMixin, generic.CreateView, generic.ListView):
     template_name = 'startex/create_list_sx_unit_detail.html'
@@ -355,127 +352,20 @@ class Create_List_SX_Vehicle_DetailView(LoginRequiredMixin, generic.CreateView, 
 
 
 # Update
-class _Update_SX_Vehicle_DataView(LoginRequiredMixin, generic.UpdateView):
-    template_name = 'startex/update_sx_vehicle_data.html'
-    form_class = forms.SX_Vehicle_DataForm
-    model = models.SX_Vehicle_Data
-    success_url = '/startex/create_list_sx_vehicle_data'
-
-    def get_context_data(self, **kwargs):
-        context = super(_Update_SX_Vehicle_DataView, self).get_context_data(**kwargs)
-        context['title'] = 'StartEx - Update Vehicle Data'
-        context['sidebar'] = 'StartEx'
-        context['year'] = datetime.now().year
-        return context
-
-
 class Update_SX_Vehicle_DataView(LoginRequiredMixin, generic.UpdateView):
     template_name = 'startex/update_sx_vehicle_data.html'
     form_class = forms.SX_Vehicle_DataForm
     model = models.SX_Vehicle_Data
-    success_url = '/startex/edit_list_sx_vehicle_data'
+
+    def get_success_url(self):
+        if self.request.session.get('session_chain', 0) == 0:
+            return reverse_lazy('startex:edit_list_sx_vehicle_data')
+        else:
+            return reverse_lazy('startex:create_list_sx_vehicle_data')
 
     def get_context_data(self, **kwargs):
         context = super(Update_SX_Vehicle_DataView, self).get_context_data(**kwargs)
         context['title'] = 'StartEx - Update Vehicle Data'
-        context['sidebar'] = 'StartEx'
-        context['year'] = datetime.now().year
-        return context
-
-
-class _Update_StartEx_PlanView(LoginRequiredMixin, generic.UpdateView):
-    template_name = 'startex/update_startex_plan.html'
-    form_class = forms.StartEx_PlanForm
-    model = models.StartEx_Plan
-    success_url = '/startex/create_startex_plan'
-
-    def get_context_data(self, **kwargs):
-        context = super(_Update_StartEx_PlanView, self).get_context_data(**kwargs)
-        context['title'] = 'StartEx - Update StartEx Plan'
-        context['sidebar'] = 'StartEx'
-        context['year'] = datetime.now().year
-        return context
-
-
-class Update_StartEx_PlanView(LoginRequiredMixin, generic.UpdateView):
-    template_name = 'startex/update_startex_plan.html'
-    form_class = forms.StartEx_PlanForm
-    model = models.StartEx_Plan
-    success_url = '/startex/edit_list_startex_plan'
-
-    def get_context_data(self, **kwargs):
-        context = super(Update_StartEx_PlanView, self).get_context_data(**kwargs)
-        context['title'] = 'StartEx - Update StartEx Plan'
-        context['sidebar'] = 'StartEx'
-        context['year'] = datetime.now().year
-        return context
-
-
-class _Update_SX_Unit_DetailView(LoginRequiredMixin, generic.UpdateView):
-    template_name = 'startex/update_sx_unit_detail.html'
-    form_class = forms.SX_Unit_DetailForm
-    model = models.SX_Unit_Detail
-    success_url = '/startex/create_list_sx_unit_detail'
-
-    def get_context_data(self, **kwargs):
-        context = super(_Update_SX_Unit_DetailView, self).get_context_data(**kwargs)
-        context['title'] = 'StartEx - Update Allocated Unit Detail'
-        context['sidebar'] = 'StartEx'
-        context['year'] = datetime.now().year
-        return context
-
-
-class Update_SX_Unit_DetailView(LoginRequiredMixin, generic.UpdateView):
-    template_name = 'startex/update_sx_unit_detail.html'
-    form_class = forms.SX_Unit_DetailForm
-    model = models.SX_Unit_Detail
-    success_url = '/startex/edit_list_sx_unit_detail'
-
-    def get_context_data(self, **kwargs):
-        context = super(Update_SX_Unit_DetailView, self).get_context_data(**kwargs)
-        context['title'] = 'StartEx - Update Allocated Unit Detail'
-        context['sidebar'] = 'StartEx'
-        context['year'] = datetime.now().year
-        return context
-
-
-class _Update_SX_Vehicle_DetailView(LoginRequiredMixin, generic.UpdateView):
-    template_name = 'startex/update_sx_vehicle_detail.html'
-    form_class = forms.SX_Vehicle_DetailForm
-    model = models.SX_Vehicle_Detail
-    success_url = '/startex/create_list_sx_vehicle_detail'
-
-    def get_context_data(self, **kwargs):
-        context = super(_Update_SX_Vehicle_DetailView, self).get_context_data(**kwargs)
-        context['title'] = 'StartEx - Update Allocated Vehicle Detail'
-        context['sidebar'] = 'StartEx'
-        context['year'] = datetime.now().year
-        return context
-
-
-class Update_SX_Vehicle_DetailView(LoginRequiredMixin, generic.UpdateView):
-    template_name = 'startex/update_sx_vehicle_detail.html'
-    form_class = forms.SX_Vehicle_DetailForm
-    model = models.SX_Vehicle_Detail
-    success_url = '/startex/edit_list_sx_vehicle_detail'
-
-    def get_context_data(self, **kwargs):
-        context = super(Update_SX_Vehicle_DetailView, self).get_context_data(**kwargs)
-        context['title'] = 'StartEx - Update Allocated Vehicle Detail'
-        context['sidebar'] = 'StartEx'
-        context['year'] = datetime.now().year
-        return context
-
-
-# Delete
-class _Delete_SX_Vehicle_DataView(LoginRequiredMixin, generic.DeleteView):
-    template_name = 'startex/delete_sx_vehicle_data.html'
-    model = models.SX_Vehicle_Data
-    success_url = reverse_lazy('startex:create_list_sx_vehicle_data')
-
-    def get_context_data(self, **kwargs):
-        context = super(_Delete_SX_Vehicle_DataView, self).get_context_data(**kwargs)
-        context['title'] = 'StartEx - Delete Vehicle Data'
         context['sidebar'] = 'StartEx'
         context['year'] = datetime.now().year
         if self.request.session.get('session_chain', 0) == 0:
@@ -485,10 +375,85 @@ class _Delete_SX_Vehicle_DataView(LoginRequiredMixin, generic.DeleteView):
         return context
 
 
+class Update_StartEx_PlanView(LoginRequiredMixin, generic.UpdateView):
+    template_name = 'startex/update_startex_plan.html'
+    form_class = forms.StartEx_PlanForm
+    model = models.StartEx_Plan
+
+    def get_success_url(self):
+        if self.request.session.get('session_chain', 0) == 0:
+            return reverse_lazy('startex:edit_list_startex_plan')
+        else:
+            return reverse_lazy('startex:create_startex_plan')
+
+    def get_context_data(self, **kwargs):
+        context = super(Update_StartEx_PlanView, self).get_context_data(**kwargs)
+        context['title'] = 'StartEx - Update StartEx Plan'
+        context['sidebar'] = 'StartEx'
+        context['year'] = datetime.now().year
+        if self.request.session.get('session_chain', 0) == 0:
+            context['cancel_url'] = 'startex:edit_list_startex_plan'
+        else:
+            context['cancel_url'] = 'startex:create_startex_plan'
+        return context
+
+
+class Update_SX_Unit_DetailView(LoginRequiredMixin, generic.UpdateView):
+    template_name = 'startex/update_sx_unit_detail.html'
+    form_class = forms.SX_Unit_DetailForm
+    model = models.SX_Unit_Detail
+
+    def get_success_url(self):
+        if self.request.session.get('session_chain', 0) == 0:
+            return reverse_lazy('startex:edit_list_sx_unit_detail')
+        else:
+            return reverse_lazy('startex:create_list_sx_unit_detail')
+
+    def get_context_data(self, **kwargs):
+        context = super(Update_SX_Unit_DetailView, self).get_context_data(**kwargs)
+        context['title'] = 'StartEx - Update Allocated Unit Detail'
+        context['sidebar'] = 'StartEx'
+        context['year'] = datetime.now().year
+        if self.request.session.get('session_chain', 0) == 0:
+            context['cancel_url'] = 'startex:edit_list_sx_unit_detail'
+        else:
+            context['cancel_url'] = 'startex:create_list_sx_unit_detail'
+        return context
+
+
+class Update_SX_Vehicle_DetailView(LoginRequiredMixin, generic.UpdateView):
+    template_name = 'startex/update_sx_vehicle_detail.html'
+    form_class = forms.SX_Vehicle_DetailForm
+    model = models.SX_Vehicle_Detail
+
+    def get_success_url(self):
+        if self.request.session.get('session_chain', 0) == 0:
+            return reverse_lazy('startex:edit_list_sx_vehicle_detail')
+        else:
+            return reverse_lazy('startex:create_list_sx_vehicle_detail')
+
+    def get_context_data(self, **kwargs):
+        context = super(Update_SX_Vehicle_DetailView, self).get_context_data(**kwargs)
+        context['title'] = 'StartEx - Update Allocated Vehicle Detail'
+        context['sidebar'] = 'StartEx'
+        context['year'] = datetime.now().year
+        if self.request.session.get('session_chain', 0) == 0:
+            context['cancel_url'] = 'startex:edit_list_sx_vehicle_detail'
+        else:
+            context['cancel_url'] = 'startex:create_list_sx_vehicle_detail'
+        return context
+
+
+# Delete
 class Delete_SX_Vehicle_DataView(LoginRequiredMixin, generic.DeleteView):
     template_name = 'startex/delete_sx_vehicle_data.html'
     model = models.SX_Vehicle_Data
-    success_url = reverse_lazy('startex:edit_list_sx_vehicle_data')
+
+    def get_success_url(self):
+        if self.request.session.get('session_chain', 0) == 0:
+            return reverse_lazy('startex:edit_list_sx_vehicle_data')
+        else:
+            return reverse_lazy('startex:create_list_sx_vehicle_data')
 
     def get_context_data(self, **kwargs):
         context = super(Delete_SX_Vehicle_DataView, self).get_context_data(**kwargs)
@@ -502,57 +467,41 @@ class Delete_SX_Vehicle_DataView(LoginRequiredMixin, generic.DeleteView):
         return context
 
 
-class _Delete_StartEx_PlanView(LoginRequiredMixin, generic.DeleteView):
-    template_name = 'startex/delete_startex_plan.html'
-    model = models.StartEx_Plan
-    success_url = reverse_lazy('startex:create_startex_plan')
-
-    def get_context_data(self, **kwargs):
-        context = super(_Delete_StartEx_PlanView, self).get_context_data(**kwargs)
-        context['title'] = 'StartEx - Delete StartEx Plan'
-        context['sidebar'] = 'StartEx'
-        context['year'] = datetime.now().year
-        return context
-
-
 class Delete_StartEx_PlanView(LoginRequiredMixin, generic.DeleteView):
     template_name = 'startex/delete_startex_plan.html'
     model = models.StartEx_Plan
-    success_url = reverse_lazy('startex:edit_list_startex_plan')
+
+    def get_success_url(self):
+        if self.request.session.get('session_chain', 0) == 0:
+            return reverse_lazy('startex:edit_list_startex_plan')
+        else:
+            return reverse_lazy('startex:create_startex_plan')
 
     def get_context_data(self, **kwargs):
         context = super(Delete_StartEx_PlanView, self).get_context_data(**kwargs)
         context['title'] = 'StartEx - Delete StartEx Plan'
         context['sidebar'] = 'StartEx'
         context['year'] = datetime.now().year
-        return context
-
-
-class _Delete_SX_Unit_DetailView(LoginRequiredMixin, generic.DeleteView):
-    template_name = 'startex/delete_sx_unit_detail.html'
-    model = models.SX_Unit_Detail
-    success_url = reverse_lazy('startex:create_list_sx_unit_detail')
-
-    def get_context_data(self, **kwargs):
-        context = super(_Delete_SX_Unit_DetailView, self).get_context_data(**kwargs)
-        context['title'] = 'StartEx - Delete Allocated Unit Detail'
-        context['sidebar'] = 'StartEx'
-        context['year'] = datetime.now().year
         if self.request.session.get('session_chain', 0) == 0:
-            context['cancel_url'] = 'startex:edit_list_sx_unit_detail'
+            context['cancel_url'] = 'startex:edit_list_startex_plan'
         else:
-            context['cancel_url'] = 'startex:create_list_sx_unit_detail'
+            context['cancel_url'] = 'startex:create_startex_plan'
         return context
 
 
 class Delete_SX_Unit_DetailView(LoginRequiredMixin, generic.DeleteView):
     template_name = 'startex/delete_sx_unit_detail.html'
     model = models.SX_Unit_Detail
-    success_url = reverse_lazy('startex:edit_list_sx_unit_detail')
+
+    def get_success_url(self):
+        if self.request.session.get('session_chain', 0) == 0:
+            return reverse_lazy('startex:edit_list_sx_unit_detail')
+        else:
+            return reverse_lazy('startex:create_list_sx_unit_detail')
 
     def get_context_data(self, **kwargs):
         context = super(Delete_SX_Unit_DetailView, self).get_context_data(**kwargs)
-        context['title'] = 'StartEx - Delete Allocated Unit Detail'
+        context['title'] = 'StartEx - Remove Unit Detail'
         context['sidebar'] = 'StartEx'
         context['year'] = datetime.now().year
         if self.request.session.get('session_chain', 0) == 0:
@@ -562,31 +511,19 @@ class Delete_SX_Unit_DetailView(LoginRequiredMixin, generic.DeleteView):
         return context
 
 
-class _Delete_SX_Vehicle_DetailView(LoginRequiredMixin, generic.DeleteView):
-    template_name = 'startex/delete_sx_vehicle_detail.html'
-    model = models.SX_Vehicle_Detail
-    success_url = reverse_lazy('startex:create_list_sx_vehicle_detail')
-
-    def get_context_data(self, **kwargs):
-        context = super(_Delete_SX_Vehicle_DetailView, self).get_context_data(**kwargs)
-        context['title'] = 'StartEx - Delete Allocated Vehicle Detail'
-        context['sidebar'] = 'StartEx'
-        context['year'] = datetime.now().year
-        if self.request.session.get('session_chain', 0) == 0:
-            context['cancel_url'] = 'startex:edit_list_sx_vehicle_detail'
-        else:
-            context['cancel_url'] = 'startex:create_list_sx_vehicle_detail'
-        return context
-
-
 class Delete_SX_Vehicle_DetailView(LoginRequiredMixin, generic.DeleteView):
     template_name = 'startex/delete_sx_vehicle_detail.html'
     model = models.SX_Vehicle_Detail
-    success_url = reverse_lazy('startex:edit_list_sx_vehicle_detail')
+
+    def get_success_url(self):
+        if self.request.session.get('session_chain', 0) == 0:
+            return reverse_lazy('startex:edit_list_sx_vehicle_detail')
+        else:
+            return reverse_lazy('startex:create_list_sx_vehicle_detail')
 
     def get_context_data(self, **kwargs):
         context = super(Delete_SX_Vehicle_DetailView, self).get_context_data(**kwargs)
-        context['title'] = 'StartEx - Delete Allocated Vehicle Detail'
+        context['title'] = 'StartEx - Remove Vehicle Detail'
         context['sidebar'] = 'StartEx'
         context['year'] = datetime.now().year
         if self.request.session.get('session_chain', 0) == 0:
