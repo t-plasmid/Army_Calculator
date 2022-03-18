@@ -1,7 +1,7 @@
 {% extends "movement/movement_layout.html" %}
 
 {% block breadcrumb %}
-  <li class="breadcrumb-item active"><a href="{% url 'movement:movement_base' %}">Movement</a></li>
+  <li class="breadcrumb-item active"><a href="{% url 'movement:movement_plan_base' %}">Movement</a></li>
   <li class="breadcrumb-item active">New Movement Plan</li>
 {% endblock %}
 
@@ -95,7 +95,7 @@
         // serialize the data for sending the form data.
         var serializedData = $(this).serialize() + '&movement_plan_id=' + movement_plan_id;
         // Url
-        var url = "{% url 'movement:allocate_new_cp' %}"
+        var url = "{% url 'movement:create_list_mov_cp_detail' %}"
         // make POST ajax call
         $.ajax({
             type: 'POST',

@@ -141,10 +141,10 @@ class Detail_StartEx_PlanView(LoginRequiredMixin, generic.DetailView):
 
 
 # Edit
-class List_Edit_SX_Vehicle_DataView(LoginRequiredMixin, generic.ListView):
+class list_edit_vehicle_dataView(LoginRequiredMixin, generic.ListView):
     model = models.SX_Vehicle_Data
-    template_name = 'startex/list_edit_sx_vehicle_data.html'
-    context_object_name = 'list_edit_sx_vehicle_data'
+    template_name = 'startex/list_edit_vehicle_data.html'
+    context_object_name = 'list_edit_vehicle_data'
     paginate_by = 8
 
     def get_queryset(self):
@@ -152,7 +152,7 @@ class List_Edit_SX_Vehicle_DataView(LoginRequiredMixin, generic.ListView):
         return models.SX_Vehicle_Data.objects.all().order_by('id')
 
     def get_context_data(self, **kwargs):
-        context = super(List_Edit_SX_Vehicle_DataView, self).get_context_data(**kwargs)
+        context = super(list_edit_vehicle_dataView, self).get_context_data(**kwargs)
         context['title'] = 'StartEx - Edit Vehicle Data List'
         context['sidebar'] = 'StartEx'
         context['year'] = datetime.now().year
@@ -232,6 +232,7 @@ class Create_List_SX_Vehicle_DataView(LoginRequiredMixin, generic.CreateView, ge
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.save()
+        self.request.session['session_chain'] = 1
         return HttpResponseRedirect(self.get_success_url())
 
     def get_context_data(self, **kwargs):
@@ -359,7 +360,7 @@ class Update_SX_Vehicle_DataView(LoginRequiredMixin, generic.UpdateView):
 
     def get_success_url(self):
         if self.request.session.get('session_chain', 0) == 0:
-            return reverse_lazy('startex:edit_list_sx_vehicle_data')
+            return reverse_lazy('startex:list_edit_vehicle_data')
         else:
             return reverse_lazy('startex:create_list_sx_vehicle_data')
 
@@ -369,7 +370,7 @@ class Update_SX_Vehicle_DataView(LoginRequiredMixin, generic.UpdateView):
         context['sidebar'] = 'StartEx'
         context['year'] = datetime.now().year
         if self.request.session.get('session_chain', 0) == 0:
-            context['cancel_url'] = 'startex:edit_list_sx_vehicle_data'
+            context['cancel_url'] = 'startex:list_edit_vehicle_data'
         else:
             context['cancel_url'] = 'startex:create_list_sx_vehicle_data'
         return context
@@ -451,7 +452,7 @@ class Delete_SX_Vehicle_DataView(LoginRequiredMixin, generic.DeleteView):
 
     def get_success_url(self):
         if self.request.session.get('session_chain', 0) == 0:
-            return reverse_lazy('startex:edit_list_sx_vehicle_data')
+            return reverse_lazy('startex:list_edit_vehicle_data')
         else:
             return reverse_lazy('startex:create_list_sx_vehicle_data')
 
@@ -461,7 +462,7 @@ class Delete_SX_Vehicle_DataView(LoginRequiredMixin, generic.DeleteView):
         context['sidebar'] = 'StartEx'
         context['year'] = datetime.now().year
         if self.request.session.get('session_chain', 0) == 0:
-            context['cancel_url'] = 'startex:edit_list_sx_vehicle_data'
+            context['cancel_url'] = 'startex:list_edit_vehicle_data'
         else:
             context['cancel_url'] = 'startex:create_list_sx_vehicle_data'
         return context

@@ -1,7 +1,7 @@
 {% extends "movement/movement_layout.html" %}
 
 {% block breadcrumb %}
-  <li class="breadcrumb-item active"><a href="{% url 'movement:movement_base' %}">Movement</a></li>
+  <li class="breadcrumb-item active"><a href="{% url 'movement:movement_plan_base' %}">Movement</a></li>
   <li class="breadcrumb-item active">New Unit</li>
 {% endblock %}
 
@@ -17,7 +17,7 @@
   			{% csrf_token %}
   			{% bootstrap_form form layout='horizontal' %}
   			{% bootstrap_button button_type="submit" class="btn btn-primary" content="Add" %}
-  			<a class="ms-3 btn btn-primary" href="{% url 'movement:movement_base' %}" role="button">Done</a>
+  			<a class="ms-3 btn btn-primary" href="{% url 'movement:movement_plan_base' %}" role="button">Done</a>
       </form>
   	</div>
 

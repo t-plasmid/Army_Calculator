@@ -105,7 +105,7 @@ def get_Packet_Detail(request):
 # CBV
 # Base
 class Movement_PlanBaseView(LoginRequiredMixin, generic.TemplateView):
-    template_name = 'movement/movement_base.html'
+    template_name = 'movement/movement_plan_base.html'
 
     def get_context_data(self, **kwargs):
         context = super(Movement_PlanBaseView, self).get_context_data(**kwargs)
@@ -309,7 +309,7 @@ class Create_Movement_PlanView(LoginRequiredMixin, generic.CreateView, generic.L
         context['title'] = 'Movement - New Movement Plan'
         context['sidebar'] = 'Movement'
         context['year'] = datetime.now().year
-        context['open_url'] = 'movement:allocate_new_cp'
+        context['open_url'] = 'movement:create_list_mov_cp_detail'
         context['open_text'] = 'Open'
         return context
 
@@ -324,7 +324,7 @@ class Create_CP_DetailCreateListView(LoginRequiredMixin, generic.CreateView, gen
     form_class = forms.CP_DetailForm
     context_object_name = 'cp_detail_create_list'
     paginate_by = 20
-    success_url = '/movement/allocate_new_cp'
+    success_url = '/movement/create_list_mov_cp_detail'
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
@@ -340,7 +340,7 @@ class Create_CP_DetailCreateListView(LoginRequiredMixin, generic.CreateView, gen
         context['year'] = datetime.now().year
         context['m_id'] = self.request.session.get('session_m_id', 0)
         if self.request.session.get('session_chain', 0) == 0:
-            context['done_url'] = 'movement:movement_base'
+            context['done_url'] = 'movement:movement_plan_base'
             context['done_text'] = 'Close'
         else:
             context['done_url'] = 'movement:create_movement_plan'
@@ -361,7 +361,7 @@ class Create_Unit_DetailCreateListView(LoginRequiredMixin, generic.CreateView, g
     form_class = forms.Unit_DetailForm
     context_object_name = 'unit_detail_create_list'
     paginate_by = 5
-    success_url = '/movement/allocate_new_packet'
+    success_url = '/movement/create_list_mov_packet_detail'
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
@@ -377,10 +377,10 @@ class Create_Unit_DetailCreateListView(LoginRequiredMixin, generic.CreateView, g
         context['year'] = datetime.now().year
         context['m_id'] = self.request.session.get('session_m_id', 0)
         if self.request.session.get('session_chain', 0) == 0:
-            context['done_url'] = 'movement:movement_base'
+            context['done_url'] = 'movement:movement_plan_base'
             context['done_text'] = 'Close'
         else:
-            context['done_url'] = 'movement:allocate_new_cp'
+            context['done_url'] = 'movement:create_list_mov_cp_detail'
             context['done_text'] = 'Back'
         return context
 
@@ -398,7 +398,7 @@ class Create_Packet_DetailCreateListView(LoginRequiredMixin, generic.CreateView,
     form_class = forms.Packet_DetailForm
     context_object_name = 'packet_detail_create_list'
     paginate_by = 5
-    success_url = '/movement/allocate_new_packet'
+    success_url = '/movement/create_list_mov_packet_detail'
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
@@ -418,10 +418,10 @@ class Create_Packet_DetailCreateListView(LoginRequiredMixin, generic.CreateView,
         context['year'] = datetime.now().year
         context['u_id'] = self.request.session.get('session_u_id', 0)
         if self.request.session.get('session_chain', 0) == 0:
-            context['done_url'] = 'movement:movement_base'
+            context['done_url'] = 'movement:movement_plan_base'
             context['done_text'] = 'Close'
         else:
-            context['done_url'] = 'movement:allocate_new_unit'
+            context['done_url'] = 'movement:create_list_mov_unit_detail'
             context['done_text'] = 'Back'
         return context
 
@@ -439,7 +439,7 @@ class Create_BrigadeCreateListView(LoginRequiredMixin, generic.CreateView, gener
     model = models.Brigade
     form_class = forms.BrigadeForm
     context_object_name = 'brigade_create_list'
-    success_url = '/movement/create_brigade'
+    success_url = '/movement/create_list_brigade'
     paginate_by = 5
 
     def form_valid(self, form):
@@ -464,7 +464,7 @@ class Create_UnitCreateListView(LoginRequiredMixin, generic.CreateView, generic.
     model = models.Unit
     form_class = forms.UnitForm
     context_object_name = 'unit_create_list'
-    success_url = '/movement/create_unit'
+    success_url = '/movement/create_list_unit'
     paginate_by = 5
 
     def form_valid(self, form):
@@ -491,9 +491,9 @@ class Update_UnitView(LoginRequiredMixin, generic.UpdateView):
 
     def get_success_url(self):
         if self.request.session.get('session_chain', 0) == 0:
-            return reverse_lazy('movement:update_delete_unit_list')
+            return reverse_lazy('movement:list_edit_unit')
         else:
-            return reverse_lazy('movement:create_unit')
+            return reverse_lazy('movement:create_list_unit')
 
     def get_context_data(self, **kwargs):
         context = super(Update_UnitView, self).get_context_data(**kwargs)
@@ -501,9 +501,9 @@ class Update_UnitView(LoginRequiredMixin, generic.UpdateView):
         context['sidebar'] = 'Movement'
         context['year'] = datetime.now().year
         if self.request.session.get('session_chain', 0) == 0:
-            context['cancel_url'] = 'movement:update_delete_unit_list'
+            context['cancel_url'] = 'movement:list_edit_unit'
         else:
-            context['cancel_url'] = 'movement:create_unit'
+            context['cancel_url'] = 'movement:create_list_unit'
         return context
 
 
@@ -514,9 +514,9 @@ class Update_BrigadeView(LoginRequiredMixin, generic.UpdateView):
 
     def get_success_url(self):
         if self.request.session.get('session_chain', 0) == 0:
-            return reverse_lazy('movement:update_delete_brigade_list')
+            return reverse_lazy('movement:list_edit_brigade')
         else:
-            return reverse_lazy('movement:create_brigade')
+            return reverse_lazy('movement:create_list_brigade')
 
     def get_context_data(self, **kwargs):
         context = super(Update_BrigadeView, self).get_context_data(**kwargs)
@@ -524,9 +524,9 @@ class Update_BrigadeView(LoginRequiredMixin, generic.UpdateView):
         context['sidebar'] = 'Movement'
         context['year'] = datetime.now().year
         if self.request.session.get('session_chain', 0) == 0:
-            context['cancel_url'] = 'movement:update_delete_brigade_list'
+            context['cancel_url'] = 'movement:list_edit_brigade'
         else:
-            context['cancel_url'] = 'movement:create_brigade'
+            context['cancel_url'] = 'movement:create_list_brigade'
         return context
 
 
@@ -537,7 +537,7 @@ class Update_Movement_PlanView(LoginRequiredMixin, generic.UpdateView):
 
     def get_success_url(self):
         if self.request.session.get('session_chain', 0) == 0:
-            return reverse_lazy('movement:update_delete_movement_plan_list')
+            return reverse_lazy('movement:list_edit_movement_plan')
         else:
             return reverse_lazy('movement:create_movement_plan')
 
@@ -547,113 +547,113 @@ class Update_Movement_PlanView(LoginRequiredMixin, generic.UpdateView):
         context['sidebar'] = 'Movement'
         context['year'] = datetime.now().year
         if self.request.session.get('session_chain', 0) == 0:
-            context['cancel_url'] = 'movement:update_delete_movement_plan_list'
+            context['cancel_url'] = 'movement:list_edit_movement_plan'
         else:
             context['cancel_url'] = 'movement:create_movement_plan'
         return context
 
 
-class Update_CP_DetailView(LoginRequiredMixin, generic.UpdateView):
-    template_name = 'movement/update_cp_detail.html'
+class Update_Mov_CP_DetailView(LoginRequiredMixin, generic.UpdateView):
+    template_name = 'movement/update_mov_cp_detail.html'
     form_class = forms.CP_DetailForm
     model = models.CP_Detail
 
     def get_success_url(self):
         if self.request.session.get('session_chain', 0) == 0:
-            return reverse_lazy('movement:update_delete_cp_detail_list')
+            return reverse_lazy('movement:list_edit_mov_cp_detail')
         else:
-            return reverse_lazy('movement:allocate_new_cp')
+            return reverse_lazy('movemenCreate_CP_DetailCreateListViewt:create_list_mov_cp_detail')
 
     def get_context_data(self, **kwargs):
-        context = super(Update_CP_DetailView, self).get_context_data(**kwargs)
+        context = super(Update_Mov_CP_DetailView, self).get_context_data(**kwargs)
         context['title'] = 'Movement - Update Allocated CP'
         context['sidebar'] = 'Movement'
         context['year'] = datetime.now().year
         if self.request.session.get('session_chain', 0) == 0:
-            context['cancel_url'] = 'movement:update_delete_cp_detail_list'
+            context['cancel_url'] = 'movement:list_edit_mov_cp_detail'
         else:
-            context['cancel_url'] = 'movement:allocate_new_cp'
+            context['cancel_url'] = 'movement:create_list_mov_cp_detail'
         return context
 
 
-class Update_Unit_DetailView(LoginRequiredMixin, generic.UpdateView):
-    template_name = 'movement/update_unit_detail.html'
+class Update_Mov_Unit_DetailView(LoginRequiredMixin, generic.UpdateView):
+    template_name = 'movement/update_mov_unit_detail.html'
     form_class = forms.Unit_DetailForm
     model = models.Unit_Detail
 
     def get_success_url(self):
         if self.request.session.get('session_chain', 0) == 0:
-            return reverse_lazy('movement:update_delete_unit_detail_list')
+            return reverse_lazy('movement:list_edit_mov_unit_detail')
         else:
-            return reverse_lazy('movement:allocate_new_unit')
+            return reverse_lazy('movement:create_list_mov_unit_detail')
 
     def get_context_data(self, **kwargs):
-        context = super(Update_Unit_DetailView, self).get_context_data(**kwargs)
+        context = super(Update_Mov_Unit_DetailView, self).get_context_data(**kwargs)
         context['title'] = 'Movement - Update Allocated Unit'
         context['sidebar'] = 'Movement'
         context['year'] = datetime.now().year
         if self.request.session.get('session_chain', 0) == 0:
-            context['cancel_url'] = 'movement:update_delete_unit_detail_list'
+            context['cancel_url'] = 'movement:list_edit_mov_unit_detail'
         else:
-            context['cancel_url'] = 'movement:allocate_new_unit'
+            context['cancel_url'] = 'movement:create_list_mov_unit_detail'
         return context
 
 
-class Update_Packet_DetailView(LoginRequiredMixin, generic.UpdateView):
-    template_name = 'movement/update_packet_detail.html'
+class Update_Mov_Packet_DetailView(LoginRequiredMixin, generic.UpdateView):
+    template_name = 'movement/update_mov_packet_detail.html'
     form_class = forms.Packet_DetailForm
     model = models.Packet_Detail
 
     def get_success_url(self):
         if self.request.session.get('session_chain', 0) == 0:
-            return reverse_lazy('movement:update_delete_packet_detail_list')
+            return reverse_lazy('movement:list_edit_mov_packet_detail')
         else:
-            return reverse_lazy('movement:allocate_new_packet')
+            return reverse_lazy('movement:create_list_mov_packet_detail')
 
     def get_context_data(self, **kwargs):
-        context = super(Update_Packet_DetailView, self).get_context_data(**kwargs)
+        context = super(Update_Mov_Packet_DetailView, self).get_context_data(**kwargs)
         context['title'] = 'Movement - Update Allocated Packet'
         context['sidebar'] = 'Movement'
         context['year'] = datetime.now().year
         if self.request.session.get('session_chain', 0) == 0:
-            context['cancel_url'] = 'movement:update_delete_packet_detail_list'
+            context['cancel_url'] = 'movement:list_edit_mov_packet_detail'
         else:
-            context['cancel_url'] = 'movement:allocate_new_packet'
+            context['cancel_url'] = 'movement:create_list_mov_packet_detail'
         return context
 
 
 # Delete
-class Delete_Unit_DetailView(LoginRequiredMixin, generic.DeleteView):
-    template_name = 'movement/confirm_delete_unit_detail.html'
+class Delete_Mov_Unit_DetailView(LoginRequiredMixin, generic.DeleteView):
+    template_name = 'movement/delete_mov_unit_detail.html'
     model = models.Unit_Detail
 
     def get_success_url(self):
         if self.request.session.get('session_chain', 0) == 0:
-            return reverse_lazy('movement:update_delete_unit_detail_list')
+            return reverse_lazy('movement:list_edit_mov_unit_detail')
         else:
-            return reverse_lazy('movement:allocate_new_unit')
+            return reverse_lazy('movement:create_list_mov_unit_detail')
 
     def get_context_data(self, **kwargs):
-        context = super(Delete_Unit_DetailView, self).get_context_data(**kwargs)
+        context = super(Delete_Mov_Unit_DetailView, self).get_context_data(**kwargs)
         context['title'] = 'Movement - Remove Unit'
         context['sidebar'] = 'Movement'
         context['year'] = datetime.now().year
         if self.request.session.get('session_chain', 0) == 0:
-            context['cancel_url'] = 'movement:update_delete_unit_detail_list'
+            context['cancel_url'] = 'movement:list_edit_mov_unit_detail'
         else:
-            context['cancel_url'] = 'movement:allocate_new_unit'
+            context['cancel_url'] = 'movement:create_list_mov_unit_detail'
         return context
 
 
 class Delete_UnitView(LoginRequiredMixin, generic.DeleteView):
-    template_name = 'movement/confirm_delete_unit.html'
+    template_name = 'movement/delete_unit.html'
     model = models.Unit
 
     def get_success_url(self):
         if self.request.session.get('session_chain', 0) == 0:
-            return reverse_lazy('movement:update_delete_unit_list')
+            return reverse_lazy('movement:list_edit_unit')
         else:
-            return reverse_lazy('movement:create_unit')
+            return reverse_lazy('movement:create_list_unit')
 
     def get_context_data(self, **kwargs):
         context = super(Delete_UnitView, self).get_context_data(**kwargs)
@@ -661,41 +661,41 @@ class Delete_UnitView(LoginRequiredMixin, generic.DeleteView):
         context['sidebar'] = 'Movement'
         context['year'] = datetime.now().year
         if self.request.session.get('session_chain', 0) == 0:
-            context['cancel_url'] = 'movement:update_delete_unit_list'
+            context['cancel_url'] = 'movement:list_edit_unit'
         else:
-            context['cancel_url'] = 'movement:create_unit'
+            context['cancel_url'] = 'movement:create_list_unit'
         return context
 
 
-class Delete_Packet_DetailView(LoginRequiredMixin, generic.DeleteView):
-    template_name = 'movement/confirm_delete_packet_detail.html'
+class Delete_Mov_Packet_DetailView(LoginRequiredMixin, generic.DeleteView):
+    template_name = 'movement/delete_mov_packet_detail.html'
     model = models.Packet_Detail
 
     def get_success_url(self):
         if self.request.session.get('session_chain', 0) == 0:
-            return reverse_lazy('movement:update_delete_packet_detail_list')
+            return reverse_lazy('movement:list_edit_mov_packet_detail')
         else:
-            return reverse_lazy('movement:allocate_new_packet')
+            return reverse_lazy('movement:create_list_mov_packet_detail')
 
     def get_context_data(self, **kwargs):
-        context = super(Delete_Packet_DetailView, self).get_context_data(**kwargs)
+        context = super(Delete_Mov_Packet_DetailView, self).get_context_data(**kwargs)
         context['title'] = 'Movement - Remove Packet'
         context['sidebar'] = 'Movement'
         context['year'] = datetime.now().year
         if self.request.session.get('session_chain', 0) == 0:
-            context['cancel_url'] = 'movement:update_delete_packet_detail_list'
+            context['cancel_url'] = 'movement:list_edit_mov_packet_detail'
         else:
-            context['cancel_url'] = 'movement:allocate_new_packet'
+            context['cancel_url'] = 'movement:create_list_mov_packet_detail'
         return context
 
 
 class Delete_Movement_PlanView(LoginRequiredMixin, generic.DeleteView):
-    template_name = 'movement/confirm_delete_movement_plan.html'
+    template_name = 'movement/delete_movement_plan.html'
     model = models.Movement_Data
 
     def get_success_url(self):
         if self.request.session.get('session_chain', 0) == 0:
-            return reverse_lazy('movement:update_delete_movement_plan_list')
+            return reverse_lazy('movement:list_edit_movement_plan')
         else:
             return reverse_lazy('movement:create_movement_plan')
 
@@ -705,42 +705,42 @@ class Delete_Movement_PlanView(LoginRequiredMixin, generic.DeleteView):
         context['sidebar'] = 'Movement'
         context['year'] = datetime.now().year
         if self.request.session.get('session_chain', 0) == 0:
-            context['cancel_url'] = 'movement:update_delete_movement_plan_list'
+            context['cancel_url'] = 'movement:list_edit_movement_plan'
         else:
             context['cancel_url'] = 'movement:create_movement_plan'
         return context
 
 
-class Delete_CP_DetailView(LoginRequiredMixin, generic.DeleteView):
-    template_name = 'movement/confirm_delete_cp_detail.html'
+class Delete_Mov_CP_DetailView(LoginRequiredMixin, generic.DeleteView):
+    template_name = 'movement/delete_mov_cp_detail.html'
     model = models.CP_Detail
 
     def get_success_url(self):
         if self.request.session.get('session_chain', 0) == 0:
-            return reverse_lazy('movement:update_delete_cp_detail_list')
+            return reverse_lazy('movement:list_edit_mov_cp_detail')
         else:
-            return reverse_lazy('movement:allocate_new_cp')
+            return reverse_lazy('movement:create_list_mov_cp_detail')
 
     def get_context_data(self, **kwargs):
-        context = super(Delete_CP_DetailView, self).get_context_data(**kwargs)
+        context = super(Delete_Mov_CP_DetailView, self).get_context_data(**kwargs)
         context['title'] = 'Movement - Remove CP'
         context['sidebar'] = 'Movement'
         context['year'] = datetime.now().year
         if self.request.session.get('session_chain', 0) == 0:
-            context['cancel_url'] = 'movement:update_delete_cp_detail_list'
+            context['cancel_url'] = 'movement:list_edit_mov_cp_detail'
         else:
-            context['cancel_url'] = 'movement:allocate_new_cp'
+            context['cancel_url'] = 'movement:create_list_mov_cp_detail'
         return context
 
 class Delete_BrigadeView(LoginRequiredMixin, generic.DeleteView):
-    template_name = 'movement/confirm_delete_brigade.html'
+    template_name = 'movement/delete_brigade.html'
     model = models.Brigade
 
     def get_success_url(self):
         if self.request.session.get('session_chain', 0) == 0:
-            return reverse_lazy('movement:update_delete_brigade_list')
+            return reverse_lazy('movement:list_edit_brigade')
         else:
-            return reverse_lazy('movement:create_brigade')
+            return reverse_lazy('movement:create_list_brigade')
 
     def get_context_data(self, **kwargs):
         context = super(Delete_BrigadeView, self).get_context_data(**kwargs)
@@ -748,7 +748,7 @@ class Delete_BrigadeView(LoginRequiredMixin, generic.DeleteView):
         context['sidebar'] = 'Movement'
         context['year'] = datetime.now().year
         if self.request.session.get('session_chain', 0) == 0:
-            context['cancel_url'] = 'movement:update_delete_brigade_list'
+            context['cancel_url'] = 'movement:list_edit_brigade'
         else:
-            context['cancel_url'] = 'movement:create_brigade'
+            context['cancel_url'] = 'movement:create_list_brigade'
         return context

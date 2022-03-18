@@ -75,7 +75,7 @@ class Movement_Data(models.Model):
 
     def get_absolute_url(self):
         return reverse(
-            "movement:movement_single",
+            "movement:detail_movement_plan",
             kwargs={
                 "brigade": self.brigade,
                 "pk": self.pk,
@@ -143,7 +143,7 @@ class CP_Detail(models.Model):
 
     def get_update_url(self):
         return reverse(
-            "movement:update_cp_detail",
+            "movement:update_mov_cp_detail",
             kwargs={
                 "pk": self.pk,
             }
@@ -151,7 +151,7 @@ class CP_Detail(models.Model):
 
     def get_delete_url(self):
         return reverse(
-            "movement:delete_cp_detail",
+            "movement:delete_mov_cp_detail",
             kwargs={
                 "pk": self.pk,
             }
@@ -177,7 +177,7 @@ class Unit_Detail(models.Model):
 
     def get_absolute_url(self):
         return reverse(
-            "movement:unit_single",
+            "movement:detail_movement_plan_by_unit",
             kwargs={
                 "unit": self.unit,
                 "pk": self.pk,
@@ -187,7 +187,7 @@ class Unit_Detail(models.Model):
 
     def get_update_url(self):
         return reverse(
-            "movement:update_unit_detail",
+            "movement:update_mov_unit_detail",
             kwargs={
                 "pk": self.pk,
             }
@@ -195,7 +195,7 @@ class Unit_Detail(models.Model):
 
     def get_delete_url(self):
         return reverse(
-            "movement:delete_unit_detail",
+            "movement:delete_mov_unit_detail",
             kwargs={
                 "pk": self.pk,
             }
@@ -219,7 +219,7 @@ class Packet_Detail(models.Model):
 
     def get_update_url(self):
         return reverse(
-            "movement:update_packet_detail",
+            "movement:update_mov_packet_detail",
             kwargs={
                 "pk": self.pk,
             }
@@ -227,7 +227,7 @@ class Packet_Detail(models.Model):
 
     def get_delete_url(self):
         return reverse(
-            "movement:delete_packet_detail",
+            "movement:delete_mov_packet_detail",
             kwargs={
                 "pk": self.pk,
             }

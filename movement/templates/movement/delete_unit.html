@@ -1,21 +1,21 @@
 {% extends "movement/movement_layout.html" %}
 
 {% block breadcrumb %}
-  <li class="breadcrumb-item active"><a href="{% url 'movement:movement_base' %}">Movement</a></li>
-  <li class="breadcrumb-item active">Delete Movement Plan</li>
+  <li class="breadcrumb-item active"><a href="{% url 'movement:movement_plan_base' %}">Movement</a></li>
+  <li class="breadcrumb-item active">Delete Unit</li>
 {% endblock %}
 
 {% block content %}
 	{% if request.user.is_authenticated %}
 		<div class="container">
 		  <div class="alert alert-danger lead" role="alert">
-			Confirm Delete Movement Plan!
+			Confirm Delete Unit!
 		  </div>
 		  {% load django_bootstrap5 %}
 			<div class="container">
 				<form method="POST" class="form">
 					{% csrf_token %}
-				  <p>Are you sure you want to delete movement plan for exercise "{{ object.exercise_name }}"?</p>
+				  <p>Are you sure you want to delete unit "{{ object.unit }}"?</p>
 					{% bootstrap_button button_type="submit" class="btn btn-primary" content="Confirm" %}
 					<a class="ms-3 btn btn-primary" href="{% url cancel_url %}" role="button">Cancel</a>
 			  </form>

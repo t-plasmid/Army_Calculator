@@ -24,7 +24,7 @@ urlpatterns = [
     path("create_list_sx_vehicle_detail/", views.Create_List_SX_Vehicle_DetailView.as_view(),
          name="create_list_sx_vehicle_detail"),
     # Edit
-    path("list_edit_sx_vehicle_data/", views.List_Edit_SX_Vehicle_DataView.as_view(), name="list_edit_sx_vehicle_data"),
+    path("list_edit_vehicle_data/", views.list_edit_vehicle_dataView.as_view(), name="list_edit_vehicle_data"),
     path("list_edit_startex_plan/", views.List_Edit_StartEx_PlanView.as_view(), name="list_edit_startex_plan"),
     path("list_edit_sx_unit_detail/", views.List_Edit_SX_Unit_DetailView.as_view(), name="list_edit_sx_unit_detail"),
     path("list_edit_sx_vehicle_detail/", views.List_Edit_SX_Vehicle_DetailView.as_view(),
