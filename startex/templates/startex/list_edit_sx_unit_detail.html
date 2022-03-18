@@ -1,8 +1,16 @@
 {% extends "./startex_layout.html" %}
 
 {% block breadcrumb %}
-  <li class="breadcrumb-item active"><a href="{% url 'movement:movement_plan_base' %}">Movement</a></li>
+  <li class="breadcrumb-item active"><a href="{% url 'startex:startex_plan_base' %}">StartEx</a></li>
 	<li class="breadcrumb-item active">Update/Delete Movement Plan List</li>
+{% endblock %}
+
+{% block searchbar %}
+    <form class="d-flex" action="{% url 'startex:list_edit_sx_unit_detail' %}">
+      {% csrf_token %}
+      <input class="form-control me-2" type="search" placeholder="StartEx - Search" aria-label="Search" name="search">
+      <button class="btn btn-success me-2" type="submit">Search</button>
+    </form>
 {% endblock %}
 
 {% block content %}

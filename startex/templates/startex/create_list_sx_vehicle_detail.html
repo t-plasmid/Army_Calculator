@@ -7,8 +7,34 @@
     <li class="breadcrumb-item active">Create Vehicle Allocation</li>
 {% endblock %}
 
+{% block searchbar %}
+    <form class="d-flex" action="{% url 'startex:create_list_sx_vehicle_detail' %}">
+      {% csrf_token %}
+      <input class="form-control me-2" type="search" placeholder="StartEx - Search" aria-label="Search" name="search">
+      <button class="btn btn-success me-2" type="submit">Search</button>
+    </form>
+{% endblock %}
+
 {% block content %}
     {% if request.user.is_authenticated %}
+        {% if searchbool %}
+            <div class="container">
+                <hr class="bg-danger border-2 border-top border-danger">
+                <h2>Search Result</h2><br>
+                {% if vehicle_details %}
+                    {% for vehicle_detail in vehicle_details %}
+                        <h3>{{forloop.counter}}. {{vehicle_detail.sx_u_id}}</h3>
+                        <p class="lead">ID: {{vehicle_detail.id}}</p>
+                        <p>Vehicle: {{vehicle_detail.sx_v_id}}</p>
+                        <p>Qty: {{vehicle_detail.qty}}</p>
+                    {% endfor %}
+                {% else %}
+                    <p>Not found </p>
+                {% endif %}
+                <hr class="bg-danger border-2 border-top border-danger">
+            </div>
+        {% endif %}
+
         <div class="container">
             <div class="alert alert-info lead" role="alert">
                 Add Unit
@@ -76,11 +102,10 @@
         <script>
             $('#id_sx_u_id').val({{ sx_u_id }});
         </script>
-
-    {% else %}
-        <h1> You are not logged in</h1>
-    {% endif %}
-    </div>
+            </div>
+      {% else %}
+		<h1> You are not logged in</h1>
+	{% endif %}
 {% endblock %}
 
 {% block scripts %}

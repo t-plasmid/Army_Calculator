@@ -5,8 +5,36 @@
     <li class="breadcrumb-item active">Create StartEX Plan</li>
 {% endblock %}
 
+{% block searchbar %}
+    <form class="d-flex" action="{% url 'startex:create_startex_plan' %}">
+      {% csrf_token %}
+      <input class="form-control me-2" type="search" placeholder="StartEx - Search" aria-label="Search" name="search">
+      <button class="btn btn-success me-2" type="submit">Search</button>
+    </form>
+{% endblock %}
+
 {% block content %}
 	{% if request.user.is_authenticated %}
+        {% if searchbool %}
+            <div class="container">
+                <hr class="bg-danger border-2 border-top border-danger">
+                <h2>Search Result</h2><br>
+                {% if startex_plans %}
+                    {% for startex_plan in startex_plans %}
+                        <h3>{{forloop.counter}}. {{startex_plan.name}}</h3>
+                        <p class="lead">ID: {{startex_plan.id}}</p>
+                        <p>Description: {{startex_plan.description}}</p>
+                        <p>Brigade: {{startex_plan.brigade}}</p>
+                        <p>Date Created: {{startex_plan.created_at}}</p>
+                        <p>Created By: {{startex_plan.created_by}}</p>
+                    {% endfor %}
+                {% else %}
+                    <p>Not found </p>
+                {% endif %}
+                <hr class="bg-danger border-2 border-top border-danger">
+            </div>
+        {% endif %}
+
 		<div class="container">
 			<div class="alert alert-info lead" role="alert">Create StartEx Plan</div>
             {% load django_bootstrap5 %}

@@ -19,6 +19,23 @@
             <div class="container">
                 <hr class="bg-danger border-2 border-top border-danger">
                 <h2>Search Result</h2><br>
+                {% if unit_details %}
+                    {% for unit_detail in unit_details %}
+                        <h3>{{forloop.counter}}. {{unit_detail.sx_id}}</h3>
+                        <p class="lead">ID: {{unit_detail.id}}</p>
+                        <p>Unit: {{unit_detail.u_id}}</p>
+                    {% endfor %}
+                {% else %}
+                    <p>Not found </p>
+                {% endif %}
+                <hr class="bg-danger border-2 border-top border-danger">
+            </div>
+        {% endif %}
+
+        {% if searchbool %}
+            <div class="container">
+                <hr class="bg-danger border-2 border-top border-danger">
+                <h2>Search Result</h2><br>
                 {% if units %}
                     {% for unit in units %}
                         <h3>{{forloop.counter}}. {{unit.acronym}}</h3>

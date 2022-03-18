@@ -11,6 +11,7 @@ from django.views import generic
 
 from startex import forms
 from startex import models
+from django.db.models import Q
 
 User = get_user_model()
 
@@ -175,6 +176,14 @@ class list_edit_vehicle_dataView(LoginRequiredMixin, generic.ListView):
         context['title'] = 'StartEx - Edit Vehicle Data List'
         context['sidebar'] = 'StartEx'
         context['year'] = datetime.now().year
+        search_post = self.request.GET.get('search')
+        if search_post:
+            context['vehicle_data'] = models.SX_Vehicle_Data.objects.filter(
+                Q(id__icontains=search_post) | Q(name__icontains=search_post) | Q(
+                    model__icontains=search_post) | Q(category__icontains=search_post))
+            context['searchbool'] = 1
+        else:
+            context['searchbool'] = 0
         return context
 
 
@@ -193,6 +202,15 @@ class List_Edit_StartEx_PlanView(LoginRequiredMixin, generic.ListView):
         context['title'] = 'StartEx - Edit StartEx Plan List'
         context['sidebar'] = 'StartEx'
         context['year'] = datetime.now().year
+        search_post = self.request.GET.get('search')
+        if search_post:
+            context['startex_plans'] = models.StartEx_Plan.objects.filter(
+                Q(description__icontains=search_post) | Q(brigade__brigade__icontains=search_post) | Q(
+                    brigade__acronym__icontains=search_post) | Q(id__icontains=search_post) | Q(
+                    name__icontains=search_post))
+            context['searchbool'] = 1
+        else:
+            context['searchbool'] = 0
         return context
 
 
@@ -215,6 +233,14 @@ class List_Edit_SX_Unit_DetailView(LoginRequiredMixin, generic.ListView):
         context['title'] = 'StartEx - Edit Unit Detail List'
         context['sidebar'] = 'StartEx'
         context['year'] = datetime.now().year
+        search_post = self.request.GET.get('search')
+        if search_post:
+            context['unit_details'] = models.SX_Unit_Detail.objects.filter(
+                Q(id__icontains=search_post) | Q(sx_id__id__icontains=search_post) | Q(sx_id__name__icontains=search_post) | Q(
+                    u_id__unit__icontains=search_post) | Q(u_id__acronym__icontains=search_post))
+            context['searchbool'] = 1
+        else:
+            context['searchbool'] = 0
         return context
 
 
@@ -236,6 +262,14 @@ class List_Edit_SX_Vehicle_DetailView(LoginRequiredMixin, generic.ListView):
         context['title'] = 'StartEx - Edit Vehicle Detail List'
         context['sidebar'] = 'StartEx'
         context['year'] = datetime.now().year
+        search_post = self.request.GET.get('search')
+        if search_post:
+            context['vehicle_details'] = models.SX_Vehicle_Detail.objects.filter(
+                Q(sx_u_id__u_id__acronym__icontains=search_post) | Q(sx_u_id__u_id__unit__icontains=search_post) | Q(sx_u_id__sx_id__name__icontains=search_post) | Q(id__icontains=search_post) | Q(
+                    sx_v_id__name__icontains=search_post) | Q(qty__icontains=search_post))
+            context['searchbool'] = 1
+        else:
+            context['searchbool'] = 0
         return context
 
 
@@ -259,6 +293,14 @@ class Create_List_SX_Vehicle_DataView(LoginRequiredMixin, generic.CreateView, ge
         context['title'] = 'StartEx - Create New Vehicle Data'
         context['sidebar'] = 'StartEx'
         context['year'] = datetime.now().year
+        search_post = self.request.GET.get('search')
+        if search_post:
+            context['vehicle_data'] = models.SX_Vehicle_Data.objects.filter(
+                Q(id__icontains=search_post) | Q(name__icontains=search_post) | Q(
+                    model__icontains=search_post) | Q(category__icontains=search_post))
+            context['searchbool'] = 1
+        else:
+            context['searchbool'] = 0
         return context
 
     def get_queryset(self):
@@ -288,6 +330,15 @@ class Create_StartEx_PlanView(LoginRequiredMixin, generic.CreateView, generic.Li
         context['year'] = datetime.now().year
         context['open_url'] = 'startex:create_list_sx_unit_detail'
         context['open_text'] = 'Open'
+        search_post = self.request.GET.get('search')
+        if search_post:
+            context['startex_plans'] = models.StartEx_Plan.objects.filter(
+                Q(description__icontains=search_post) | Q(brigade__brigade__icontains=search_post) | Q(
+                    brigade__acronym__icontains=search_post) | Q(id__icontains=search_post) | Q(
+                    name__icontains=search_post))
+            context['searchbool'] = 1
+        else:
+            context['searchbool'] = 0
         return context
 
     def get_queryset(self):
@@ -316,6 +367,14 @@ class Create_List_SX_Unit_DetailView(LoginRequiredMixin, generic.CreateView, gen
         context['sidebar'] = 'StartEx'
         context['year'] = datetime.now().year
         context['sx_id'] = self.request.session.get('session_sx_id', 0)
+        search_post = self.request.GET.get('search')
+        if search_post:
+            context['unit_details'] = models.SX_Unit_Detail.objects.filter(
+                Q(id__icontains=search_post) | Q(sx_id__id__icontains=search_post) | Q(sx_id__name__icontains=search_post) | Q(
+                    u_id__unit__icontains=search_post) | Q(u_id__acronym__icontains=search_post))
+            context['searchbool'] = 1
+        else:
+            context['searchbool'] = 0
         if self.request.session.get('session_chain', 0) == 0:
             context['done_url'] = 'startex:startex_plan_base'
             context['done_text'] = 'Close'
@@ -354,6 +413,14 @@ class Create_List_SX_Vehicle_DetailView(LoginRequiredMixin, generic.CreateView, 
         context['sidebar'] = 'StartEx'
         context['year'] = datetime.now().year
         context['sx_u_id'] = self.request.session.get('session_sx_u_id', 0)
+        search_post = self.request.GET.get('search')
+        if search_post:
+            context['vehicle_details'] = models.SX_Vehicle_Detail.objects.filter(
+                Q(sx_u_id__u_id__acronym__icontains=search_post) | Q(sx_u_id__u_id__unit__icontains=search_post) | Q(sx_u_id__sx_id__name__icontains=search_post) | Q(id__icontains=search_post) | Q(
+                    sx_v_id__name__icontains=search_post) | Q(qty__icontains=search_post))
+            context['searchbool'] = 1
+        else:
+            context['searchbool'] = 0
         if self.request.session.get('session_chain', 0) == 0:
             context['done_url'] = 'startex:startex_plan_base'
             context['done_text'] = 'Close'

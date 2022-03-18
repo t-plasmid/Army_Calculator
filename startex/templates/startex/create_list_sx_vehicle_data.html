@@ -5,8 +5,34 @@
     <li class="breadcrumb-item active">New Vehicle Entry</li>
 {% endblock %}
 
+{% block searchbar %}
+    <form class="d-flex" action="{% url 'startex:create_list_sx_vehicle_data' %}">
+      {% csrf_token %}
+      <input class="form-control me-2" type="search" placeholder="StartEx - Search" aria-label="Search" name="search">
+      <button class="btn btn-success me-2" type="submit">Search</button>
+    </form>
+{% endblock %}
+
 {% block content %}
     {% if request.user.is_authenticated %}
+        {% if searchbool %}
+            <div class="container">
+                <hr class="bg-danger border-2 border-top border-danger">
+                <h2>Search Result</h2><br>
+                {% if vehicle_data %}
+                    {% for vehicle_datum in vehicle_data %}
+                        <h3>{{forloop.counter}}. {{vehicle_datum.name}}</h3>
+                        <p class="lead">ID: {{vehicle_datum.id}}</p>
+                        <p>Model: {{vehicle_datum.model}}</p>
+                        <p>Category: {{vehicle_datum.category}}</p>
+                    {% endfor %}
+                {% else %}
+                    <p>Not found </p>
+                {% endif %}
+                <hr class="bg-danger border-2 border-top border-danger">
+            </div>
+        {% endif %}
+
         <div class="container">
             <div class="alert alert-info lead" role="alert">New Vehicle Entry</div>
             {% load django_bootstrap5 %}
