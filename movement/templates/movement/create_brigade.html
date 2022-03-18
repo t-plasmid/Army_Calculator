@@ -57,3 +57,47 @@
 		<h1> You are not logged in</h1>
 	{% endif %}
 {% endblock content %}
+
+{% block scripts %}
+<script>
+    $("#id_brigade").change(function () {
+      var brigade_name = $(this).val();
+      $.ajax({
+        type: 'GET',
+        url: "{% url 'movement:validate_brigade_name' %}",
+        data: {
+          'brigade_name': brigade_name
+        },
+        dataType: 'json',
+        success: function (data) {
+          if (data.is_taken) {
+            alert(data.error_message);
+            var vehName = $("#id_brigade");
+            vehName.val("")
+            vehName.focus()
+          }
+        }
+      });
+    });
+
+    $("#id_acronym").change(function () {
+      var brigade_acronym_name = $(this).val();
+      $.ajax({
+        type: 'GET',
+        url: "{% url 'movement:validate_brigade_acronym_name' %}",
+        data: {
+          'brigade_acronym_name': brigade_acronym_name
+        },
+        dataType: 'json',
+        success: function (data) {
+          if (data.is_taken) {
+            alert(data.error_message);
+            var vehName = $("#id_acronym");
+            vehName.val("")
+            vehName.focus()
+          }
+        }
+      });
+    });
+</script>
+{% endblock scripts %}

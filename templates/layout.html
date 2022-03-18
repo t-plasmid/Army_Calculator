@@ -71,11 +71,10 @@
                     <!-- End -->
 
                     <!-- Search bar section starts -->
-                    <form class="d-flex" method="POST">
-                      {% csrf_token %}
-                      <input class="form-control me-2" type="search" placeholder="ToDo - Search" aria-label="Search">
-                      <button class="btn btn-success me-2" type="submit">Search</button>
-                    </form>
+<!--                    method="POST"-->
+                    {% block searchbar %}
+
+                    {% endblock %}
                     <!-- Ends -->
 
                     <!-- Login section starts -->

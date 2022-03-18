@@ -6,8 +6,35 @@
     <li class="breadcrumb-item active">CP Allocation</li>
 {% endblock %}
 
+{% block searchbar %}
+    <form class="d-flex" action="{% url 'movement:create_list_mov_cp_detail' %}">
+      {% csrf_token %}
+      <input class="form-control me-2" type="search" placeholder="Movement - Search" aria-label="Search" name="search">
+      <button class="btn btn-success me-2" type="submit">Search</button>
+    </form>
+{% endblock %}
+
 {% block content %}
     {% if request.user.is_authenticated %}
+        {% if searchbool %}
+            <div class="container">
+                <hr class="bg-danger border-2 border-top border-danger">
+                <h2>Search Result</h2><br>
+                {% if cp_details %}
+                    {% for cp_detail in cp_details %}
+                        <h3>{{forloop.counter}}. {{cp_detail.m_id}}</h3>
+                        <p class="lead">ID: {{cp_detail.id}}</p>
+                        <p>CP: {{cp_detail.cp_no}}</p>
+                        <p>Distance: {{cp_detail.distance}}</p>
+                        <p>Halt Time: {{cp_detail.halt_time}}</p>
+                    {% endfor %}
+                {% else %}
+                    <p>Not found </p>
+                {% endif %}
+                <hr class="bg-danger border-2 border-top border-danger">
+            </div>
+        {% endif %}
+
         <div class="container">
           <div class="alert alert-info lead" role="alert">
             CP Allocation
@@ -112,6 +139,28 @@
             }
         })
     })
+
+    $("#id_cp_no").change(function () {
+      var mov_id = $('#id_m_id').val();
+      var mov_cp_no = $(this).val();
+      $.ajax({
+        type: 'GET',
+        url: "{% url 'movement:validate_mov_cp_no' %}",
+        data: {
+          'mov_cp_no': mov_cp_no,
+          'mov_id': mov_id
+        },
+        dataType: 'json',
+        success: function (data) {
+          if (data.is_taken) {
+            alert(data.error_message);
+            var vehName = $("#id_cp_no");
+            vehName.val("")
+            vehName.focus()
+          }
+        }
+      });
+    });
 
     $(".ajax_open_form").submit(function (e) {
         var m_plan_id = $(this).closest('tr').children('td:first').text().split(" - ")[0];

@@ -103,5 +103,26 @@
         })
     })
 
+    $("#id_sx_v_id").change(function () {
+      var sx_u_id = $('#id_sx_u_id').val();
+      var sx_vehicle_name = $(this).val();
+      $.ajax({
+        type: 'GET',
+        url: "{% url 'startex:validate_sx_vehicle_name' %}",
+        data: {
+          'sx_vehicle_name': sx_vehicle_name,
+          'sx_u_id': sx_u_id
+        },
+        dataType: 'json',
+        success: function (data) {
+          if (data.is_taken) {
+            alert(data.error_message);
+            var vehName = $("#id_sx_v_id");
+            vehName.val("")
+            vehName.focus()
+          }
+        }
+      });
+    });
 </script>
 {% endblock scripts %}

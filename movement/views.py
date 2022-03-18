@@ -19,12 +19,14 @@ from . import forms
 
 from django.contrib.auth import get_user_model
 from django.http import JsonResponse
+from django.db.models import Q
 
 User = get_user_model()
 
+
 # Create your views here.
 
-#FBV
+# FBV
 
 def post_Movement_Plan(request):
     if request.is_ajax and request.method == "POST":
@@ -34,6 +36,7 @@ def post_Movement_Plan(request):
         return JsonResponse({"instance": ""}, status=200)
     # some error occured
     return JsonResponse({"error": ""}, status=400)
+
 
 def post_CP_Detail(request):
     if request.is_ajax and request.method == "POST":
@@ -45,6 +48,7 @@ def post_CP_Detail(request):
         return JsonResponse({"instance": ""}, status=200)
     # some error occured
     return JsonResponse({"error": ""}, status=400)
+
 
 def get_CP_Detail(request):
     if request.is_ajax and request.method == "GET":
@@ -61,6 +65,7 @@ def get_CP_Detail(request):
     # some error occured
     return JsonResponse({"error": ""}, status=400)
 
+
 def post_Unit_Detail(request):
     if request.is_ajax and request.method == "POST":
         m_unit_id = request.POST.get('m_unit_id', None)
@@ -71,6 +76,7 @@ def post_Unit_Detail(request):
         return JsonResponse({"instance": ""}, status=200)
     # some error occured
     return JsonResponse({"error": ""}, status=400)
+
 
 def get_Unit_Detail(request):
     if request.is_ajax and request.method == "GET":
@@ -87,6 +93,7 @@ def get_Unit_Detail(request):
     # some error occured
     return JsonResponse({"error": ""}, status=400)
 
+
 def get_Packet_Detail(request):
     if request.is_ajax and request.method == "GET":
         if request.GET.get('u_id'):
@@ -102,6 +109,75 @@ def get_Packet_Detail(request):
     # some error occured
     return JsonResponse({"error": ""}, status=400)
 
+
+def validate_Brigade_Name(request):
+    brigade_name = request.GET.get('brigade_name', None)
+    data = {
+        'is_taken': models.Brigade.objects.filter(brigade__iexact=brigade_name).exists()
+    }
+    if data['is_taken']:
+        data['error_message'] = 'A brigade with this name already exists.'
+    return JsonResponse(data)
+
+def validate_Brigade_Acronym_Name(request):
+    brigade_acronym_name = request.GET.get('brigade_acronym_name', None)
+    data = {
+        'is_taken': models.Brigade.objects.filter(acronym__iexact=brigade_acronym_name).exists()
+    }
+    if data['is_taken']:
+        data['error_message'] = 'A brigade acronym with this name already exists.'
+    return JsonResponse(data)
+
+def validate_Unit_Name(request):
+    unit_name = request.GET.get('unit_name', None)
+    data = {
+        'is_taken': models.Unit.objects.filter(unit__iexact=unit_name).exists()
+    }
+    if data['is_taken']:
+        data['error_message'] = 'A unit with this name already exists.'
+    return JsonResponse(data)
+
+def validate_Unit_Acronym_Name(request):
+    unit_acronym_name = request.GET.get('unit_acronym_name', None)
+    data = {
+        'is_taken': models.Unit.objects.filter(acronym__iexact=unit_acronym_name).exists()
+    }
+    if data['is_taken']:
+        data['error_message'] = 'A unit acronym with this name already exists.'
+    return JsonResponse(data)
+
+
+def validate_Mov_CP_No(request):
+    mov_cp_no = request.GET.get('mov_cp_no', None)
+    mov_id = request.GET.get('mov_id', None)
+    data = {
+        'is_taken': models.CP_Detail.objects.filter(cp_no__iexact=mov_cp_no, m_id__id__iexact=mov_id).exists()
+    }
+    if data['is_taken']:
+        data['error_message'] = 'A CP with this number already exists.'
+    return JsonResponse(data)
+
+
+def validate_Mov_Unit_Name(request):
+    mov_unit_name = request.GET.get('mov_unit_name', None)
+    mov_id = request.GET.get('mov_id', None)
+    data = {
+        'is_taken': models.Unit_Detail.objects.filter(unit__id__iexact=mov_unit_name, m_id__id__iexact=mov_id).exists()
+    }
+    if data['is_taken']:
+        data['error_message'] = 'A unit with this name already exists.'
+    return JsonResponse(data)
+
+def validate_Mov_SubUnit_Name(request):
+    mov_subunit_name = request.GET.get('mov_subunit_name', None)
+    u_id = request.GET.get('u_id', None)
+    data = {
+        'is_taken': models.Packet_Detail.objects.filter(subunit__iexact=mov_subunit_name, u_id__id__iexact=u_id).exists()
+    }
+    if data['is_taken']:
+        data['error_message'] = 'A subunit with this name already exists.'
+    return JsonResponse(data)
+
 # CBV
 # Base
 class Movement_PlanBaseView(LoginRequiredMixin, generic.TemplateView):
@@ -113,6 +189,7 @@ class Movement_PlanBaseView(LoginRequiredMixin, generic.TemplateView):
         context['sidebar'] = 'Movement'
         context['year'] = datetime.now().year
         return context
+
 
 # List and Detail
 class Movement_PlanListView(LoginRequiredMixin, generic.ListView):
@@ -172,12 +249,13 @@ class Unit_DetailView(LoginRequiredMixin, generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super(Unit_DetailView, self).get_context_data(**kwargs)
         context["packet_detail"] = models.Packet_Detail.objects.filter(u_id__exact=self.kwargs.get("pk")
-        ).order_by('packet_no')
+                                                                       ).order_by('packet_no')
         context["cp_detail"] = models.CP_Detail.objects.all().order_by('cp_no')
         context['title'] = 'Movement - Movement Plan Unit Detail'
         context['sidebar'] = 'Movement'
         context['year'] = datetime.now().year
         return context
+
 
 # Edit
 class Edit_Unit_ListView(LoginRequiredMixin, generic.ListView):
@@ -287,6 +365,7 @@ class Edit_Packet_DetailListView(LoginRequiredMixin, generic.ListView):
         context['year'] = datetime.now().year
         return context
 
+
 # Create
 class Create_Movement_PlanView(LoginRequiredMixin, generic.CreateView, generic.ListView):
     template_name = 'movement/create_movement_plan.html'
@@ -311,6 +390,20 @@ class Create_Movement_PlanView(LoginRequiredMixin, generic.CreateView, generic.L
         context['year'] = datetime.now().year
         context['open_url'] = 'movement:create_list_mov_cp_detail'
         context['open_text'] = 'Open'
+        search_post = self.request.GET.get('search')
+        if search_post:
+            context['movement_plans'] = models.Movement_Data.objects.filter(
+                Q(serial__icontains=search_post) | Q(exercise_name__icontains=search_post) | Q(
+                    route_name__icontains=search_post) | Q(description__icontains=search_post) | Q(
+                    speed__icontains=search_post) | Q(traffic_density__icontains=search_post) | Q(
+                    packet_gap__icontains=search_post) | Q(unit_gap__icontains=search_post) | Q(
+                    packet_size__icontains=search_post) | Q(route_type__route_type__icontains=search_post) | Q(
+                    route_type__acronym__icontains=search_post) | Q(brigade__brigade__icontains=search_post) | Q(
+                    brigade__acronym__icontains=search_post) | Q(id__icontains=search_post))
+            context['searchbool'] = 1
+        else:
+            context['searchbool'] = 0
+        # context['movement_plans'] = models.Movement_Data.objects.all().order_by("-created_at")
         return context
 
     def get_queryset(self):
@@ -339,6 +432,15 @@ class Create_CP_DetailCreateListView(LoginRequiredMixin, generic.CreateView, gen
         context['sidebar'] = 'Movement'
         context['year'] = datetime.now().year
         context['m_id'] = self.request.session.get('session_m_id', 0)
+        search_post = self.request.GET.get('search')
+        if search_post:
+            context['cp_details'] = models.CP_Detail.objects.filter(
+                Q(m_id__id__icontains=search_post) | Q(m_id__route_name__icontains=search_post) | Q(
+                    cp_no__icontains=search_post) | Q(distance__icontains=search_post) | Q(
+                    halt_time__icontains=search_post))
+            context['searchbool'] = 1
+        else:
+            context['searchbool'] = 0
         if self.request.session.get('session_chain', 0) == 0:
             context['done_url'] = 'movement:movement_plan_base'
             context['done_text'] = 'Close'
@@ -376,6 +478,16 @@ class Create_Unit_DetailCreateListView(LoginRequiredMixin, generic.CreateView, g
         context['sidebar'] = 'Movement'
         context['year'] = datetime.now().year
         context['m_id'] = self.request.session.get('session_m_id', 0)
+        search_post = self.request.GET.get('search')
+        if search_post:
+            context['unit_details'] = models.Unit_Detail.objects.filter(
+                Q(m_id__id__icontains=search_post) | Q(m_id__route_name__icontains=search_post) | Q(
+                    unit__unit__icontains=search_post) | Q(unit__acronym__icontains=search_post) | Q(
+                    packet_no__icontains=search_post) | Q(
+                    vehicle_qty__icontains=search_post))
+            context['searchbool'] = 1
+        else:
+            context['searchbool'] = 0
         if self.request.session.get('session_chain', 0) == 0:
             context['done_url'] = 'movement:movement_plan_base'
             context['done_text'] = 'Close'
@@ -417,6 +529,16 @@ class Create_Packet_DetailCreateListView(LoginRequiredMixin, generic.CreateView,
         context['sidebar'] = 'Movement'
         context['year'] = datetime.now().year
         context['u_id'] = self.request.session.get('session_u_id', 0)
+        search_post = self.request.GET.get('search')
+        if search_post:
+            context['packet_details'] = models.Packet_Detail.objects.filter(
+                Q(u_id__id__icontains=search_post) | Q(u_id__unit__unit__icontains=search_post) | Q(
+                    id__icontains=search_post) | Q(subunit__icontains=search_post) | Q(
+                    packet_no__icontains=search_post) | Q(
+                    vehicle_qty__icontains=search_post) | Q(u_id__unit__acronym__icontains=search_post))
+            context['searchbool'] = 1
+        else:
+            context['searchbool'] = 0
         if self.request.session.get('session_chain', 0) == 0:
             context['done_url'] = 'movement:movement_plan_base'
             context['done_text'] = 'Close'
@@ -482,6 +604,7 @@ class Create_UnitCreateListView(LoginRequiredMixin, generic.CreateView, generic.
 
     def get_queryset(self):
         return models.Unit.objects.all().order_by('id')
+
 
 # Update
 class Update_UnitView(LoginRequiredMixin, generic.UpdateView):
@@ -731,6 +854,7 @@ class Delete_Mov_CP_DetailView(LoginRequiredMixin, generic.DeleteView):
         else:
             context['cancel_url'] = 'movement:create_list_mov_cp_detail'
         return context
+
 
 class Delete_BrigadeView(LoginRequiredMixin, generic.DeleteView):
     template_name = 'movement/delete_brigade.html'

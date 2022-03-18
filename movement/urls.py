@@ -11,6 +11,13 @@ urlpatterns = [
     path('post/ajax/m_unit_detail', views.post_Unit_Detail, name="post_unit_detail"),
     path('get/ajax/m_unit_detail', views.get_Unit_Detail, name="get_unit_detail"),
     path('get/ajax/m_packet_detail', views.get_Packet_Detail, name="get_packet_detail"),
+    path('get/ajax/validate_brigade_name', views.validate_Brigade_Name, name="validate_brigade_name"),
+    path('get/ajax/validate_brigade_acronym_name', views.validate_Brigade_Acronym_Name, name="validate_brigade_acronym_name"),
+    path('get/ajax/validate_unit_name', views.validate_Unit_Name, name="validate_unit_name"),
+    path('get/ajax/validate_unit_acronym_name', views.validate_Unit_Acronym_Name, name="validate_unit_acronym_name"),
+    path('get/ajax/validate_mov_cp_no', views.validate_Mov_CP_No, name="validate_mov_cp_no"),
+    path('get/ajax/validate_mov_unit_name', views.validate_Mov_Unit_Name, name="validate_mov_unit_name"),
+    path('get/ajax/validate_mov_subunit_name', views.validate_Mov_SubUnit_Name, name="validate_mov_subunit_name"),
     # Base
     path('', views.Movement_PlanBaseView.as_view(), name="movement_plan_base"),
     # View

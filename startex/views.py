@@ -83,6 +83,25 @@ def validate_Vehicle_Name(request):
         data['error_message'] = 'A vehicle with this name already exists.'
     return JsonResponse(data)
 
+def validate_SX_Unit_Name(request):
+    sx_unit_name = request.GET.get('sx_unit_name', None)
+    sx_id = request.GET.get('sx_id', None)
+    data = {
+        'is_taken': models.SX_Unit_Detail.objects.filter(u_id__id__iexact=sx_unit_name, sx_id__id__iexact=sx_id).exists()
+    }
+    if data['is_taken']:
+        data['error_message'] = 'A unit with this name already exists.'
+    return JsonResponse(data)
+
+def validate_SX_Vehicle_Name(request):
+    sx_vehicle_name = request.GET.get('sx_vehicle_name', None)
+    sx_u_id = request.GET.get('sx_u_id', None)
+    data = {
+        'is_taken': models.SX_Vehicle_Detail.objects.filter(sx_v_id__id__iexact=sx_vehicle_name, sx_u_id__id__iexact=sx_u_id).exists()
+    }
+    if data['is_taken']:
+        data['error_message'] = 'A vehicle with this name already exists.'
+    return JsonResponse(data)
 
 # CBV
 # Base

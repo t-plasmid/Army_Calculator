@@ -10,6 +10,8 @@ urlpatterns = [
     path('get/ajax/sx_unit_detail', views.get_Unit_Detail, name="get_unit_detail"),
     path('get/ajax/sx_vehicle_detail', views.get_Vehicle_Detail, name="get_vehicle_detail"),
     path('get/ajax/validate_vehicle_name', views.validate_Vehicle_Name, name="validate_vehicle_name"),
+    path('get/ajax/validate_sx_unit_name', views.validate_SX_Unit_Name, name="validate_sx_unit_name"),
+    path('get/ajax/validate_sx_vehicle_name', views.validate_SX_Vehicle_Name, name="validate_sx_vehicle_name"),
     # Base
     path('', views.StartEx_PlanBaseView.as_view(), name="startex_plan_base"),
     # View

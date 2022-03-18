@@ -58,3 +58,47 @@
   {% endif %}
 </div>
 {% endblock %}
+
+{% block scripts %}
+<script>
+    $("#id_unit").change(function () {
+      var unit_name = $(this).val();
+      $.ajax({
+        type: 'GET',
+        url: "{% url 'movement:validate_unit_name' %}",
+        data: {
+          'unit_name': unit_name
+        },
+        dataType: 'json',
+        success: function (data) {
+          if (data.is_taken) {
+            alert(data.error_message);
+            var vehName = $("#id_unit");
+            vehName.val("")
+            vehName.focus()
+          }
+        }
+      });
+    });
+
+    $("#id_acronym").change(function () {
+      var unit_acronym_name = $(this).val();
+      $.ajax({
+        type: 'GET',
+        url: "{% url 'movement:validate_unit_acronym_name' %}",
+        data: {
+          'unit_acronym_name': unit_acronym_name
+        },
+        dataType: 'json',
+        success: function (data) {
+          if (data.is_taken) {
+            alert(data.error_message);
+            var vehName = $("#id_acronym");
+            vehName.val("")
+            vehName.focus()
+          }
+        }
+      });
+    });
+</script>
+{% endblock scripts %}
