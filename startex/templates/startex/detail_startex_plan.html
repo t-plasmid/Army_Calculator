@@ -1,4 +1,4 @@
-{% extends "./startex_layout.html" %}
+{% extends "./startex_layout_movement.html" %}
 
 {% block breadcrumb %}
   	<li class="breadcrumb-item active"><a href="{% url 'startex:startex_plan_base' %}">StartEx</a></li>
@@ -8,8 +8,10 @@
 
 {% block content %}
 	{% if request.user.is_authenticated %}
+        <div id="liveAlertPlaceholder"></div>
 		<div class="container">
 			<p hidden id="id_veh_found"></p>
+			<p id="id_veh_total"></p>
 		 	<p class="text-start mb-0"><strong>ID: </strong>{{ detail_startex_plan.id }}</p>
 			<h4 class="text-center"><strong>{{ detail_startex_plan.name }}</strong></h4>
 			<p class="text-center lead"><mark>{{ detail_startex_plan.brigade }}</mark></p>
@@ -43,6 +45,7 @@
 						{% for vehicle_data in sx_vehicle_data %}
 							<th scope="col">{{ vehicle_data.name }}</th>
 						{% endfor %}
+						<th>Total</th>
 				    </tr>
 				  </thead>
 				  <tbody id='main_tbody'>
@@ -58,6 +61,10 @@
 											if ({{vehicle_detail.qty}} > 0){
 												$("#id_veh_found").text('set');
 											}
+
+											var total = Number(document.getElementById("id_veh_total").textContent);
+											total = total + {{vehicle_detail.qty}};
+											document.getElementById("id_veh_total").textContent = total;
 										</script>
 									{% endif %}
 								{% endfor %}
@@ -69,6 +76,11 @@
 									$("#id_veh_found").text('');
 								</script>
 							{% endfor %}
+							<script>
+								var total = document.getElementById("id_veh_total").textContent;
+								document.write("<td><b>" + total + "</b></td>");
+								document.getElementById("id_veh_total").textContent = 0
+							</script>
 						</tr>
 				  	{% endfor %}
 				  </tbody>
@@ -79,3 +91,39 @@
 		<h1> You are not logged in</h1>
 	{% endif %}
 {% endblock %}
+
+{% block scripts %}
+<script>
+    // Alert - Start
+    var alertPlaceholder = document.getElementById('liveAlertPlaceholder');
+    function alert_guide(header, body, extra, instruction, furtherinfo) {
+        let code = "";
+        code += "<div class=\"alert alert-success\" role=\"alert\">\n";
+        code += "<p class=\"text-center bg-secondary text-white\">(Guide Mode)</p>\n";
+        code += "  <h4 class=\"alert-heading\">" + header + "</h4>\n";
+        code += "  <p>" + body + "</p>\n";
+        code += "  " + extra + "\n";
+        code += "  " + instruction + "\n";
+        code += "  <p></br>" + furtherinfo + "</p>\n";
+        code += "  <hr>\n";
+        code += "  <p class=\"mb-0 alert alert-warning\"><small><strong>Note:</strong> The administrator has activated \
+                    the guide mode on this web application.\n";
+
+        code += "</div>\n";
+
+        var wrapper = document.createElement('div');
+        wrapper.innerHTML = code;
+        alertPlaceholder.append(wrapper);
+    }
+
+    $(document).ready(function () {
+        var header = "Congratulation!";
+        var body = "You have just successfully created and viewed a StartEx plan.";
+        var extra = "Next, we will create a Movement plan based on the StartEx plan we just created. For this, please click the \"<code>Movement</code>\" link from the Navbar above.";
+        var instruction = "</br></br><b>Note: </b>You can also create your new Movement plan without using the StartEx plan.";
+        var furtherinfo = "";
+        alert_guide(header, body, extra, instruction, furtherinfo);
+    });
+    // Alert - End
+</script>
+{% endblock scripts %}

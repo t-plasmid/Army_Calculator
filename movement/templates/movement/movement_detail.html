@@ -8,6 +8,7 @@
 
 {% block content %}
 	{% if request.user.is_authenticated %}
+        <div id="liveAlertPlaceholder"></div>
 		<div class="container">
 				<p hidden id="my_date">{{movement_detail_detail.start_date|date:"Y-m-d"}}T{{movement_detail_detail.start_time|time:"H:i:s"}}.000Z</p>
 		    <p class="text-end mb-0"><strong>{{ movement_detail_detail.serial }}</strong></p>
@@ -108,6 +109,7 @@
 				      <th rowspan ="2" scope="col">Running Time (min)</th>
 				      <th rowspan ="2" scope="col">Total Time (min)</th>
 				      <th rowspan ="2" scope="col">View</th>
+
 
 				    </tr>
 						<tr class = "table-secondary align-middle" style="text-align: center;">
@@ -231,7 +233,7 @@
 
 								// View column
 								var unit_start_time_formatted = unit_start_time.toISOString();
-								var unit_start_time_url = "<td><a href='{{ unit.get_absolute_url }}?start_date=" + unit_start_time_formatted + "'>view</a></td>";
+								var unit_start_time_url = "<td><a href='{{ unit.get_absolute_url }}?start_date=" + unit_start_time_formatted + "'>view{% if forloop.counter == 1 %}<span class=\"spinner-grow spinner-grow-sm\" role=\"status\" aria-hidden=\"true\"></span>{% endif %}</a></td>";
 								document.write(unit_start_time_url);
 
 								document.write("</tr>");
@@ -380,5 +382,37 @@
 			$("#total_distance").text(total_distance);
 			$("#total_halt_time").text(total_halt);
 		});
+
+		// Alert - Start
+    var alertPlaceholder = document.getElementById('liveAlertPlaceholder');
+    function alert_guide(header, body, extra, instruction, furtherinfo) {
+        let code = "";
+        code += "<div class=\"alert alert-success\" role=\"alert\">\n";
+        code += "<p class=\"text-center bg-secondary text-white\">(Guide Mode)</p>\n";
+        code += "  <h4 class=\"alert-heading\">" + header + "</h4>\n";
+        code += "  <p>" + body + "</p>\n";
+        code += "  " + extra + "\n";
+        code += "  " + instruction + "\n";
+        code += "  <p></br>" + furtherinfo + "</p>\n";
+        code += "  <hr>\n";
+        code += "  <p class=\"mb-0 alert alert-warning\"><small><strong>Note:</strong> The administrator has activated \
+                    the guide mode on this web application.\n";
+
+        code += "</div>\n";
+
+        var wrapper = document.createElement('div');
+        wrapper.innerHTML = code;
+        alertPlaceholder.append(wrapper);
+    }
+
+    $(document).ready(function () {
+        var header = "View Movement Plan!";
+        var body = "Click on the \"<code>View</code>\" button highlighted below to view the Movement Plan you have just created.";
+        var extra = "";
+        var instruction = "";
+        var furtherinfo = "";
+        alert_guide(header, body, extra, instruction, furtherinfo);
+    });
+    // Alert - End
 	</script>
 {% endblock %}

@@ -1,15 +1,44 @@
-{% extends "layout.html" %}
+{% extends "layout_base_success.html" %}
 {% block content %}
-
-  <div class="container">
-    <p class="lead">You are now logged in!</p>
-    <!-- <h2><a href="% url 'groups:all'%}">Go to Groups</a></h2> -->
+  <div id="liveAlertPlaceholder"></div>
+  <div class="alert alert-success" role="alert">
+    You are now logged in!
   </div>
+
 
   <script>
     $(document).ready(function(){
         $('#v-sidebar').removeClass('d-md-block');
         $('#h-sidebar').addClass('d-none');      
     });
+
+    // Alert - Start
+    var alertPlaceholder = document.getElementById('liveAlertPlaceholder');
+    function alert_guide(header, body, extra, instruction) {
+        let code = "";
+        code += "<div class=\"alert alert-success\" role=\"alert\">\n";
+        code += "<p class=\"text-center bg-secondary text-white\">(Guide Mode)</p>\n";
+        code += "  <h4 class=\"alert-heading\">" + header + "</h4>\n";
+        code += "  <p>" + body + "</p>\n";
+        code += "  " + extra + "\n";
+        code += "  " + instruction + "\n";
+        code += "  <hr>\n";
+        code += "  <p class=\"mb-0 alert alert-warning\"><small><strong>Note:</strong> The administrator has activated \
+                    the guide mode on this web application.\n";
+        code += "</div>\n";
+
+        var wrapper = document.createElement('div');
+        wrapper.innerHTML = code;
+        alertPlaceholder.append(wrapper);
+    }
+
+    $(document).ready(function () {
+        var header = "First, a StartEx plan!";
+        var body = "We'll begin with the StartEx module. Please click the \"<code>StartEx</code>\" link from the Navbar above.";
+        var extra = "";
+        var instruction = "";
+        alert_guide(header, body, extra, instruction);
+    });
+    // Alert - End
   </script>
 {% endblock %}

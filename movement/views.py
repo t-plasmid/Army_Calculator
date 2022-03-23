@@ -33,6 +33,7 @@ def post_Movement_Plan(request):
         movement_plan_id = request.POST.get('movement_plan_id', None)
         request.session['session_m_id'] = movement_plan_id
         request.session['session_chain'] = 1
+        request.session['session_sx_guide'] = 0
         return JsonResponse({"instance": ""}, status=200)
     # some error occured
     return JsonResponse({"error": ""}, status=400)
@@ -45,6 +46,20 @@ def post_CP_Detail(request):
         request.session['session_cp_id'] = m_cp_id
         request.session['session_m_id'] = m_plan_id
         request.session['session_chain'] = 1
+        request.session['session_sx_guide'] = 0
+        return JsonResponse({"instance": ""}, status=200)
+    # some error occured
+    return JsonResponse({"error": ""}, status=400)
+
+
+def post_Unit_Detail(request):
+    if request.is_ajax and request.method == "POST":
+        m_unit_id = request.POST.get('m_unit_id', None)
+        m_plan_id = request.POST.get('m_plan_id', None)
+        request.session['session_u_id'] = m_unit_id
+        request.session['session_m_id'] = m_plan_id
+        request.session['session_chain'] = 1
+        request.session['session_sx_guide'] = 0
         return JsonResponse({"instance": ""}, status=200)
     # some error occured
     return JsonResponse({"error": ""}, status=400)
@@ -61,18 +76,6 @@ def get_CP_Detail(request):
         else:
             request.session['session_m_id'] = 0
 
-        return JsonResponse({"instance": ""}, status=200)
-    # some error occured
-    return JsonResponse({"error": ""}, status=400)
-
-
-def post_Unit_Detail(request):
-    if request.is_ajax and request.method == "POST":
-        m_unit_id = request.POST.get('m_unit_id', None)
-        m_plan_id = request.POST.get('m_plan_id', None)
-        request.session['session_u_id'] = m_unit_id
-        request.session['session_m_id'] = m_plan_id
-        request.session['session_chain'] = 1
         return JsonResponse({"instance": ""}, status=200)
     # some error occured
     return JsonResponse({"error": ""}, status=400)
@@ -188,6 +191,7 @@ class Movement_PlanBaseView(LoginRequiredMixin, generic.TemplateView):
         context['title'] = 'Movement - Base Page'
         context['sidebar'] = 'Movement'
         context['year'] = datetime.now().year
+        self.request.session['session_sx_guide'] = 0
         return context
 
 
@@ -437,16 +441,18 @@ class Create_Movement_PlanView(LoginRequiredMixin, generic.CreateView, generic.L
         self.object.save()
         self.request.session['session_m_id'] = self.object.pk
         self.request.session['session_chain'] = 1
+        self.request.session['session_sx_guide'] = 1
         return HttpResponseRedirect(self.get_success_url())
 
     def get_context_data(self, **kwargs):
         context = super(Create_Movement_PlanView, self).get_context_data(**kwargs)
-        context['title'] = 'Movement - New Movement Plan'
+        context['title'] = 'Movement - Movement Plan'
         context['sidebar'] = 'Movement'
         context['year'] = datetime.now().year
         context['open_url'] = 'movement:create_list_mov_cp_detail'
         context['open_text'] = 'Open'
         search_post = self.request.GET.get('search')
+        context['sx_guide'] = self.request.session.get('session_sx_guide', 0)
         if search_post:
             context['movement_plans'] = models.Movement_Data.objects.filter(
                 Q(serial__icontains=search_post) | Q(exercise_name__icontains=search_post) | Q(
@@ -480,6 +486,7 @@ class Create_CP_DetailCreateListView(LoginRequiredMixin, generic.CreateView, gen
         self.object.save()
         self.request.session['session_cp_id'] = self.object.pk
         self.request.session['session_m_id'] = self.object.m_id.pk
+        self.request.session['session_sx_guide'] = 1
         return HttpResponseRedirect(self.get_success_url())
 
     def get_context_data(self, **kwargs):
@@ -489,6 +496,7 @@ class Create_CP_DetailCreateListView(LoginRequiredMixin, generic.CreateView, gen
         context['year'] = datetime.now().year
         context['m_id'] = self.request.session.get('session_m_id', 0)
         search_post = self.request.GET.get('search')
+        context['sx_guide'] = self.request.session.get('session_sx_guide', 0)
         if search_post:
             context['cp_details'] = models.CP_Detail.objects.filter(
                 Q(m_id__id__icontains=search_post) | Q(m_id__route_name__icontains=search_post) | Q(
@@ -526,6 +534,7 @@ class Create_Unit_DetailCreateListView(LoginRequiredMixin, generic.CreateView, g
         self.object.save()
         self.request.session['session_u_id'] = self.object.pk
         self.request.session['session_m_id'] = self.object.m_id.pk
+        self.request.session['session_sx_guide'] = 1
         return HttpResponseRedirect(self.get_success_url())
 
     def get_context_data(self, **kwargs):
@@ -535,6 +544,7 @@ class Create_Unit_DetailCreateListView(LoginRequiredMixin, generic.CreateView, g
         context['year'] = datetime.now().year
         context['m_id'] = self.request.session.get('session_m_id', 0)
         search_post = self.request.GET.get('search')
+        context['sx_guide'] = self.request.session.get('session_sx_guide', 0)
         if search_post:
             context['unit_details'] = models.Unit_Detail.objects.filter(
                 Q(m_id__id__icontains=search_post) | Q(m_id__route_name__icontains=search_post) | Q(
@@ -573,6 +583,7 @@ class Create_Packet_DetailCreateListView(LoginRequiredMixin, generic.CreateView,
         self.object.save()
         self.request.session['session_u_id'] = self.object.u_id.id
         self.request.session['session_m_id'] = self.object.u_id.m_id.id
+        self.request.session['session_sx_guide'] = 1
         if models.Packet_Detail.objects.filter(u_id_id=self.object.u_id.id).count() > 0:
             models.Unit_Detail.objects.filter(id=self.object.u_id.id).update(packet_allocated=True)
         else:
@@ -586,6 +597,7 @@ class Create_Packet_DetailCreateListView(LoginRequiredMixin, generic.CreateView,
         context['year'] = datetime.now().year
         context['u_id'] = self.request.session.get('session_u_id', 0)
         search_post = self.request.GET.get('search')
+        context['sx_guide'] = self.request.session.get('session_sx_guide', 0)
         if search_post:
             context['packet_details'] = models.Packet_Detail.objects.filter(
                 Q(u_id__id__icontains=search_post) | Q(u_id__unit__unit__icontains=search_post) | Q(

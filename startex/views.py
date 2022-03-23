@@ -25,6 +25,7 @@ def post_StartEx_Plan(request):
         sx_plan_id = request.POST.get('sx_plan_id', None)
         request.session['session_sx_id'] = sx_plan_id
         request.session['session_chain'] = 1
+        request.session['session_sx_guide'] = 0
         return JsonResponse({"instance": ""}, status=200)
     # some error occured
     return JsonResponse({"error": ""}, status=400)
@@ -37,6 +38,7 @@ def post_Unit_Detail(request):
         request.session['session_sx_u_id'] = sx_unit_id
         request.session['session_sx_id'] = sx_plan_id
         request.session['session_chain'] = 1
+        request.session['session_sx_guide'] = 0
         return JsonResponse({"instance": ""}, status=200)
     # some error occured
     return JsonResponse({"error": ""}, status=400)
@@ -114,6 +116,7 @@ class StartEx_PlanBaseView(LoginRequiredMixin, generic.TemplateView):
         context['title'] = 'StartEx - Base Page'
         context['sidebar'] = 'StartEx'
         context['year'] = datetime.now().year
+        self.request.session['session_sx_guide'] = 0
         return context
 
 
@@ -321,6 +324,7 @@ class Create_StartEx_PlanView(LoginRequiredMixin, generic.CreateView, generic.Li
         self.object.save()
         self.request.session['session_sx_id'] = self.object.pk
         self.request.session['session_chain'] = 1
+        self.request.session['session_sx_guide'] = 1
         return HttpResponseRedirect(self.get_success_url())
 
     def get_context_data(self, **kwargs):
@@ -330,6 +334,7 @@ class Create_StartEx_PlanView(LoginRequiredMixin, generic.CreateView, generic.Li
         context['year'] = datetime.now().year
         context['open_url'] = 'startex:create_list_sx_unit_detail'
         context['open_text'] = 'Open'
+        context['sx_guide'] = self.request.session.get('session_sx_guide', 0)
         search_post = self.request.GET.get('search')
         if search_post:
             context['startex_plans'] = models.StartEx_Plan.objects.filter(
@@ -359,6 +364,7 @@ class Create_List_SX_Unit_DetailView(LoginRequiredMixin, generic.CreateView, gen
         self.object.save()
         self.request.session['session_sx_u_id'] = self.object.pk
         self.request.session['session_sx_id'] = self.object.sx_id.pk
+        self.request.session['session_sx_guide'] = 1
         return HttpResponseRedirect(self.get_success_url())
 
     def get_context_data(self, **kwargs):
@@ -367,6 +373,7 @@ class Create_List_SX_Unit_DetailView(LoginRequiredMixin, generic.CreateView, gen
         context['sidebar'] = 'StartEx'
         context['year'] = datetime.now().year
         context['sx_id'] = self.request.session.get('session_sx_id', 0)
+        context['sx_guide'] = self.request.session.get('session_sx_guide', 0)
         search_post = self.request.GET.get('search')
         if search_post:
             context['unit_details'] = models.SX_Unit_Detail.objects.filter(
@@ -405,6 +412,7 @@ class Create_List_SX_Vehicle_DetailView(LoginRequiredMixin, generic.CreateView, 
         self.object.save()
         self.request.session['session_sx_u_id'] = self.object.sx_u_id.id
         self.request.session['session_sx_id'] = self.object.sx_u_id.sx_id.id
+        self.request.session['session_sx_guide'] = 1
         return HttpResponseRedirect(self.get_success_url())
 
     def get_context_data(self, **kwargs):
@@ -413,6 +421,7 @@ class Create_List_SX_Vehicle_DetailView(LoginRequiredMixin, generic.CreateView, 
         context['sidebar'] = 'StartEx'
         context['year'] = datetime.now().year
         context['sx_u_id'] = self.request.session.get('session_sx_u_id', 0)
+        context['sx_guide'] = self.request.session.get('session_sx_guide', 0)
         search_post = self.request.GET.get('search')
         if search_post:
             context['vehicle_details'] = models.SX_Vehicle_Detail.objects.filter(

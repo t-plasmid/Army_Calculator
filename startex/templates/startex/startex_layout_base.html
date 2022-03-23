@@ -9,10 +9,10 @@
 	<div class="dropdown align-middle pt-3">
 		<a href="#" class="d-flex align-items-center ms-5 mb-3 text-white text-decoration-none dropdown-toggle" id="dropdownUser4" data-bs-toggle="dropdown" aria-expanded="false">
 			<!-- <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2"> -->
-			<span class="ms-1">Create/Update</span>
+			<span class="ms-1">Create/Update<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span></span>
 		</a>
 		<ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-			<li><a class="dropdown-item" href="{% url 'startex:create_startex_plan' %}">StartEx Plan</a></li>
+			<li><a class="dropdown-item" href="{% url 'startex:create_startex_plan' %}">StartEx Plan<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span></a></li>
             <li><hr class="dropdown-divider"></li>
 			<li><a class="dropdown-item" href="{% url 'startex:create_list_sx_vehicle_data' %}">New Vehicle Entry</a></li>
 		</ul>
@@ -31,10 +31,10 @@
 {% block primary_navbar %}
 	<div class="dropdown">
 		<a href="#" class="d-flex align-items-center ms-5 mb-3 text-white text-decoration-none dropdown-toggle bi bi-patch-plus" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-			<span class="ms-1">Create/Update</span>
+			<span class="ms-1">Create/Update<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span></span>
 		</a>
 		<ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-			<li><a class="dropdown-item" href="{% url 'startex:create_startex_plan' %}">StartEx Plan</a></li>
+			<li><a class="dropdown-item" href="{% url 'startex:create_startex_plan' %}">StartEx Plan<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span></a></li>
             <li><hr class="dropdown-divider"></li>
 			<li><a class="dropdown-item" href="{% url 'startex:create_list_sx_vehicle_data' %}">New Vehicle Entry</a></li>
 		</ul>

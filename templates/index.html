@@ -1,13 +1,8 @@
-{% extends "layout.html" %}
-{% block breadcrumb %}
-  <!-- <li class="breadcrumb-item active">Home</li> -->
-  <!-- <li class="breadcrumb-item active" aria-current="page">Library</li> -->
-  <!-- <li class="breadcrumb-item"><a href="#">Home</a></li>
-  <li class="breadcrumb-item active" aria-current="page">Library</li> -->
-{% endblock %}
+{% extends "layout_base.html" %}
 
 {% block content %}
 {% load static %}
+  <div id="liveAlertPlaceholder"></div>
   <div class="d-flex-container">
     <!-- ======= Hero Section ======= -->
     <section id="hero_index">
@@ -18,9 +13,9 @@
           <h1>New experience with Army Calculator</h1>
           <h2>In today's digital world, we must evolve the way we plan and manage movement of vehicles during an operation or exercise.</h2>
           {% if request.user.is_authenticated %}
-            <a href="{% url 'movement:movement_plan_base' %}" class="btn-get-started scrollto">Get started</a>
+            <a href="{% url 'startex:startex_plan_base' %}" class="btn-get-started scrollto">Get started</a>
           {% else %}
-            <a href="accounts/login" class="btn-get-started scrollto">Please login to begin</a>
+            <a href="accounts/login" class="btn-get-started scrollto" data-toggle="popover" title="Click here" data-content="">Please login to begin<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span></a>
           {% endif %}
         </div>
         <div class="col-lg-6 order-1 order-lg-2 hero-img" data-aos="fade-left">
@@ -32,4 +27,44 @@
     </section><!-- End Hero -->
   </div>
 
+<script>
+  // Alert - Start
+    var alertPlaceholder = document.getElementById('liveAlertPlaceholder');
+    function alert_guide(header, body, extra, instruction) {
+        let code = "";
+        code += "<div class=\"alert alert-success\" role=\"alert\">\n";
+        code += "<p class=\"text-center bg-secondary text-white\">(Guide Mode)</p>\n";
+        code += "  <h4 class=\"alert-heading\">" + header + "</h4>\n";
+        code += "  <p>" + body + "</p>\n";
+        code += "  " + extra + "\n";
+        code += "  " + instruction + "\n";
+        code += "  <hr>\n";
+        code += "  <p class=\"mb-0 alert alert-warning\"><small><strong>Note:</strong> The administrator has activated \
+                    the guide mode on this web application.\n";
+        code += "</div>\n";
+
+        var wrapper = document.createElement('div');
+        wrapper.innerHTML = code;
+        alertPlaceholder.append(wrapper);
+    }
+
+    $(document).ready(function () {
+        var header = "Let's start!";
+        var body = "This web application was created as part of a final year project. \
+        The main purpose of the application is to provide logistic planning officers with \
+        a tool to assist them with their complex logistic planning processes and calculations. \
+        There are two modules within the tool that address two distinct needs of the planner.";
+        var extra = "<ul>\n";
+        extra += "<li><strong>StartEx module</strong> -  The logistic planning officers can use this module to \
+                  allocate brigade and units, including vehicle type and quantity for each unit, for the \
+                  initial planning process.</li>\n";
+        extra += "<li><strong>Movement module</strong> - This module allows logistic planning officers to generate various \
+                  calculation outputs, which they can then use to supplement their final logistic planning process.</li>\n";
+        extra += "</ul>\n";
+        var instruction = "Click on the <code>\"Please login to begin\"</code> button to begin."
+        alert_guide(header, body, extra, instruction);
+    });
+    // Alert - End
+
+</script>
 {% endblock %}

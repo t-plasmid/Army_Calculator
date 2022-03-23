@@ -1,10 +1,4 @@
-{% extends "layout.html" %}
-{% block breadcrumb %}
-  <!-- <li class="breadcrumb-item active">Log in</li> -->
-  <!-- <li class="breadcrumb-item active" aria-current="page">Library</li> -->
-  <!-- <li class="breadcrumb-item"><a href="#">Home</a></li>
-  <li class="breadcrumb-item active" aria-current="page">Library</li> -->
-{% endblock %}
+{% extends "layout_base.html" %}
 
 {% block primary_navbar %}
 	<div class="">
@@ -25,19 +19,56 @@
 {% load django_bootstrap5 %}
 
 {% block content %}
-<div class="container">
-  <!-- <h1>Login</h1> -->
-  <form method="POST" class="form">
-    {% csrf_token %}
-    {% bootstrap_form form %}
-    {% bootstrap_button button_type="submit" class="btn btn-primary" content="Login" %}
-  </form>
-</div>
+	<div id="liveAlertPlaceholder"></div>
+	<div class="container">
+	  <!-- <h1>Login</h1> -->
+	  <form method="POST" class="form">
+		{% csrf_token %}
+		{% bootstrap_form form %}
+		{% bootstrap_button button_type="submit" class="btn btn-primary" content="Login" %}
+		  <a href="#" data-toggle="popover" title="Once the login information has been entered, click here" data-content=""><span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span></a>
+
+	  </form>
+	</div>
 
 <script>
   $(document).ready(function(){
       $('#v-sidebar').removeClass('d-md-block');
       $('#h-sidebar').addClass('d-none');
   });
+
+  // Alert - Start
+    var alertPlaceholder = document.getElementById('liveAlertPlaceholder');
+    function alert_guide(header, body, extra, instruction) {
+        let code = "";
+        code += "<div class=\"alert alert-success\" role=\"alert\">\n";
+        code += "<p class=\"text-center bg-secondary text-white\">(Guide Mode)</p>\n";
+        code += "  <h4 class=\"alert-heading\">" + header + "</h4>\n";
+        code += "  <p>" + body + "</p>\n";
+        code += "  " + extra + "\n";
+        code += "  " + instruction + "\n";
+        code += "  <hr>\n";
+        code += "  <p class=\"mb-0 alert alert-warning\"><small><strong>Note:</strong> The administrator has activated \
+                    the guide mode on this web application.\n";
+        code += "</div>\n";
+
+        var wrapper = document.createElement('div');
+        wrapper.innerHTML = code;
+        alertPlaceholder.append(wrapper);
+    }
+
+    $(document).ready(function () {
+        var header = "Log in!";
+        var body = "To \"<code>log in</code>\", please enter the username and password that were provided to you. \
+        			Alternatively, you can sign up for an account. For the time being, signup requests will be \
+        			automatically authorised without the need for approval by an administrator in order to expedite \
+        			and simplify application testing. In a production environment, however, any account request must be approved by an administrator.";
+
+        var extra = "";
+        var instruction = "";
+        alert_guide(header, body, extra, instruction);
+    });
+    // Alert - End
+
 </script>
 {% endblock %}

@@ -1,4 +1,4 @@
-{% extends "./startex_layout.html" %}
+{% extends "./startex_layout_base.html" %}
 
 {% block breadcrumb %}
   <li class="breadcrumb-item active">StartEx</li>
@@ -7,7 +7,7 @@
 {% block content %}
 {% load static %}
 {% if request.user.is_authenticated %}
-
+	<div id="liveAlertPlaceholder"></div>
   <div class="container mb-3">
     <section id="hero" class="d-flex align-items-center">
     <div class="container" data-aos="zoom-out" data-aos-delay="100">
@@ -131,90 +131,6 @@
         </div>
       </div>
 
-      <!-- <div class="col-lg-4 col-md-6 portfolio-item filter-app">
-        <div class="portfolio-wrap">
-          <img src="assets/img/portfolio/portfolio-3.jpg" class="img-fluid" alt="">
-          <div class="portfolio-links">
-            <a href="assets/img/portfolio/portfolio-3.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox" title="App 2"><i class="bi bi-plus"></i></a>
-            <a href="portfolio-details.html" title="More Details"><i class="bi bi-link"></i></a>
-          </div>
-          <div class="portfolio-info">
-            <h4>App 2</h4>
-            <p>App</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-lg-4 col-md-6 portfolio-item filter-web">
-        <div class="portfolio-wrap">
-          <img src="assets/img/portfolio/portfolio-5.jpg" class="img-fluid" alt="">
-          <div class="portfolio-links">
-            <a href="assets/img/portfolio/portfolio-5.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox" title="Web 2"><i class="bi bi-plus"></i></a>
-            <a href="portfolio-details.html" title="More Details"><i class="bi bi-link"></i></a>
-          </div>
-          <div class="portfolio-info">
-            <h4>Web 2</h4>
-            <p>Web</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-lg-4 col-md-6 portfolio-item filter-app">
-        <div class="portfolio-wrap">
-          <img src="assets/img/portfolio/portfolio-6.jpg" class="img-fluid" alt="">
-          <div class="portfolio-links">
-            <a href="assets/img/portfolio/portfolio-6.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox" title="App 3"><i class="bi bi-plus"></i></a>
-            <a href="portfolio-details.html" title="More Details"><i class="bi bi-link"></i></a>
-          </div>
-          <div class="portfolio-info">
-            <h4>App 3</h4>
-            <p>App</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-lg-4 col-md-6 portfolio-item filter-card">
-        <div class="portfolio-wrap">
-          <img src="assets/img/portfolio/portfolio-7.jpg" class="img-fluid" alt="">
-          <div class="portfolio-links">
-            <a href="assets/img/portfolio/portfolio-7.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox" title="Card 1"><i class="bi bi-plus"></i></a>
-            <a href="portfolio-details.html" title="More Details"><i class="bi bi-link"></i></a>
-          </div>
-          <div class="portfolio-info">
-            <h4>Card 1</h4>
-            <p>Card</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-lg-4 col-md-6 portfolio-item filter-card">
-        <div class="portfolio-wrap">
-          <img src="assets/img/portfolio/portfolio-8.jpg" class="img-fluid" alt="">
-          <div class="portfolio-links">
-            <a href="assets/img/portfolio/portfolio-8.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox" title="Card 3"><i class="bi bi-plus"></i></a>
-            <a href="portfolio-details.html" title="More Details"><i class="bi bi-link"></i></a>
-          </div>
-          <div class="portfolio-info">
-            <h4>Card 3</h4>
-            <p>Card</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-lg-4 col-md-6 portfolio-item filter-web">
-        <div class="portfolio-wrap">
-          <img src="assets/img/portfolio/portfolio-9.jpg" class="img-fluid" alt="">
-          <div class="portfolio-links">
-            <a href="assets/img/portfolio/portfolio-9.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox" title="Web 3"><i class="bi bi-plus"></i></a>
-            <a href="portfolio-details.html" title="More Details"><i class="bi bi-link"></i></a>
-          </div>
-          <div class="portfolio-info">
-            <h4>Web 3</h4>
-            <p>Web</p>
-          </div>
-        </div>
-      </div> -->
-
     </div>
 
   </div>
@@ -225,3 +141,38 @@
 {% endif %}
 
 {% endblock %}
+
+{% block scripts %}
+<script>
+    // Alert - Start
+    var alertPlaceholder = document.getElementById('liveAlertPlaceholder');
+    function alert_guide(header, body, extra, instruction) {
+        let code = "";
+        code += "<div class=\"alert alert-success\" role=\"alert\">\n";
+        code += "<p class=\"text-center bg-secondary text-white\">(Guide Mode)</p>\n";
+        code += "  <h4 class=\"alert-heading\">" + header + "</h4>\n";
+        code += "  <p>" + body + "</p>\n";
+        code += "  " + extra + "\n";
+        code += "  " + instruction + "\n";
+        code += "  <hr>\n";
+        code += "  <p class=\"mb-0 alert alert-warning\"><small><strong>Note:</strong> The administrator has activated \
+                    the guide mode on this web application.\n";
+
+        code += "</div>\n";
+
+        var wrapper = document.createElement('div');
+        wrapper.innerHTML = code;
+        alertPlaceholder.append(wrapper);
+    }
+
+    $(document).ready(function () {
+        var header = "Let's start with the StartEx module!";
+        var body = "This is the StartEx module's landing page. This page will contain pertinent information about this module. \
+                    There isn't much information here right now because we're figuring out what information our sponsors want displayed here.";
+        var extra = "Please select \"<code>StartEx Plan</code>\" from the \"<code>Create/Update</code>\" dropdown menu on the left vertical navbar.";
+        var instruction = "";
+        alert_guide(header, body, extra, instruction);
+    });
+    // Alert - End
+</script>
+{% endblock scripts %}

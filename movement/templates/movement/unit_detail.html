@@ -8,6 +8,7 @@
 
 {% block content %}
 	{% if request.user.is_authenticated %}
+        <div id="liveAlertPlaceholder"></div>
     <div class="container">
       <script>
         const params = new URLSearchParams(window.location.search);
@@ -348,5 +349,37 @@
 			$("#total_distance").text(total_distance);
 			$("#total_halt_time").text(total_halt);
 		});
+
+		// Alert - Start
+    var alertPlaceholder = document.getElementById('liveAlertPlaceholder');
+    function alert_guide(header, body, extra, instruction, furtherinfo) {
+        let code = "";
+        code += "<div class=\"alert alert-success\" role=\"alert\">\n";
+        code += "<p class=\"text-center bg-secondary text-white\">(Guide Mode)</p>\n";
+        code += "  <h4 class=\"alert-heading\">" + header + "</h4>\n";
+        code += "  <p>" + body + "</p>\n";
+        code += "  " + extra + "\n";
+        code += "  " + instruction + "\n";
+        code += "  <p></br>" + furtherinfo + "</p>\n";
+        code += "  <hr>\n";
+        code += "  <p class=\"mb-0 alert alert-warning\"><small><strong>Note:</strong> The administrator has activated \
+                    the guide mode on this web application.\n";
+
+        code += "</div>\n";
+
+        var wrapper = document.createElement('div');
+        wrapper.innerHTML = code;
+        alertPlaceholder.append(wrapper);
+    }
+
+    $(document).ready(function () {
+        var header = "That's all!";
+        var body = "You have successfully completed the application's guided tour. If you wish, you may explore the application's other features on your own time.";
+        var extra = "<code>Thank you.</code>";
+        var instruction = "";
+        var furtherinfo = "";
+        alert_guide(header, body, extra, instruction, furtherinfo);
+    });
+    // Alert - End
 	</script>
 {% endblock %}

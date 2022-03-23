@@ -7,6 +7,7 @@
 
 {% block content %}
   	{% if request.user.is_authenticated %}
+        <div id="liveAlertPlaceholder"></div>
     	<div class="alert alert-dark lead" role="alert">List StartEx Plan</div>
   			{% if list_startex_plan %}
 			  <div class="row">
@@ -20,7 +21,10 @@
 							<p class="card-text">{{startex_plan.description}}</p>
 								<p class="mb-0 card-text">Created at: {{startex_plan.created_at}}</p>
 								<p class="mt-0 card-text">Created by: {{startex_plan.created_by}}</p>
-							<a href="{{ startex_plan.get_detailview_url }}" class="btn btn-primary">View</a>
+							  <a href="{{ startex_plan.get_detailview_url }}" class="btn btn-primary">View</a>
+							  {% if forloop.counter == 1 %}
+								<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+							  {% endif %}
 						  </div>
 						</div>
 					{% endfor %}
@@ -35,3 +39,39 @@
 		<h1> You are not logged in</h1>
 	{% endif %}
 {% endblock %}
+
+{% block scripts %}
+<script>
+    // Alert - Start
+    var alertPlaceholder = document.getElementById('liveAlertPlaceholder');
+    function alert_guide(header, body, extra, instruction, furtherinfo) {
+        let code = "";
+        code += "<div class=\"alert alert-success\" role=\"alert\">\n";
+        code += "<p class=\"text-center bg-secondary text-white\">(Guide Mode)</p>\n";
+        code += "  <h4 class=\"alert-heading\">" + header + "</h4>\n";
+        code += "  <p>" + body + "</p>\n";
+        code += "  " + extra + "\n";
+        code += "  " + instruction + "\n";
+        code += "  <p></br>" + furtherinfo + "</p>\n";
+        code += "  <hr>\n";
+        code += "  <p class=\"mb-0 alert alert-warning\"><small><strong>Note:</strong> The administrator has activated \
+                    the guide mode on this web application.\n";
+
+        code += "</div>\n";
+
+        var wrapper = document.createElement('div');
+        wrapper.innerHTML = code;
+        alertPlaceholder.append(wrapper);
+    }
+
+    $(document).ready(function () {
+        var header = "View StartEx Plan!";
+        var body = "Click on the \"<code>View</code>\" button highlighted below to view the StartEx Plan you have just created.";
+        var extra = "";
+        var instruction = "";
+        var furtherinfo = "";
+        alert_guide(header, body, extra, instruction, furtherinfo);
+    });
+    // Alert - End
+</script>
+{% endblock scripts %}

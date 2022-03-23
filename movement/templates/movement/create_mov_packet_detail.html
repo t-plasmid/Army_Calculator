@@ -1,4 +1,4 @@
-{% extends "movement/movement_layout.html" %}
+{% extends "movement/movement_layout_view.html" %}
 
 {% block breadcrumb %}
     <li class="breadcrumb-item active"><a href="{% url 'movement:movement_plan_base' %}">Movement</a></li>
@@ -18,6 +18,7 @@
 
 {% block content %}
     {% if request.user.is_authenticated %}
+        <div id="liveAlertPlaceholder"></div>
         {% if searchbool %}
             <div class="container">
                 <hr class="bg-danger border-2 border-top border-danger">
@@ -44,7 +45,10 @@
             <form method="POST" class="form">
                 {% csrf_token %}
                 {% bootstrap_form form layout='horizontal' %}
-                {% bootstrap_button button_type="submit" class="btn btn-primary" content="Allocate" %}
+                {% bootstrap_button button_type="submit" class="btn btn-primary" content="Add" %}
+                {% if sx_guide == 0 %}
+                    <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                {% endif %}
                 <a id = 'id_done' class="ms-3 btn btn-primary" href="{% url done_url %}" role="button">{{ done_text }}</a>
           </form>
         </div>
@@ -171,5 +175,41 @@
         }
       });
     });
+
+    // Alert - Start
+    var alertPlaceholder = document.getElementById('liveAlertPlaceholder');
+    function alert_guide(header, body, extra, instruction, furtherinfo) {
+        let code = "";
+        code += "<div class=\"alert alert-success\" role=\"alert\">\n";
+        code += "<p class=\"text-center bg-secondary text-white\">(Guide Mode)</p>\n";
+        code += "  <h4 class=\"alert-heading\">" + header + "</h4>\n";
+        code += "  <p>" + body + "</p>\n";
+        code += "  " + extra + "\n";
+        code += "  " + instruction + "\n";
+        code += "  <p></br>" + furtherinfo + "</p>\n";
+        code += "  <hr>\n";
+        code += "  <p class=\"mb-0 alert alert-warning\"><small><strong>Note:</strong> The administrator has activated \
+                    the guide mode on this web application.\n";
+
+        code += "</div>\n";
+
+        var wrapper = document.createElement('div');
+        wrapper.innerHTML = code;
+        alertPlaceholder.append(wrapper);
+    }
+
+    $(document).ready(function () {
+        var header = "Finally, a packet allocation for subunits!";
+        var body = "Enter a subunit name, a packet number, and the vehicle quantity, and then click the \"<code>Add</code>\" \
+                button to add a new subunit's packet detail to the unit you've selected. Repeat the process to add more subunits' packet details to \
+                the unit you've selected.";
+        var extra = "<h5>For example:</h5>";
+        var instruction = "<b>Subunit: </b>11 Signal Regiment</br><b>Packet no: </b>1</br><b>Vehicle qty: </b>10";
+        var furtherinfo = "After you've added the subunit's packet detail, you can make changes by clicking the \"<code>Delete</code>\" or \"<code>Update</code>\" \
+                    buttons. Finally, please select \"<code>Movement Plan</code>\" from the \"<code>View</code>\" dropdown menu on the left vertical \
+                    navbar to view your Movement plan.";
+        alert_guide(header, body, extra, instruction, furtherinfo);
+    });
+    // Alert - End
 </script>
 {% endblock scripts %}

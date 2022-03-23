@@ -16,6 +16,7 @@
 
 {% block content %}
     {% if request.user.is_authenticated %}
+        <div id="liveAlertPlaceholder"></div>
         {% if searchbool %}
             <div class="container">
                 <hr class="bg-danger border-2 border-top border-danger">
@@ -43,6 +44,9 @@
                     {% csrf_token %}
                     {% bootstrap_form form layout='horizontal' %}
                     {% bootstrap_button button_type="submit" class="btn btn-primary" content="Add" %}
+                    {% if sx_guide == 0 %}
+                        <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                    {% endif %}
                     <a id = 'id_done' class="ms-3 btn btn-primary" href="{% url done_url %}" role="button">{{ done_text }}</a>
               </form>
             </div>
@@ -78,6 +82,11 @@
                                             <form class="ajax_open_form btn">
                                                 {% csrf_token %}
                                                 <input type="submit" id="uid-{{sx_unit_detail.id}}" class="btn btn-primary btn-sm" value="Open" />
+                                                {% if forloop.counter == 1 %}
+                                                    {% if sx_guide == 1 %}
+                                                        <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                                                    {% endif %}
+                                                {% endif %}
                                             </form>
                                         </div>
                                     {% endfor %}
@@ -168,5 +177,38 @@
             }
         })
     })
+
+    // Alert - Start
+    var alertPlaceholder = document.getElementById('liveAlertPlaceholder');
+    function alert_guide(header, body, extra, instruction, furtherinfo) {
+        let code = "";
+        code += "<div class=\"alert alert-success\" role=\"alert\">\n";
+        code += "<p class=\"text-center bg-secondary text-white\">(Guide Mode)</p>\n";
+        code += "  <h4 class=\"alert-heading\">" + header + "</h4>\n";
+        code += "  <p>" + body + "</p>\n";
+        code += "  " + extra + "\n";
+        code += "  " + instruction + "\n";
+        code += "  <p></br>" + furtherinfo + "</p>\n";
+        code += "  <hr>\n";
+        code += "  <p class=\"mb-0 alert alert-warning\"><small><strong>Note:</strong> The administrator has activated \
+                    the guide mode on this web application.\n";
+
+        code += "</div>\n";
+
+        var wrapper = document.createElement('div');
+        wrapper.innerHTML = code;
+        alertPlaceholder.append(wrapper);
+    }
+
+    $(document).ready(function () {
+        var header = "Next, a unit allocation!";
+        var body = "Select a relevant unit from the dropdown box and then click the \"<code>Add</code>\" button to add the unit to the StartEx plan created earlier. Repeat the process to add more units to the plan.";
+        var extra = "<h5>For example:</h5>";
+        var instruction = "<b>Unit: </b> 1 MERC";
+        var furtherinfo = "After you've added the unit, you can make changes by clicking the \"<code>Delete</code>\" or \"<code>Update</code>\" \
+                    buttons. Finally, click the \"<code>Open</code>\" button next to the newly created unit to allocate vehicle name and quantity.";
+        alert_guide(header, body, extra, instruction, furtherinfo);
+    });
+    // Alert - End
 </script>
 {% endblock scripts %}

@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "layout_movement.html" %}
 
 {% block breadcrumb %}
 
@@ -20,10 +20,18 @@
 	<div class="dropdown align-middle pt-3">
 		<a href="#" class="d-flex align-items-center ms-5 mb-3 text-white text-decoration-none dropdown-toggle" id="dropdownUser5" data-bs-toggle="dropdown" aria-expanded="false">
 			<!-- <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2"> -->
-			<span class="ms-1">View</span>
+			<span class="ms-1">View
+				{% if sx_guide == 1 %}
+                    <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                {% endif %}
+			</span>
 		</a>
 	  	<ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-			<li><a class="dropdown-item" href="{% url 'startex:list_startex_plan' %}">StartEx Plan</a></li>
+			<li><a class="dropdown-item" href="{% url 'startex:list_startex_plan' %}">StartEx Plan
+				{% if sx_guide == 1 %}
+                    <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                {% endif %}
+			</a></li>
 		</ul>
 	</div>
 {% endblock secondary_navbar %}
@@ -31,7 +39,7 @@
 {% block primary_navbar %}
 	<div class="dropdown">
 		<a href="#" class="d-flex align-items-center ms-5 mb-3 text-white text-decoration-none dropdown-toggle bi bi-patch-plus" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-			<span class="ms-1">Create/Update</span>
+			<span class="ms-1">Create/Update</span></span>
 		</a>
 		<ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
 			<li><a class="dropdown-item" href="{% url 'startex:create_startex_plan' %}">StartEx Plan</a></li>
@@ -41,10 +49,18 @@
 	</div>
 	<div class="dropdown">
 		<a href="#" class="d-flex align-items-center ms-5 mb-3 text-white text-decoration-none dropdown-toggle bi bi-view-list" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
-			<span class="ms-1">View</span>
+			<span class="ms-1">View
+				{% if sx_guide == 1 %}
+                    <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                {% endif %}
+			</span>
 		</a>
 		<ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-			<li><a class="dropdown-item" href="{% url 'startex:list_startex_plan' %}">StartEx Plan</a></li>
+			<li><a class="dropdown-item" href="{% url 'startex:list_startex_plan' %}">StartEx Plan
+				{% if sx_guide == 1 %}
+                    <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                {% endif %}
+			</a></li>
 		</ul>
 	</div>
 {% endblock %}
