@@ -18,6 +18,10 @@ urlpatterns = [
     path('get/ajax/validate_mov_cp_no', views.validate_Mov_CP_No, name="validate_mov_cp_no"),
     path('get/ajax/validate_mov_unit_name', views.validate_Mov_Unit_Name, name="validate_mov_unit_name"),
     path('get/ajax/validate_mov_subunit_name', views.validate_Mov_SubUnit_Name, name="validate_mov_subunit_name"),
+    path('get/ajax/validate_mov_subunit_pkt_no', views.validate_Mov_SubUnit_Pkt_No, name="validate_mov_subunit_pkt_no"),
+    path('get/ajax/get_sx_plan', views.get_SX_Plan, name="get_sx_plan"),
+    path('get/ajax/get_btn_text', views.get_Btn_Text, name="get_btn_text"),
+    path('get/ajax/validate_mov_veh_qty', views.validate_Mov_Veh_Qty, name="validate_mov_veh_qty"),
     # Base
     path('', views.Movement_PlanBaseView.as_view(), name="movement_plan_base"),
     # View

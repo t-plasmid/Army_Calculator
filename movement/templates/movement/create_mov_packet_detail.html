@@ -136,6 +136,29 @@
 
 {% block scripts %}
 <script>
+
+    $("#id_vehicle_qty").change(function () {
+      var u_id = $('#id_u_id').val();
+      var mov_veh_qty = $(this).val();
+      $.ajax({
+        type: 'GET',
+        url: "{% url 'movement:validate_mov_veh_qty' %}",
+        data: {
+          'mov_veh_qty': mov_veh_qty,
+          'u_id': u_id
+        },
+        dataType: 'json',
+        success: function (data) {
+          if (data.qty_invalid) {
+            alert(data.error_message);
+            var vehQty = $("#id_vehicle_qty");
+            vehQty.val("")
+            vehQty.focus()
+          }
+        }
+      });
+    });
+
     $("#id_u_id").change(function (e) {
         e.preventDefault();
         // get the nickname
@@ -169,6 +192,28 @@
           if (data.is_taken) {
             alert(data.error_message);
             var vehName = $("#id_subunit");
+            vehName.val("")
+            vehName.focus()
+          }
+        }
+      });
+    });
+
+    $("#id_packet_no").change(function () {
+      var u_id = $('#id_u_id').val();
+      var mov_subunit_pkt_no = $(this).val();
+      $.ajax({
+        type: 'GET',
+        url: "{% url 'movement:validate_mov_subunit_pkt_no' %}",
+        data: {
+          'mov_subunit_pkt_no': mov_subunit_pkt_no,
+          'u_id': u_id
+        },
+        dataType: 'json',
+        success: function (data) {
+          if (data.is_taken) {
+            alert(data.error_message);
+            var vehName = $("#id_packet_no");
             vehName.val("")
             vehName.focus()
           }

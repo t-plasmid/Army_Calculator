@@ -40,16 +40,103 @@
         <div class="container">
           <div class="alert alert-info lead" role="alert">Unit Allocation</div>
           {% load django_bootstrap5 %}
-            <div class="container">
-                <form method="POST" class="form">
-                    {% csrf_token %}
-                    {% bootstrap_form form layout='horizontal' %}
-                    {% bootstrap_button button_type="submit" class="btn btn-primary" content="Add" %}
-                    {% if sx_guide == 0 %}
-                        <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
-                    {% endif %}
-                    <a id = 'id_done' class="ms-3 btn btn-primary" href="{% url done_url %}" role="button">{{ done_text }}</a>
-              </form>
+            <div class="d-flex align-content-stretch flex-wrap">
+                <div>
+                    <form method="POST" class="form">
+                        {% csrf_token %}
+                        {% bootstrap_form form layout='horizontal' %}
+                        {% bootstrap_button button_type="submit" class="btn btn-primary" content="Add" %}
+                        {% if sx_guide == 0 %}
+                            <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                        {% endif %}
+                        <a id = 'id_done' class="ms-3 btn btn-primary" href="{% url done_url %}" role="button">{{ done_text }}</a>
+                  </form>
+                    </br> <button class="btn_text_change btn btn-outline-dark" id="id_btn_text_change">{{ btn_text }}</button>
+                </div>
+
+
+                    <div id="id_startex_plan_div" class = "border border-secondary border-4 p-3 mb-2 bg-light text-dark">
+                        <div class="container">
+                            <label class="col-sm-4 col-form-label" for="id_sx_plan_sec">StartEx Plan:</label>
+                            <select id="id_sx_plan_sec" class="form-select">
+                                {% for sx_l in startex_list %}
+                                    <option value="{{ sx_l.id }}" class="sel_sx">{{ sx_l.name }}</option>
+                                {% endfor %}
+                            </select>
+                          <div class="row">
+                            <div class="col">
+                                <label class="col-sm-2 col-form-label" for="id_sx_id_sec">ID:</label><span id="id_sx_id_sec">{{ detail_startex_plan.id }}</span>
+                            </div>
+                            <div class="col">
+                              <label class="col-sm-4 col-form-label" for="id_sx_brigade_sec">Brigade:</label><span id="id_sx_brigade_sec">{{ detail_startex_plan.brigade }}</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="container">
+                            <div class="p-3 mb-3 bg-light border rounded-3">
+                                <h5>Description</h5>
+                                <p class="lead"> {{ detail_startex_plan.description }}</p>
+                            </div>
+                        </div>
+
+
+                        <p hidden id="id_veh_found"></p>
+                        <p hidden id="id_veh_total"></p>
+                        <p hidden id="id_btn_cmd">{{ btn_cmd }}</p>
+                        <p hidden id="id_sx_pk">{{ detail_startex_plan.id }}</p>
+                        <div class="container">
+                            <div class="table-responsive">
+                              <table class="table table-bordered" style="text-align: center;">
+                                  <thead>
+                                    <tr class = "table-secondary align-middle">
+                                      <th scope="col"></th>
+                                        {% for vehicle_data in sx_vehicle_data %}
+                                            <th scope="col">{{ vehicle_data.name }}</th>
+                                        {% endfor %}
+                                        <th>Total</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody id='main_tbody'>
+                                    {% for unit_detail in sx_unit_detail %}
+                                        <tr>
+                                            <td class = "table-secondary"><strong>{{ unit_detail.u_id }}</strong></td>
+                                            {% for vehicle_data in sx_vehicle_data %}
+
+                                                {% for vehicle_detail in sx_vehicle_detail %}
+                                                    {% if vehicle_detail.sx_u_id.id == unit_detail.id and vehicle_data.id == vehicle_detail.sx_v_id.id %}
+                                                        <td class="bg-info text-white">{{vehicle_detail.qty}}</td>
+                                                        <script>
+                                                            if ({{vehicle_detail.qty}} > 0){
+                                                                $("#id_veh_found").text('set');
+                                                            }
+
+                                                            var total = Number(document.getElementById("id_veh_total").textContent);
+                                                            total = total + {{vehicle_detail.qty}};
+                                                            document.getElementById("id_veh_total").textContent = total;
+                                                        </script>
+                                                    {% endif %}
+                                                {% endfor %}
+
+                                                <script>
+                                                    if ($("#id_veh_found").text() != 'set'){
+                                                        document.write("<td></td>");
+                                                    }
+                                                    $("#id_veh_found").text('');
+                                                </script>
+                                            {% endfor %}
+                                            <script>
+                                                var total = document.getElementById("id_veh_total").textContent;
+                                                document.write("<td><b>" + total + "</b></td>");
+                                                document.getElementById("id_veh_total").textContent = 0
+                                            </script>
+                                        </tr>
+                                    {% endfor %}
+                                  </tbody>
+                              </table>
+                            </div>
+                        </div>
+                    </div>
             </div>
 
             <div class="mt-5 alert alert-secondary lead" role="alert">
@@ -146,6 +233,102 @@
 
 {% block scripts %}
 <script>
+
+    if ($('#id_btn_cmd').text() == "show" ){
+        $('#id_startex_plan_div').show();
+    } else {
+        $('#id_startex_plan_div').hide();
+    }
+
+    document.getElementById("id_sx_plan_sec").value = Number(document.getElementById("id_sx_pk").innerHTML);
+
+    /*$('#id_startex_plan_div').hide()
+    $('.btn_text_change').click(function(){
+        var $this = $(this);
+        $this.toggleClass('btn_text_change');
+        if($this.hasClass('btn_text_change')){
+            $this.text('Show StartEx Plan');
+            $('#id_startex_plan_div').hide()
+        } else {
+            $this.text('Hide StartEx Plan');
+            $('#id_startex_plan_div').show()
+
+        }
+    });*/
+
+
+    $('.btn_text_change').click(function(){
+        var $this = $(this);
+        var btn_txt = $this.text();
+        $this.text(function(i, text){
+          return text === "Hide StartEx Plan" ? "Show StartEx Plan" : "Hide StartEx Plan";
+        })
+        if ($this.text() === "Show StartEx Plan"){
+          $('#id_startex_plan_div').hide()
+        } else {
+            $('#id_startex_plan_div').show()
+        }
+
+        //$this.toggleClass('btn_text_change');
+        //if($this.hasClass('btn_text_change')){
+        //    $this.text('Show StartEx Plan');
+        //    $('#id_startex_plan_div').hide()
+        //} else {
+        //    $this.text('Hide StartEx Plan');
+        //    $('#id_startex_plan_div').show()
+        //}
+        $.ajax({
+        type: 'GET',
+        url: "{% url 'movement:get_btn_text' %}",
+        data: {
+          'btn_txt': btn_txt,
+        },
+        dataType: 'json',
+        success: function (data) {
+          if (data.is_taken) {
+            location.reload();
+            //alert(data.error_message);
+          }
+        }
+        });
+    });
+
+    /*$("#id_btn_text_change").click(function () {
+      var btn_txt = $('#id_btn_text_change').text();
+      $.ajax({
+        type: 'GET',
+        url: "{% url 'movement:get_btn_text' %}",
+        data: {
+          'btn_txt': btn_txt,
+        },
+        dataType: 'json',
+        success: function (data) {
+          if (data.is_taken) {
+            location.reload();
+            //alert(data.error_message);
+          }
+        }
+      });
+    });*/
+
+    $("#id_sx_plan_sec").change(function () {
+      var sx_id = $('#id_sx_plan_sec').val();
+      $.ajax({
+        type: 'GET',
+        url: "{% url 'movement:get_sx_plan' %}",
+        data: {
+          'sx_id': sx_id,
+        },
+        dataType: 'json',
+        success: function (data) {
+          if (data.is_taken) {
+            location.reload();
+            //alert(data.error_message);
+          }
+        }
+      });
+    });
+
     $("#id_m_id").change(function (e) {
         e.preventDefault();
         // get the nickname
@@ -242,5 +425,7 @@
         alert_guide(header, body, extra, instruction, furtherinfo);
     });
     // Alert - End
+
+
 </script>
 {% endblock scripts %}

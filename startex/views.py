@@ -146,8 +146,7 @@ class Detail_StartEx_PlanView(LoginRequiredMixin, generic.DetailView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        return queryset.filter(
-            id__iexact=self.kwargs.get("pk")
+        return queryset.filter(id__iexact=self.kwargs.get("pk")
         )
 
     def get_context_data(self, **kwargs):
