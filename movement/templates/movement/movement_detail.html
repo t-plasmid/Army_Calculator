@@ -11,18 +11,23 @@
         <div id="liveAlertPlaceholder"></div>
 		<div class="container">
 				<p hidden id="my_date">{{movement_detail_detail.start_date|date:"Y-m-d"}}T{{movement_detail_detail.start_time|time:"H:i:s"}}.000Z</p>
-		    <p class="text-end mb-0"><strong>{{ movement_detail_detail.serial }}</strong></p>
+				<p hidden id="id_created_at">{{movement_detail_detail.created_at|date:"Y-m-d"}}T{{movement_detail_detail.created_at|time:"H:i:s"}}.000Z</p>
+		    	<p class="text-end mb-0"><strong>{{ movement_detail_detail.serial }}</strong></p>
 				<p class="text-end"><strong>{{ movement_detail_detail.exercise_name }}</strong></p>
 				<h4 class="text-center">{{ movement_detail_detail.route_name }}</h4>
 				<p class="text-center lead"><mark>{{ movement_detail_detail.brigade }}</mark></p>
 				<div class="col-md-6 col-lg-4 col-xl-3">
 					<table class = 'table table-borderless'>
 						<tr>
-							<td width="95px" class = "mb-0"><small>Created At:</small></td>
-							<td><small>{{ movement_detail_detail.created_at }}</small></td>
+							<td width="95px" class = "mb-0"><small>Created at:</small></td>
+							<script>
+								var datetime = new Date(Date.parse($("#id_created_at").text()));
+								document.write("<td><small>" + datetime.toLocaleTimeString('en-GB', {hour24: false}) + " (" + datetime.toLocaleDateString('en-GB', {hour24: false}) + ")</small></td>");
+							</script>
+<!--							<td><small>{{ movement_detail_detail.created_at }}</small></td>-->
 						</tr>
 						<tr>
-							<td><small>Created By:</small></td>
+							<td><small>Created by:</small></td>
 							<td><small>{{ movement_detail_detail.created_by }}</small></td>
 						</tr>
 					</table>
@@ -74,8 +79,8 @@
 								<td>{{ movement_detail_detail.traffic_density }}</td>
 							</tr>
 							<tr>
-								<td><strong>Unit's Pkt size:</strong></td>
-								<td>{{ movement_detail_detail.packet_size}} (global)</td>
+<!--								<td><strong>Unit's Pkt size:</strong></td>-->
+<!--								<td>{{ movement_detail_detail.packet_size}} (global)</td>-->
 							</tr>
 						</table>
 	        </div>
@@ -128,6 +133,7 @@
 				  <tbody id='main_tbody'>
 					<script async>
 						var previous_pass_time = 0;
+  						var unit_gap_total = 0;
 						var route_type = "{{ movement_detail_detail.route_type }}";
 						{% for unit in unit_detail %}
 							document.write("<tr>");
@@ -140,7 +146,13 @@
 							var speed = {{ movement_detail_detail.speed }};
 							var vehicle_qty = {{ unit.vehicle_qty }};
 							var pass_time = (60 * vehicle_qty)/(density * speed);
-							document.write("<td>" + pass_time + "</td>");
+							var pass_time_output = pass_time + " <small>min</small>";
+								if ((pass_time) % 1 != 0){
+									var pass_time_min = Math.floor(pass_time);
+									var pass_time_sec = Math.round((pass_time % 1) * 60);
+									pass_time_output = pass_time_min + " <small>min</small> " + pass_time_sec + " <small>sec</small>";
+								}
+							document.write("<td>" + pass_time_output + "</td>");
 
 							// SP - Start time calculation
 							var unit_gap = {{ movement_detail_detail.unit_gap }};
@@ -167,18 +179,17 @@
 								datetime.setMinutes(datetime.getMinutes() - param1);
 								datetime.setSeconds(datetime.getSeconds() - param1 % 1 * 60);
 							}
-
-							{% if unit.packet_no != 1 %}
-								datetime_adder(unit_gap);
-								unit_start_time_adder(unit_gap);
+							{% if unit.pk != unit_detail_first.pk %}
+								datetime_adder(unit_gap_total);
+								unit_start_time_adder(unit_gap_total);
 							{% endif %}
 							datetime_adder(previous_pass_time);
 							unit_start_time_adder(previous_pass_time);
-							document.write("<td>" + datetime.toLocaleTimeString('en-GB', {hour12: false}) + "</td>");
+							document.write("<td>" + datetime.toLocaleTimeString('en-GB', {hour24: false}) + "</td>");
 
 							// SP - Clear time calculation
 							datetime_adder(pass_time);
-							document.write("<td>" + datetime.toLocaleTimeString('en-GB', {hour12: false}) + "</td>");
+							document.write("<td>" + datetime.toLocaleTimeString('en-GB', {hour24: false}) + "</td>");
 							datetime_subtractor(pass_time);
 
 							var unit_total_distance = 0;
@@ -193,14 +204,14 @@
 									{% if forloop.last %}
 										// RP - ETA calculation
 										datetime_adder(delta_time);
-										document.write("<td>" + datetime.toLocaleTimeString('en-GB', {hour12: false}) + "</td>");
+										document.write("<td>" + datetime.toLocaleTimeString('en-GB', {hour24: false}) + "</td>");
 									{% else %}
 										// CP - ETA calculation
 										datetime_adder(delta_time);
-										document.write("<td>" + datetime.toLocaleTimeString('en-GB', {hour12: false}) + "</td>");
+										document.write("<td>" + datetime.toLocaleTimeString('en-GB', {hour24: false}) + "</td>");
 										// CP - Clear time calculation
 										datetime_adder(pass_time);
-										document.write("<td>" + datetime.toLocaleTimeString('en-GB', {hour12: false}) + "</td>");
+										document.write("<td>" + datetime.toLocaleTimeString('en-GB', {hour24: false}) + "</td>");
 										datetime_subtractor(pass_time);
 									{% endif %}
 									datetime_adder(halt_time);
@@ -209,7 +220,13 @@
 									unit_total_distance += distance;
 									{% if forloop.last %}
 										var running_time = 60 * unit_total_distance / speed;
-										document.write("<td>" + running_time + "</td>");
+										var running_time_output = running_time + " <small>min</small>";
+											if ((running_time) % 1 != 0){
+												var running_time_min = Math.floor(running_time);
+												var running_time_sec = Math.round((running_time % 1) * 60);
+												running_time_output = running_time_min + " <small>min</small> " + running_time_sec + " <small>sec</small>";
+											}
+										document.write("<td>" + running_time_output + "</td>");
 
 										unit_total_time = running_time;
 									{% else %}
@@ -226,10 +243,19 @@
 									gap = 0;
 								}
 								unit_total_time = unit_total_time + pass_time + unit_total_halts + gap;
-								document.write("<td>" + Math.round(unit_total_time) + "</td>")
+								var unit_total_time_output = unit_total_time + " <small>min</small>";
+								if ((unit_total_time) % 1 != 0){
+									var unit_total_time_min = Math.floor(unit_total_time);
+									var unit_total_time_sec = Math.round((unit_total_time % 1) * 60);
+									unit_total_time_output = unit_total_time_min + " <small>min</small> " + unit_total_time_sec + " <small>sec</small>";
+								}
+
+								document.write("<td>" + unit_total_time_output + "</td>")
+<!--								document.write("<td>" + Math.round(unit_total_time) + "</td>")-->
 
 								// Store pass time of current unit so that it can be used for the next unit's calculations.
 								previous_pass_time += pass_time;
+								unit_gap_total += unit_gap;
 
 								// View column
 								var unit_start_time_formatted = unit_start_time.toISOString();
@@ -266,7 +292,7 @@
 										datetime.setMinutes(datetime.getMinutes() + unit_gap);
 									}
 									counter++;
-									$(this).text(datetime.toLocaleTimeString('en-GB', {hour12: false}));
+									$(this).text(datetime.toLocaleTimeString('en-GB', {hour24: false}));
 								});
 
 							});

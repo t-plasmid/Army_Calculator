@@ -54,54 +54,59 @@
             <div class="mt-5 alert alert-secondary lead" role="alert">
                 List of allocated units
             </div>
-            {% if create_list_sx_unit_detail %}
-              <table id = "id_list_sx_unit_detail" class="table table-responsive table-striped table-bordered border-secondary mb-4">
-                <thead class="table-dark">
-                  <tr>
-                    <th>StartEx ID</th>
-                    <th>Unit</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
+
+            <div class="row justify-content-left">
+                <div class="col-auto">
                     {% if create_list_sx_unit_detail %}
-                        {% regroup create_list_sx_unit_detail by sx_id as sx_unit_detail_by_sx_id %}
-                            {% for sx_id in sx_unit_detail_by_sx_id %}
-                                <tr>
-                                    <td>{{ sx_id.grouper }}</td>
-                                    <td>
-                                    {% for name in sx_id.list %}
-                                        <div class="border-bottom" style="height:40px;">{{name.u_id}}</div>
+                      <table id = "id_list_sx_unit_detail" class="table table-responsive table-striped table-bordered border-secondary mb-4">
+                        <thead class="table-dark">
+                          <tr>
+                            <th>StartEx ID</th>
+                            <th>Unit</th>
+                            <th>Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            {% if create_list_sx_unit_detail %}
+                                {% regroup create_list_sx_unit_detail by sx_id as sx_unit_detail_by_sx_id %}
+                                    {% for sx_id in sx_unit_detail_by_sx_id %}
+                                        <tr>
+                                            <td>{{ sx_id.grouper }}</td>
+                                            <td>
+                                            {% for name in sx_id.list %}
+                                                <div class="border-bottom" style="height:40px;">{{name.u_id}}</div>
+                                            {% endfor %}
+                                            </td>
+                                            <td>
+                                            {% for sx_unit_detail in create_list_sx_unit_detail %}
+                                                <div class="border-bottom" style="height:40px;">
+                                                    <a href="{{ sx_unit_detail.get_delete_url }}" class="btn btn-danger btn-sm bi bi-x-square"></a>
+                                                    <a href="{{ sx_unit_detail.get_update_url }}" class="btn btn-primary btn-sm bi bi-pen"></a>
+                                                    <form class="ajax_open_form btn">
+                                                        {% csrf_token %}
+                                                        <input type="submit" id="uid-{{sx_unit_detail.id}}" class="btn btn-primary btn-sm" value="Open" />
+                                                        {% if forloop.counter == 1 %}
+                                                            {% if sx_guide == 1 %}
+                                                                <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    </form>
+                                                </div>
+                                            {% endfor %}
+                                            </td>
+                                        </tr>
                                     {% endfor %}
-                                    </td>
-                                    <td>
-                                    {% for sx_unit_detail in create_list_sx_unit_detail %}
-                                        <div class="border-bottom" style="height:40px;">
-                                            <a href="{{ sx_unit_detail.get_delete_url }}" class="btn btn-danger btn-sm bi bi-x-square"></a>
-                                            <a href="{{ sx_unit_detail.get_update_url }}" class="btn btn-primary btn-sm bi bi-pen"></a>
-                                            <form class="ajax_open_form btn">
-                                                {% csrf_token %}
-                                                <input type="submit" id="uid-{{sx_unit_detail.id}}" class="btn btn-primary btn-sm" value="Open" />
-                                                {% if forloop.counter == 1 %}
-                                                    {% if sx_guide == 1 %}
-                                                        <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
-                                                    {% endif %}
-                                                {% endif %}
-                                            </form>
-                                        </div>
-                                    {% endfor %}
-                                    </td>
-                                </tr>
-                            {% endfor %}
+                            {% endif %}
+                        </tbody>
+                      </table>
+
+                      {% include 'startex/pagination.html' %}
+
+                    {% else %}
+                        <p>There are no records!</p>
                     {% endif %}
-                </tbody>
-              </table>
-
-              {% include 'startex/pagination.html' %}
-
-            {% else %}
-                <p>There are no records!</p>
-            {% endif %}
+                </div>
+            </div>
 
             <script>
               $('#id_sx_id').val({{ sx_id }});

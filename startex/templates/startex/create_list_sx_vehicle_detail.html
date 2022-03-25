@@ -57,51 +57,56 @@
             List of allocated vehicles
         </div>
 
-        {% if create_list_sx_vehicle_detail %}
-          <table id="id_list_sx_vehicle_detail" class="table table-responsive table-striped table-bordered border-secondary mb-4">
-              <thead class="table-dark">
-                <tr>
-                    <th>StartEx ID</th>
-                    <th>Vehicle</th>
-                    <th>Qty</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
+
+        <div class="row justify-content-left">
+                <div class="col-auto">
                 {% if create_list_sx_vehicle_detail %}
-                {% regroup create_list_sx_vehicle_detail by sx_u_id as sx_vehicle_detail_by_sx_u_id %}
-                    {% for sx_u_id in sx_vehicle_detail_by_sx_u_id %}
+                  <table id="id_list_sx_vehicle_detail" class="table table-responsive table-striped table-bordered border-secondary mb-4">
+                      <thead class="table-dark">
                         <tr>
-                            <td>{{ sx_u_id.grouper }}</td>
-                            <td>
-                            {% for list in sx_u_id.list %}
-                                <div class="border-bottom" style="height:40px;">{{list.sx_v_id}}</div>
-                            {% endfor %}
-                            </td>
-                            <td>
-                            {% for list in sx_u_id.list %}
-                                <div class="border-bottom" style="height:40px;">{{list.qty}}</div>
-                            {% endfor %}
-                            </td>
-                            <td>
-                            {% for vehicle_detail in create_list_sx_vehicle_detail %}
-                                <div class="border-bottom" style="height:40px;">
-                                    <a href="{{ vehicle_detail.get_delete_url }}" class="btn btn-danger btn-sm bi bi-x-square"></a>
-                                    <a href="{{ vehicle_detail.get_update_url }}?reverse=true" class="btn btn-primary btn-sm bi bi-pen"></a>
-                                </div>
-                            {% endfor %}
-                            </td>
+                            <th>StartEx ID</th>
+                            <th>Vehicle</th>
+                            <th>Qty</th>
+                            <th>Action</th>
                         </tr>
-                    {% endfor %}
-            {% endif %}
-            </tbody>
-          </table>
+                    </thead>
+                    <tbody>
+                        {% if create_list_sx_vehicle_detail %}
+                        {% regroup create_list_sx_vehicle_detail by sx_u_id as sx_vehicle_detail_by_sx_u_id %}
+                            {% for sx_u_id in sx_vehicle_detail_by_sx_u_id %}
+                                <tr>
+                                    <td>{{ sx_u_id.grouper }}</td>
+                                    <td>
+                                    {% for list in sx_u_id.list %}
+                                        <div class="border-bottom" style="height:40px;">{{list.sx_v_id}}</div>
+                                    {% endfor %}
+                                    </td>
+                                    <td>
+                                    {% for list in sx_u_id.list %}
+                                        <div class="border-bottom" style="height:40px;">{{list.qty}}</div>
+                                    {% endfor %}
+                                    </td>
+                                    <td>
+                                    {% for vehicle_detail in create_list_sx_vehicle_detail %}
+                                        <div class="border-bottom" style="height:40px;">
+                                            <a href="{{ vehicle_detail.get_delete_url }}" class="btn btn-danger btn-sm bi bi-x-square"></a>
+                                            <a href="{{ vehicle_detail.get_update_url }}?reverse=true" class="btn btn-primary btn-sm bi bi-pen"></a>
+                                        </div>
+                                    {% endfor %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                    {% endif %}
+                    </tbody>
+                  </table>
 
-          {% include 'startex/pagination.html' %}
+                  {% include 'startex/pagination.html' %}
 
-        {% else %}
-            <p>There are no records!</p>
-        {% endif %}
+                {% else %}
+                    <p>There are no records!</p>
+                {% endif %}
+                </div>
+            </div>
 
         <script>
             $('#id_sx_u_id').val({{ sx_u_id }});

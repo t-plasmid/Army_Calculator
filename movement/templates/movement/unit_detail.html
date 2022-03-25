@@ -1,9 +1,10 @@
 {% extends "movement/movement_layout.html" %}
 
 {% block breadcrumb %}
-  <li class="breadcrumb-item active"><a href="{% url 'movement:movement_plan_base' %}">Movement</a></li>
+  	<li class="breadcrumb-item active"><a href="{% url 'movement:movement_plan_base' %}">Movement</a></li>
 	<li class="breadcrumb-item active"><a href="{% url 'movement:list_movement_plan' %}">Movement Plan</a></li>
-  <li class="breadcrumb-item active">Unit Plan Detail</li>
+	<li class="breadcrumb-item active"><a href="javascript:history.back()">Movement Plan Detail</a></li>
+  	<li class="breadcrumb-item active">Unit Plan Detail</li>
 {% endblock %}
 
 {% block content %}
@@ -20,6 +21,7 @@
 		    <p class="text-end mb-0"><strong>{{ unit_detail.m_id.serial }}</strong></p>
 				<p class="text-end"><strong>{{ unit_detail.m_id.exercise_name }}</strong></p>
 				<h4 class="text-center">{{ unit_detail.m_id.route_name }}</h4>
+				<h5 class="text-center">{{ unit_detail.m_id.brigade }}</h5>
 				<p class="text-center lead"><mark>{{ unit_detail.unit }}</mark></p>
 		</div>
 
@@ -29,7 +31,11 @@
 							<table class = 'table table-borderless'>
 								<tr>
 									<td width="160px"><strong>Start time:</strong></td>
-									<td>{{ unit_detail.m_id.start_time|time:"H:i:s" }}</td>
+									<script>
+										var datetime = new Date(Date.parse($("#my_date").text()));
+										document.write("<td>" + datetime.toLocaleTimeString('en-GB', {hour24: false}) + "</td>");
+									</script>
+<!--									<td id="id_start_time_td">{{ unit_detail.m_id.start_time|time:"H:i:s" }}</td>-->
 								</tr>
 								<tr>
 									<td><strong>Route type:</strong></td>
@@ -41,7 +47,11 @@
 						<table class = 'table table-borderless'>
 							<tr>
 								<td width="160px"><strong>Start date:</strong></td>
-								<td>{{ unit_detail.m_id.start_date|date:"j/n/y" }}</td>
+								<script>
+									var datetime = new Date(Date.parse($("#my_date").text()));
+									document.write("<td>" + datetime.toLocaleDateString('en-GB', {hour24: false}) + "</td>");
+								</script>
+<!--								<td>{{ unit_detail.m_id.start_date|date:"j/n/y" }}</td>-->
 							</tr>
 							<tr>
 								<td><strong>Pkt gap (min):</strong></td>
@@ -56,12 +66,12 @@
 								<td>{{ unit_detail.m_id.speed }}</td>
 							</tr>
 							<tr>
-								<td><strong>Unit's pkt size:</strong></td>
-								{% if unit_detail.packet_auto_populted %}
-									<td>{{ unit_detail.m_id.packet_size}} (Auto set)</td>
-								{% else %}
-									<td>Manually set</td>
-								{% endif %}
+<!--								<td><strong>Unit's pkt size:</strong></td>-->
+<!--								{% if unit_detail.packet_auto_populted %}-->
+<!--									<td>{{ unit_detail.m_id.packet_size}} (Auto set)</td>-->
+<!--								{% else %}-->
+<!--									<td>Manually set</td>-->
+<!--								{% endif %}-->
 							</tr>
 						</table>
 					</div>
@@ -129,6 +139,7 @@
 				  <tbody id='main_tbody'>
             <script async>
   						var previous_pass_time = 0;
+  						var packet_gap_total = 0;
   						var route_type = "{{ unit_detail.m_id.route_type }}";
   						{% for packet in packet_detail %}
   							document.write("<tr>");
@@ -138,10 +149,17 @@
 
   							// Pass Time calculation
   							var density = parseInt({{ unit_detail.m_id.traffic_density }});
-								var speed = parseInt({{ unit_detail.m_id.speed }});
-								var vehicle_qty = parseInt({{ packet.vehicle_qty }});
-								var pass_time = (60 * vehicle_qty)/(density * speed);
-  							document.write("<td>" + pass_time + "</td>");
+							var speed = parseInt({{ unit_detail.m_id.speed }});
+							var vehicle_qty = parseInt({{ packet.vehicle_qty }});
+							var pass_time = (60 * vehicle_qty)/(density * speed);
+							var pass_time = (60 * vehicle_qty)/(density * speed);
+							var pass_time_output = pass_time + " <small>min</small>";
+							if ((pass_time) % 1 != 0){
+								var pass_time_min = Math.floor(pass_time);
+								var pass_time_sec = Math.round((pass_time % 1) * 60);
+								pass_time_output = pass_time_min + " <small>min</small> " + pass_time_sec + " <small>sec</small>";
+							}
+  							document.write("<td>" + pass_time_output + "</td>");
 
   							// SP - Start time calculation
   							var packet_gap = parseInt({{ unit_detail.m_id.packet_gap }});
@@ -160,17 +178,17 @@
 									datetime.setMinutes(datetime.getMinutes() - param1);
 									datetime.setSeconds(datetime.getSeconds() - param1 % 1 * 60);
 								}
-
-  							{% if packet.packet_no != 1 %}
-                  datetime_adder(packet_gap);
+							//alert({{packet.pk}});
+  							{% if packet.pk != packet_detail_first.pk %}
+  								datetime_adder(packet_gap_total);
   							{% endif %}
-                datetime_adder(previous_pass_time);
-  							document.write("<td>" + datetime.toLocaleTimeString('en-GB', {hour12: false}) + "</td>");
+               				datetime_adder(previous_pass_time);
+  							document.write("<td>" + datetime.toLocaleTimeString('en-GB', {hour24: false}) + "</td>");
 
   							// SP - Clear time calculation
-                datetime_adder(pass_time);
-  							document.write("<td>" + datetime.toLocaleTimeString('en-GB', {hour12: false}) + "</td>");
-                datetime_subtractor(pass_time);
+                			datetime_adder(pass_time);
+  							document.write("<td>" + datetime.toLocaleTimeString('en-GB', {hour24: false}) + "</td>");
+							datetime_subtractor(pass_time);
 
   							var packet_total_distance = 0;
   							var packet_total_time = 0;
@@ -179,54 +197,68 @@
   							{% for cp in cp_detail %}
 
   								// Calculates clear time for each unit.
-                  {% if cp.m_id == unit_detail.m_id %}
+                  				{% if cp.m_id == unit_detail.m_id %}
     								var halt_time = parseInt({{ cp.halt_time }});
     								var distance = parseInt({{ cp.distance }});
     								var delta_time = ((distance * 60) / speed);
     									{% if forloop.last %}
     										// RP - ETA calculation
-                        datetime_adder(delta_time);
-    										document.write("<td>" + datetime.toLocaleTimeString('en-GB', {hour12: false}) + "</td>");
+                        					datetime_adder(delta_time);
+    										document.write("<td>" + datetime.toLocaleTimeString('en-GB', {hour24: false}) + "</td>");
     									{% else %}
     										// CP - ETA calculation
-                        datetime_adder(delta_time);
-    										document.write("<td>" + datetime.toLocaleTimeString('en-GB', {hour12: false}) + "</td>");
+                        					datetime_adder(delta_time);
+    										document.write("<td>" + datetime.toLocaleTimeString('en-GB', {hour24: false}) + "</td>");
     										// CP - Clear time calculation
-                        datetime_adder(pass_time);
-    										document.write("<td>" + datetime.toLocaleTimeString('en-GB', {hour12: false}) + "</td>");
-                        datetime_subtractor(pass_time);
+                        					datetime_adder(pass_time);
+    										document.write("<td>" + datetime.toLocaleTimeString('en-GB', {hour24: false}) + "</td>");
+                        					datetime_subtractor(pass_time);
     									{% endif %}
-                      datetime_adder(halt_time);
+                      					datetime_adder(halt_time);
 
     									// Running Time (min) calculation
     									packet_total_distance += distance;
     									{% if forloop.last %}
-                      var running_time = 60 * packet_total_distance / speed;
-                      document.write("<td>" + running_time + "</td>");
+										  	var running_time = 60 * packet_total_distance / speed;
+										  	var running_time_output = running_time + " <small>min</small>";
+											if ((running_time) % 1 != 0){
+												var running_time_min = Math.floor(running_time);
+												var running_time_sec = Math.round((running_time % 1) * 60);
+												running_time_output = running_time_min + " <small>min</small> " + running_time_sec + " <small>sec</small>";
+											}
+										  	document.write("<td>" + running_time_output + "</td>");
 
     										packet_total_time = running_time;
     									{% else %}
     										packet_total_halts += halt_time;
     									{% endif %}
-                    {% endif %}
+                    			{% endif %}
 
-  								{% endfor %}
-  								// Total Time (min) calculation
-  								if (route_type == "Motorway"){
-  									gap = pass_time * 0.15
-  								} else if(route_type == "Urban"){
-  									gap = pass_time * 0.2
-  								} else {
-  									gap = 0;
-  								}
-  								packet_total_time += pass_time + packet_total_halts + gap;
-  								document.write("<td>" + Math.round(packet_total_time) + "</td>")
+							{% endfor %}
+							// Total Time (min) calculation
+							if (route_type == "Motorway"){
+								gap = pass_time * 0.15
+							} else if(route_type == "Urban"){
+								gap = pass_time * 0.2
+							} else {
+								gap = 0;
+							}
+							packet_total_time += pass_time + packet_total_halts + gap;
+							var packet_total_time_output = packet_total_time + " <small>min</small>";
+								if ((packet_total_time) % 1 != 0){
+									var packet_total_time_min = Math.floor(packet_total_time);
+									var packet_total_time_sec = Math.round((packet_total_time % 1) * 60);
+									packet_total_time_output = packet_total_time_min + " <small>min</small> " + packet_total_time_sec + " <small>sec</small>";
+								}
 
-                  // Store pass time of current unit so that it can be used for the next unit's calculations.
-  								previous_pass_time += pass_time;
+								document.write("<td>" + packet_total_time_output + "</td>")
 
-  								document.write("</tr>");
-  							{% endfor %}
+							// Store pass time of current unit so that it can be used for the next unit's calculations.
+							previous_pass_time += pass_time;
+  							packet_gap_total += packet_gap;
+
+							document.write("</tr>");
+						{% endfor %}
   						</script>
           </tbody>
         </table>

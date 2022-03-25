@@ -46,36 +46,41 @@
             </div>
 
         <div class="mt-5 alert alert-secondary lead" role="alert">List of Vehicles</div>
-        {% if create_list_sx_vehicle_data %}
-            <table id = "id_list_sx_vehicle_data" class="table table-responsive table-striped table-bordered border-secondary mb-4">
-                <thead class="table-dark">
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Model</th>
-                        <th>Category</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for vehicle_data in create_list_sx_vehicle_data %}
-                        <tr>
-                            <td>{{ vehicle_data.pk }}</td>
-                            <td>{{ vehicle_data.name }}</td>
-                            <td>{{ vehicle_data.model }}</td>
-                            <td>{{ vehicle_data.category }}</td>
-                            <td><a href="{{ vehicle_data.get_delete_url }}" class="btn btn-danger btn-sm bi bi-x-square"></a>
-                              <a href="{{ vehicle_data.get_update_url }}" class="btn btn-primary btn-sm bi bi-pen"></a></td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-          </table>
 
-              {% include 'startex/pagination.html' %}
+        <div class="row justify-content-left">
+                <div class="col-auto">
+                {% if create_list_sx_vehicle_data %}
+                    <table id = "id_list_sx_vehicle_data" class="table table-responsive table-striped table-bordered border-secondary mb-4">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Model</th>
+                                <th>Category</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for vehicle_data in create_list_sx_vehicle_data %}
+                                <tr>
+                                    <td>{{ vehicle_data.pk }}</td>
+                                    <td>{{ vehicle_data.name }}</td>
+                                    <td>{{ vehicle_data.model }}</td>
+                                    <td>{{ vehicle_data.category }}</td>
+                                    <td><a href="{{ vehicle_data.get_delete_url }}" class="btn btn-danger btn-sm bi bi-x-square"></a>
+                                      <a href="{{ vehicle_data.get_update_url }}" class="btn btn-primary btn-sm bi bi-pen"></a></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                  </table>
 
-        {% else %}
-            <p>There are no records!</p>
-        {% endif %}
+                      {% include 'startex/pagination.html' %}
+
+                {% else %}
+                    <p>There are no records!</p>
+                {% endif %}
+                </div>
+            </div>
     {% else %}
         <h1> You are not logged in</h1>
     {% endif %}

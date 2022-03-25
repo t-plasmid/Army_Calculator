@@ -66,34 +66,39 @@
             <div class="mt-5 alert alert-secondary lead" role="alert">
                 List of units
             </div>
-            {% if unit_create_list %}
-              <table id = "id_brigade_list_view" class="table table-responsive table-striped table-bordered border-secondary mb-4">
-                <thead class="table-dark">
-                  <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Acronym</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for unit in unit_create_list %}
-                    <tr>
-                      <td>{{ unit.id }}</td>
-                      <td>{{ unit.unit }}</td>
-                      <td>{{ unit.acronym }}</td>
-                      <td><a href="{{ unit.get_delete_url }}" class="btn btn-danger btn-sm bi bi-x-square"></a>
-                          <a href="{{ unit.get_update_url }}" class="btn btn-primary btn-sm bi bi-pen"></a></td>
-                    </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
 
-              {% include 'movement/pagination.html' %}
+            <div class="row justify-content-left">
+                <div class="col-auto">
+                    {% if unit_create_list %}
+                      <table id = "id_brigade_list_view" class="table table-responsive table-striped table-bordered border-secondary mb-4">
+                        <thead class="table-dark">
+                          <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Acronym</th>
+                            <th>Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for unit in unit_create_list %}
+                            <tr>
+                              <td>{{ unit.id }}</td>
+                              <td>{{ unit.unit }}</td>
+                              <td>{{ unit.acronym }}</td>
+                              <td><a href="{{ unit.get_delete_url }}" class="btn btn-danger btn-sm bi bi-x-square"></a>
+                                  <a href="{{ unit.get_update_url }}" class="btn btn-primary btn-sm bi bi-pen"></a></td>
+                            </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
 
-            {% else %}
-                <p>There are no records!</p>
-            {% endif %}
+                      {% include 'movement/pagination.html' %}
+
+                    {% else %}
+                        <p>There are no records!</p>
+                    {% endif %}
+                </div>
+            </div>
             </div>
       {% else %}
 		<h1> You are not logged in</h1>

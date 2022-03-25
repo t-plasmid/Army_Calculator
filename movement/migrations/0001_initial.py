@@ -33,7 +33,7 @@ class Migration(migrations.Migration):
                 ('traffic_density', models.PositiveIntegerField()),
                 ('packet_gap', models.PositiveIntegerField(blank=True, null=True)),
                 ('unit_gap', models.PositiveIntegerField(blank=True, null=True)),
-                ('packet_size', models.PositiveIntegerField(blank=True, null=True)),
+                # ('packet_size', models.PositiveIntegerField(blank=True, null=True)),
                 ('created_at', models.DateTimeField(auto_now=True)),
                 ('brigade', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='movement_data', to='movement.Brigade')),
                 ('created_by', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='movement_data', to=settings.AUTH_USER_MODEL)),

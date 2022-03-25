@@ -49,34 +49,39 @@
             <div class="mt-5 alert alert-secondary lead" role="alert">
                 List of brigades
             </div>
-            {% if brigade_create_list %}
-              <table id = "id_brigade_list_view" class="table table-responsive table-striped table-bordered border-secondary mb-4">
-                <thead class="table-dark">
-                  <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Acronym</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for brigade in brigade_create_list %}
-                    <tr>
-                      <td>{{ brigade.id }}</td>
-                      <td>{{ brigade.brigade }}</td>
-                      <td>{{ brigade.acronym }}</td>
-                      <td><a href="{{ brigade.get_delete_url }}" class="btn btn-danger btn-sm bi bi-x-square"></a>
-                          <a href="{{ brigade.get_update_url }}" class="btn btn-primary btn-sm bi bi-pen"></a></td>
-                    </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
 
-              {% include 'movement/pagination.html' %}
+            <div class="row justify-content-left">
+                <div class="col-auto">
+                    {% if brigade_create_list %}
+                      <table id = "id_brigade_list_view" class="table table-responsive table-striped table-bordered border-secondary mb-4">
+                        <thead class="table-dark">
+                          <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Acronym</th>
+                            <th>Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for brigade in brigade_create_list %}
+                            <tr>
+                              <td>{{ brigade.id }}</td>
+                              <td>{{ brigade.brigade }}</td>
+                              <td>{{ brigade.acronym }}</td>
+                              <td><a href="{{ brigade.get_delete_url }}" class="btn btn-danger btn-sm bi bi-x-square"></a>
+                                  <a href="{{ brigade.get_update_url }}" class="btn btn-primary btn-sm bi bi-pen"></a></td>
+                            </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
 
-            {% else %}
-                <p>There are no records!</p>
-            {% endif %}
+                      {% include 'movement/pagination.html' %}
+
+                    {% else %}
+                        <p>There are no records!</p>
+                    {% endif %}
+                </div>
+            </div>
 		</div>
 	{% else %}
 		<h1> You are not logged in</h1>

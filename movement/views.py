@@ -302,6 +302,9 @@ class Movement_PlanDetailView(LoginRequiredMixin, generic.DetailView):
         context["cp_detail"] = models.CP_Detail.objects.filter(
             m_id__exact=self.kwargs.get("pk")
         ).order_by('cp_no')
+        context["unit_detail_first"] = models.Unit_Detail.objects.filter(
+            m_id__exact=self.kwargs.get("pk")
+        ).order_by('packet_no').first()
         context['title'] = 'Movement - Movement Plan Detail'
         context['sidebar'] = 'Movement'
         context['year'] = datetime.now().year
@@ -323,6 +326,8 @@ class Unit_DetailView(LoginRequiredMixin, generic.DetailView):
         context = super(Unit_DetailView, self).get_context_data(**kwargs)
         context["packet_detail"] = models.Packet_Detail.objects.filter(u_id__exact=self.kwargs.get("pk")
                                                                        ).order_by('packet_no')
+        context["packet_detail_first"] = models.Packet_Detail.objects.filter(u_id__exact=self.kwargs.get("pk")
+                                                                       ).order_by('packet_no').first()
         context["cp_detail"] = models.CP_Detail.objects.all().order_by('cp_no')
         context['title'] = 'Movement - Movement Plan Unit Detail'
         context['sidebar'] = 'Movement'
@@ -402,8 +407,7 @@ class Edit_Movement_PlanListView(LoginRequiredMixin, generic.ListView):
                 Q(serial__icontains=search_post) | Q(exercise_name__icontains=search_post) | Q(
                     route_name__icontains=search_post) | Q(description__icontains=search_post) | Q(
                     speed__icontains=search_post) | Q(traffic_density__icontains=search_post) | Q(
-                    packet_gap__icontains=search_post) | Q(unit_gap__icontains=search_post) | Q(
-                    packet_size__icontains=search_post) | Q(route_type__route_type__icontains=search_post) | Q(
+                    packet_gap__icontains=search_post) | Q(unit_gap__icontains=search_post) | Q(route_type__route_type__icontains=search_post) | Q(
                     route_type__acronym__icontains=search_post) | Q(brigade__brigade__icontains=search_post) | Q(
                     brigade__acronym__icontains=search_post) | Q(id__icontains=search_post))
             context['searchbool'] = 1
@@ -527,8 +531,7 @@ class Create_Movement_PlanView(LoginRequiredMixin, generic.CreateView, generic.L
                 Q(serial__icontains=search_post) | Q(exercise_name__icontains=search_post) | Q(
                     route_name__icontains=search_post) | Q(description__icontains=search_post) | Q(
                     speed__icontains=search_post) | Q(traffic_density__icontains=search_post) | Q(
-                    packet_gap__icontains=search_post) | Q(unit_gap__icontains=search_post) | Q(
-                    packet_size__icontains=search_post) | Q(route_type__route_type__icontains=search_post) | Q(
+                    packet_gap__icontains=search_post) | Q(unit_gap__icontains=search_post) | Q(route_type__route_type__icontains=search_post) | Q(
                     route_type__acronym__icontains=search_post) | Q(brigade__brigade__icontains=search_post) | Q(
                     brigade__acronym__icontains=search_post) | Q(id__icontains=search_post))
             context['searchbool'] = 1
@@ -614,7 +617,7 @@ class Create_Unit_DetailCreateListView(LoginRequiredMixin, generic.CreateView, g
         context['m_id'] = self.request.session.get('session_m_id', 0)
         context['startex_list'] = sxm.StartEx_Plan.objects.all().order_by('created_at')
         context['detail_startex_plan'] = sxm.StartEx_Plan.objects.get(
-            pk__iexact=self.request.session.get('session_mud_sx', 0))
+            pk__iexact=self.request.session.get('session_mud_sx', 1))
         context["sx_vehicle_data"] = sxm.SX_Vehicle_Data.objects.all().order_by('name')
         context["sx_vehicle_detail"] = sxm.SX_Vehicle_Detail.objects.all().order_by('id')
         context["sx_unit_detail"] = sxm.SX_Unit_Detail.objects.filter(

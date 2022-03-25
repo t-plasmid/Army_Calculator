@@ -56,68 +56,73 @@
             <div class="mt-5 alert alert-secondary lead" role="alert">
                 List of allocated Critical Points (CPs)
             </div>
-            {% if cp_detail_create_list %}
-              <table id = "id_cp_list_view" class="table table-responsive table-striped table-bordered border-secondary mb-4">
-                <thead class="table-dark">
-                  <tr>
-                    <th>Movement Plan ID</th>
-                    <th>CP</th>
-                    <th>Distance</th>
-                    <th>Halt Time</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
+
+            <div class="row justify-content-left">
+                <div class="col-auto">
                     {% if cp_detail_create_list %}
-                        {% regroup cp_detail_create_list by m_id as cp_detail_create_list_by_m_id %}
-                            {% for m_id in cp_detail_create_list_by_m_id %}
-                                <tr>
-                                    <td>{{ m_id.grouper }}</td>
+                      <table id = "id_cp_list_view" class="table table-responsive table-striped table-bordered border-secondary mb-4">
+                        <thead class="table-dark text-center">
+                          <tr>
+                            <th>Movement Plan ID</th>
+                            <th>CP</th>
+                            <th>Distance</th>
+                            <th>Halt Time</th>
+                            <th>Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            {% if cp_detail_create_list %}
+                                {% regroup cp_detail_create_list by m_id as cp_detail_create_list_by_m_id %}
+                                    {% for m_id in cp_detail_create_list_by_m_id %}
+                                        <tr>
+                                            <td>{{ m_id.grouper }}</td>
 
-                                    <td>
-                                        {% for name in m_id.list %}
-                                            <div class="border-bottom" style="height:40px;">{{name.cp_no}}</div>
-                                        {% endfor %}
-                                    </td>
-                                    <td>
-                                        {% for name in m_id.list %}
-                                            <div class="border-bottom" style="height:40px;">{{name.distance}}</div>
-                                        {% endfor %}
-                                    </td>
-                                    <td>
-                                        {% for name in m_id.list %}
-                                            <div class="border-bottom" style="height:40px;">{{name.halt_time}}</div>
-                                        {% endfor %}
-                                    </td>
+                                            <td>
+                                                {% for name in m_id.list %}
+                                                    <div class="border-bottom" style="height:40px;">{{name.cp_no}}</div>
+                                                {% endfor %}
+                                            </td>
+                                            <td>
+                                                {% for name in m_id.list %}
+                                                    <div class="border-bottom" style="height:40px;">{{name.distance}}</div>
+                                                {% endfor %}
+                                            </td>
+                                            <td>
+                                                {% for name in m_id.list %}
+                                                    <div class="border-bottom" style="height:40px;">{{name.halt_time}}</div>
+                                                {% endfor %}
+                                            </td>
 
-                                    <td>
-                                    {% for cp_detail in cp_detail_create_list %}
-                                        <div class="border-bottom" style="height:40px;">
-                                            <a href="{{ cp_detail.get_delete_url }}" class="btn btn-danger btn-sm bi bi-x-square"></a>
-                                            <a href="{{ cp_detail.get_update_url }}" class="btn btn-primary btn-sm bi bi-pen"></a>
-                                            <form class="ajax_open_form btn">
-                                                {% csrf_token %}
-                                                {% if forloop.counter == 1 %}
-                                                    <input type="submit" id="uid-{{cp_detail.id}}" class="btn btn-primary btn-sm" value="Open" />
-                                                    {% if sx_guide == 1 %}
-                                                        <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
-                                                    {% endif %}
-                                                {% endif %}
-                                            </form>
-                                        </div>
+                                            <td>
+                                            {% for cp_detail in cp_detail_create_list %}
+                                                <div class="border-bottom" style="height:40px;">
+                                                    <a href="{{ cp_detail.get_delete_url }}" class="btn btn-danger btn-sm bi bi-x-square"></a>
+                                                    <a href="{{ cp_detail.get_update_url }}" class="btn btn-primary btn-sm bi bi-pen"></a>
+                                                    <form class="ajax_open_form btn">
+                                                        {% csrf_token %}
+                                                        {% if forloop.counter == 1 %}
+                                                            <input type="submit" id="uid-{{cp_detail.id}}" class="btn btn-primary btn-sm" value="Open" />
+                                                            {% if sx_guide == 1 %}
+                                                                <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    </form>
+                                                </div>
+                                            {% endfor %}
+                                            </td>
+                                        </tr>
                                     {% endfor %}
-                                    </td>
-                                </tr>
-                            {% endfor %}
+                            {% endif %}
+                        </tbody>
+                      </table>
+
+                      {% include 'movement/pagination.html' %}
+
+                    {% else %}
+                        <p>There are no records!</p>
                     {% endif %}
-                </tbody>
-              </table>
-
-              {% include 'movement/pagination.html' %}
-
-            {% else %}
-                <p>There are no records!</p>
-            {% endif %}
+                </div>
+            </div>
 
             <script>
               $('#id_m_id').val({{ m_id }});

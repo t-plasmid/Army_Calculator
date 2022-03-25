@@ -60,7 +60,7 @@ class Movement_Data(models.Model):
     traffic_density = models.PositiveIntegerField(null=False, blank=False)
     packet_gap = models.PositiveIntegerField(null=True, blank=True)
     unit_gap = models.PositiveIntegerField(null=True, blank=True)
-    packet_size = models.PositiveIntegerField(null=True, blank=True)
+    # packet_size = models.PositiveIntegerField(null=True, blank=True)
     route_type = models.ForeignKey(Route_Type, related_name="movement_data", on_delete=models.PROTECT)
     # route_type = models.TextField(choices = ROUTE_CHOICES)
     created_at = models.DateTimeField(auto_now=True)
@@ -167,7 +167,7 @@ class Unit_Detail(models.Model):
     packet_no = models.PositiveIntegerField(null=False, blank=False)
     vehicle_qty = models.PositiveIntegerField(null=False, blank=False)
     packet_allocated = models.BooleanField(null=False, blank=False, default=False)
-    packet_auto_populted = models.BooleanField(null=False, blank=False, default=False)
+    # packet_auto_populated = models.BooleanField(null=False, blank=False, default=False)
 
     def __str__(self):
         return str(self.m_id) + " - " + str(self.unit)

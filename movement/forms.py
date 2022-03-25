@@ -9,7 +9,7 @@ class Movement_PlanForm(forms.ModelForm):
 
     class Meta:
         model = models.Movement_Data
-        exclude = ('created_by',)
+        exclude = ['created_by']
 
         widgets = {
             'description': forms.Textarea(attrs = {'class': 'editable medium-editor-textarea'}),
@@ -83,7 +83,7 @@ class Unit_DetailForm(forms.ModelForm):
 
     class Meta:
         model = models.Unit_Detail
-        exclude = ('packet_allocated', 'packet_auto_populted',)
+        exclude = ['packet_allocated']
 
     def __init__(self, *args, **kwargs):
         super(Unit_DetailForm, self).__init__(*args, **kwargs)

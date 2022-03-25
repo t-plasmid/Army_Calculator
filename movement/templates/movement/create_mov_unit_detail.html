@@ -88,7 +88,7 @@
                         <div class="container">
                             <div class="table-responsive">
                               <table class="table table-bordered" style="text-align: center;">
-                                  <thead>
+                                  <thead class="text-center">
                                     <tr class = "table-secondary align-middle">
                                       <th scope="col"></th>
                                         {% for vehicle_data in sx_vehicle_data %}
@@ -142,80 +142,85 @@
             <div class="mt-5 alert alert-secondary lead" role="alert">
                 List of allocated units
             </div>
-            {% if unit_detail_create_list %}
-              <table id="id_u_list_view" class="table table-responsive table-striped table-bordered border-secondary mb-4">
-                <thead class="table-dark">
-                  <tr>
-                    <th>ID</th>
-                    <th>Unit</th>
-                    <th>Packet No</th>
-                    <th>Vehicle Qty</th>
-                    <th>Packet Allocated</th>
-                    <th>Packet Auto Allocated</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
+
+            <div class="row justify-content-left">
+                <div class="col-auto">
                     {% if unit_detail_create_list %}
-                        {% regroup unit_detail_create_list by m_id as unit_detail_create_list_by_m_id %}
-                            {% for m_id in unit_detail_create_list_by_m_id %}
-                                <tr>
-                                    <td>{{ m_id.grouper }}</td>
+                      <table id="id_u_list_view" class="table table-responsive table-striped table-bordered border-secondary mb-4">
+                        <thead class="table-dark text-center">
+                          <tr>
+                            <th>ID</th>
+                            <th>Unit</th>
+                            <th>Packet No</th>
+                            <th>Vehicle Qty</th>
+                            <th>Packet Allocated</th>
+        <!--                    <th>Packet Auto Allocated</th>-->
+                            <th>Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            {% if unit_detail_create_list %}
+                                {% regroup unit_detail_create_list by m_id as unit_detail_create_list_by_m_id %}
+                                    {% for m_id in unit_detail_create_list_by_m_id %}
+                                        <tr>
+                                            <td>{{ m_id.grouper }}</td>
 
-                                    <td>
-                                        {% for name in m_id.list %}
-                                            <div class="border-bottom" style="height:40px;">{{name.unit}}</div>
-                                        {% endfor %}
-                                    </td>
-                                    <td>
-                                        {% for name in m_id.list %}
-                                            <div class="border-bottom" style="height:40px;">{{name.packet_no}}</div>
-                                        {% endfor %}
-                                    </td>
-                                    <td>
-                                        {% for name in m_id.list %}
-                                            <div class="border-bottom" style="height:40px;">{{name.vehicle_qty}}</div>
-                                        {% endfor %}
-                                    </td>
-                                    <td>
-                                        {% for name in m_id.list %}
-                                            <div class="border-bottom" style="height:40px;">{{name.packet_allocated}}</div>
-                                        {% endfor %}
-                                    </td>
-                                    <td>
-                                        {% for name in m_id.list %}
-                                            <div class="border-bottom" style="height:40px;">{{name.packet_auto_populated}}</div>
-                                        {% endfor %}
-                                    </td>
+                                            <td>
+                                                {% for name in m_id.list %}
+                                                    <div class="border-bottom" style="height:40px;">{{name.unit}}</div>
+                                                {% endfor %}
+                                            </td>
+                                            <td>
+                                                {% for name in m_id.list %}
+                                                    <div class="border-bottom" style="height:40px;">{{name.packet_no}}</div>
+                                                {% endfor %}
+                                            </td>
+                                            <td>
+                                                {% for name in m_id.list %}
+                                                    <div class="border-bottom" style="height:40px;">{{name.vehicle_qty}}</div>
+                                                {% endfor %}
+                                            </td>
+                                            <td>
+                                                {% for name in m_id.list %}
+                                                    <div class="border-bottom" style="height:40px;">{{name.packet_allocated}}</div>
+                                                {% endfor %}
+                                            </td>
+        <!--                                    <td>-->
+        <!--                                        {% for name in m_id.list %}-->
+        <!--                                            <div class="border-bottom" style="height:40px;">{{name.packet_auto_populated}}</div>-->
+        <!--                                        {% endfor %}-->
+        <!--                                    </td>-->
 
-                                    <td>
-                                    {% for unit_detail in unit_detail_create_list %}
-                                        <div class="border-bottom" style="height:40px;">
-                                            <a href="{{ unit_detail.get_delete_url }}" class="btn btn-danger btn-sm bi bi-x-square"></a>
-                                            <a href="{{ unit_detail.get_update_url }}" class="btn btn-primary btn-sm bi bi-pen"></a>
-                                            <form class="ajax_open_form btn">
-                                                {% csrf_token %}
-                                                <input type="submit" id="uid-{{unit_detail.id}}" class="btn btn-primary btn-sm" value="Open" />
-                                                {% if forloop.counter == 1 %}
-                                                    {% if sx_guide == 1 %}
-                                                        <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
-                                                    {% endif %}
-                                                {% endif %}
-                                            </form>
-                                        </div>
+                                            <td>
+                                            {% for unit_detail in unit_detail_create_list %}
+                                                <div class="border-bottom" style="height:40px;">
+                                                    <a href="{{ unit_detail.get_delete_url }}" class="btn btn-danger btn-sm bi bi-x-square"></a>
+                                                    <a href="{{ unit_detail.get_update_url }}" class="btn btn-primary btn-sm bi bi-pen"></a>
+                                                    <form class="ajax_open_form btn">
+                                                        {% csrf_token %}
+                                                        <input type="submit" id="uid-{{unit_detail.id}}" class="btn btn-primary btn-sm" value="Open" />
+                                                        {% if forloop.counter == 1 %}
+                                                            {% if sx_guide == 1 %}
+                                                                <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    </form>
+                                                </div>
+                                            {% endfor %}
+                                            </td>
+                                        </tr>
                                     {% endfor %}
-                                    </td>
-                                </tr>
-                            {% endfor %}
+                            {% endif %}
+                        </tbody>
+                      </table>
+
+                      {% include 'movement/pagination.html' %}
+
+                    {% else %}
+                        <p>There are no records!</p>
                     {% endif %}
-                </tbody>
-              </table>
-
-              {% include 'movement/pagination.html' %}
-
-            {% else %}
-                <p>There are no records!</p>
-            {% endif %}
+                </div>
+            </div>
 
             <script>
                 $('#id_m_id').val({{ m_id }});

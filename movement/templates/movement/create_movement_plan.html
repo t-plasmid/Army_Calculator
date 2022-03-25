@@ -35,7 +35,7 @@
                         <p>Traffic Density: {{mov_plan.traffic_density}}</p>
                         <p>Packet Gap: {{mov_plan.packet_gap}}</p>
                         <p>Unit Gap: {{mov_plan.unit_gap}}</p>
-                        <p>Packet Size: {{mov_plan.packet_size}}</p>
+<!--                        <p>Packet Size: {{mov_plan.packet_size}}</p>-->
                         <p>Route Type: {{mov_plan.route_type}}</p>
                         <p>Date Created: {{mov_plan.created_at}}</p>
                         <p>Created By: {{mov_plan.created_by}}</p>
@@ -63,70 +63,77 @@
             </div>
             <div class="mt-5 alert alert-secondary lead" role="alert">List - Movement Plan</div>
 
-            {% if create_list_movement_plan %}
-              <table id="id_list_startex_plan" class="table table-responsive table-striped table-bordered border-secondary mb-4">
-                  <thead class="table-dark">
-                    <tr>
-                        <th>ID</th>
-                        <th>Route Name</th>
-                        <th>Exercise Name</th>
-                        <th>Serial</th>
-                        <th>Description</th>
-                        <th>Start Time</th>
-                        <th>Start Date</th>
-                        <th>Traffic Density</th>
-                        <th>Packet Gap</th>
-                        <th>Unit Gap</th>
-                        <th>Packet Size</th>
-                        <th>Route Type</th>
-                        <th>Bigade</th>
-                        <th>Created at</th>
-                        <th>Created by</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for movement_plan in create_list_movement_plan %}
-                        <tr>
-                            <td>{{ movement_plan.id }}</td>
-                            <td>{{ movement_plan.route_name }}</td>
-                            <td>{{ movement_plan.exercise_name }}</td>
-                            <td>{{ movement_plan.serial }}</td>
-                            <td>{{ movement_plan.description }}</td>
-                            <td>{{ movement_plan.start_time }}</td>
-                            <td>{{ movement_plan.start_date }}</td>
-                            <td>{{ movement_plan.traffic_density }}</td>
-                            <td>{{ movement_plan.packet_gap }}</td>
-                            <td>{{ movement_plan.unit_gap }}</td>
-                            <td>{{ movement_plan.packet_size }}</td>
-                            <td>{{ movement_plan.route_type }}</td>
-                            <td>{{ movement_plan.brigade }}</td>
-                            <td>{{ movement_plan.created_at }}</td>
-                            <td>{{ movement_plan.created_by }}</td>
-                            <td>
-                                <a href="{{ movement_plan.get_delete_url }}" class="btn btn-danger btn-sm bi bi-x-square"></a>
-                                <a href="{{ movement_plan.get_update_url }}" class="btn btn-primary btn-sm bi bi-pen"></a>
-                                <form class="ajax_open_form btn">
-                                    {% csrf_token %}
-                                    <input type="submit" class="btn btn-primary btn-sm" value="Open" />
-                                    {% if forloop.counter == 1 %}
-                                        {% if sx_guide == 1 %}
-                                            <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
-                                        {% endif %}
-                                    {% endif %}
-    <!--                                <a id = 'id_open_btn' class="ms-3 btn btn-primary btn-sm" href="{% url open_url %}" role="button">{{ open_text }}</a>-->
-                                </form>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-              </table>
 
-              {% include 'movement/pagination.html' %}
+            <div class="row justify-content-left">
+                <div class="col-auto">
+                    {% if create_list_movement_plan %}
+                      <table id="id_list_startex_plan" class="table table-responsive table-striped table-bordered border-secondary mb-4 table-condensed">
+                          <thead class="table-dark text-center">
+                            <tr>
+                                <th>ID</th>
+                                <th>Route</th>
+                                <th>Exercise</th>
+                                <th>Serial</th>
+                                <th>Description</th>
+                                <th>Brigade</th>
+                                <th>Start Time</th>
+                                <th>Start Date</th>
+                                <th>Tfc Density</th>
+                                <th>Pkt Gap</th>
+                                <th>Unit Gap</th>
+        <!--                        <th>Packet Size</th>-->
+                                <th>Route Type</th>
 
-            {% else %}
-                <p>There are no records!</p>
-            {% endif %}
+                                <th>Created at</th>
+                                <th>Created by</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for movement_plan in create_list_movement_plan %}
+                                <tr>
+                                    <td>{{ movement_plan.id }}</td>
+                                    <td><span class="d-inline-block text-truncate" style="max-width: 80px;">{{ movement_plan.route_name }}</span></td>
+                                    <td><span class="d-inline-block text-truncate" style="max-width: 80px;">{{ movement_plan.exercise_name }}</span></td>
+                                    <td><span class="d-inline-block text-truncate" style="max-width: 80px;">{{ movement_plan.serial }}</span></td>
+                                    <td><span class="d-inline-block text-truncate" style="max-width: 80px;">{{ movement_plan.description }}</span></td>
+                                    <td>{{ movement_plan.brigade }}</td>
+                                    <td>{{ movement_plan.start_time|time:"H:i:s" }}</td>
+                                    <td>{{ movement_plan.start_date|date:"j/n/y" }}</td>
+                                    <td>{{ movement_plan.traffic_density }}</td>
+                                    <td>{{ movement_plan.packet_gap }}</td>
+                                    <td>{{ movement_plan.unit_gap }}</td>
+        <!--                            <td>{{ movement_plan.packet_size }}</td>-->
+                                    <td>{{ movement_plan.route_type }}</td>
+
+                                    <td>{{ movement_plan.created_at|time:"H:i:s" }}</br>({{ movement_plan.created_at|date:"j/n/y" }})</td>
+                                    <td>{{ movement_plan.created_by }}</td>
+                                    <td class="col-md-2">
+                                        <a href="{{ movement_plan.get_delete_url }}" class="btn btn-danger btn-sm bi bi-x-square"></a>
+                                        <a href="{{ movement_plan.get_update_url }}" class="btn btn-primary btn-sm bi bi-pen"></a>
+                                        <form class="ajax_open_form btn">
+                                            {% csrf_token %}
+                                            <input type="submit" class="btn btn-primary btn-sm" value="Open" />
+                                            {% if forloop.counter == 1 %}
+                                                {% if sx_guide == 1 %}
+                                                    <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                                                {% endif %}
+                                            {% endif %}
+            <!--                                <a id = 'id_open_btn' class="ms-3 btn btn-primary btn-sm" href="{% url open_url %}" role="button">{{ open_text }}</a>-->
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                      </table>
+
+                      {% include 'movement/pagination.html' %}
+
+                    {% else %}
+                        <p>There are no records!</p>
+                    {% endif %}
+                </div>
+            </div>
 
             </div>
       {% else %}

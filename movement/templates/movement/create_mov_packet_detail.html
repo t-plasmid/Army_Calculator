@@ -56,61 +56,65 @@
         <div class="mt-5 alert alert-secondary lead" role="alert">
             List of allocated packets
         </div>
-        {% if packet_detail_create_list %}
-          <p hidden id="id_records">Could not retrive the packet records!</p>
-          <table id="id_p_list_view" class="table table-responsive table-striped table-bordered border-secondary mb-4">
-            <thead class="table-dark">
-              <tr>
-                <th>ID</th>
-                <th>Sub-unit</th>
-                <th>Packet No</th>
-                <th>Vehicle Qty</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
+
+        <div class="row justify-content-left">
+            <div class="col-auto">
                 {% if packet_detail_create_list %}
-                    {% regroup packet_detail_create_list by u_id as packet_detail_create_list_by_u_id %}
-                        {% for u_id in packet_detail_create_list_by_u_id %}
-                            <tr>
-                                <td>{{ u_id.grouper }}</td>
+                  <p hidden id="id_records">Could not retrive the packet records!</p>
+                  <table id="id_p_list_view" class="table table-responsive table-striped table-bordered border-secondary mb-4">
+                    <thead class="table-dark text-center">
+                      <tr>
+                        <th>ID</th>
+                        <th>Sub-unit</th>
+                        <th>Packet No</th>
+                        <th>Vehicle Qty</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        {% if packet_detail_create_list %}
+                            {% regroup packet_detail_create_list by u_id as packet_detail_create_list_by_u_id %}
+                                {% for u_id in packet_detail_create_list_by_u_id %}
+                                    <tr>
+                                        <td>{{ u_id.grouper }}</td>
 
-                                <td>
-                                    {% for name in u_id.list %}
-                                        <div class="border-bottom" style="height:40px;">{{name.subunit}}</div>
-                                    {% endfor %}
-                                </td>
-                                <td>
-                                    {% for name in u_id.list %}
-                                        <div class="border-bottom" style="height:40px;">{{name.packet_no}}</div>
-                                    {% endfor %}
-                                </td>
-                                <td>
-                                    {% for name in u_id.list %}
-                                        <div class="border-bottom" style="height:40px;">{{name.vehicle_qty}}</div>
-                                    {% endfor %}
-                                </td>
+                                        <td>
+                                            {% for name in u_id.list %}
+                                                <div class="border-bottom" style="height:40px;">{{name.subunit}}</div>
+                                            {% endfor %}
+                                        </td>
+                                        <td>
+                                            {% for name in u_id.list %}
+                                                <div class="border-bottom" style="height:40px;">{{name.packet_no}}</div>
+                                            {% endfor %}
+                                        </td>
+                                        <td>
+                                            {% for name in u_id.list %}
+                                                <div class="border-bottom" style="height:40px;">{{name.vehicle_qty}}</div>
+                                            {% endfor %}
+                                        </td>
 
-                                <td>
-                                {% for packet_detail in packet_detail_create_list %}
-                                    <div class="border-bottom" style="height:40px;">
-                                        <a href="{{ packet_detail.get_delete_url }}" class="btn btn-danger btn-sm bi bi-x-square"></a>
-                                        <a href="{{ packet_detail.get_update_url }}" class="btn btn-primary btn-sm bi bi-pen"></a>
-                                    </div>
+                                        <td>
+                                        {% for packet_detail in packet_detail_create_list %}
+                                            <div class="border-bottom" style="height:40px;">
+                                                <a href="{{ packet_detail.get_delete_url }}" class="btn btn-danger btn-sm bi bi-x-square"></a>
+                                                <a href="{{ packet_detail.get_update_url }}" class="btn btn-primary btn-sm bi bi-pen"></a>
+                                            </div>
+                                        {% endfor %}
+                                        </td>
+                                    </tr>
                                 {% endfor %}
-                                </td>
-                            </tr>
-                        {% endfor %}
+                        {% endif %}
+                    </tbody>
+                  </table>
+
+                  {% include 'movement/pagination.html' %}
+
+                {% else %}
+                    <p>There are no records!</p>
                 {% endif %}
-            </tbody>
-          </table>
-
-          {% include 'movement/pagination.html' %}
-
-        {% else %}
-            <p>There are no records!</p>
-        {% endif %}
-
+            </div>
+        </div>
         <script>
           const params = new URLSearchParams(window.location.search);
           var u_id = params.get("u_id");
