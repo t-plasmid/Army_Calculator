@@ -636,13 +636,14 @@ class Create_Unit_DetailCreateListView(LoginRequiredMixin, generic.CreateView, g
 
         context["sx_vehicle_data"] = sxm.SX_Vehicle_Data.objects.all().order_by('name')
         context["sx_vehicle_detail"] = sxm.SX_Vehicle_Detail.objects.all().order_by('id')
-        try:
-            context["sx_unit_detail"] = sxm.SX_Unit_Detail.objects.filter(sx_id__id=self.request.session.get('session_mud_sx', 1)).order_by('id')
-        except:
-            try:
-                context["sx_unit_detail"] = sxm.SX_Unit_Detail.objects.all().order_by('id')
-            except:
-                context["sx_unit_detail"] = None
+        context["sx_unit_detail"] = sxm.SX_Unit_Detail.objects.all().order_by('id').order_by('id')
+        # try:
+        #     context["sx_unit_detail"] = sxm.SX_Unit_Detail.objects.filter(sx_id__id=self.request.session.get('session_mud_sx', 1)).order_by('id')
+        # except:
+        #     try:
+        #         context["sx_unit_detail"] = sxm.SX_Unit_Detail.objects.all().order_by('id')
+        #     except:
+        #         context["sx_unit_detail"] = None
         context["btn_text"] = self.request.session.get('session_btn_text', "Hide StartEx Plan")
         context["btn_cmd"] = self.request.session.get('session_btn_cmd', "show")
         search_post = self.request.GET.get('search')
