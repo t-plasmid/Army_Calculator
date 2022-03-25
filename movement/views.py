@@ -29,6 +29,9 @@ User = get_user_model()
 
 # FBV
 
+def is_ajax(request):
+    return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+
 def post_Movement_Plan(request):
     if is_ajax(request) and request.method == "POST":
         movement_plan_id = request.POST.get('movement_plan_id', None)
