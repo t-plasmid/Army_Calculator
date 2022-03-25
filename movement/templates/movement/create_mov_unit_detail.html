@@ -63,13 +63,20 @@
                                         <option value="{{ sx_l.id }}" class="sel_sx">{{ sx_l.name }}</option>
                                     {% endfor %}
                                 </select>
-                            {% if detail_startex_plan %}
                               <div class="row">
                                 <div class="col">
-                                    <label class="col-sm-2 col-form-label" for="id_sx_id_sec">ID:</label><span id="id_sx_id_sec">{{ detail_startex_plan.id }}</span>
+                                    <label class="col-sm-2 col-form-label" for="id_sx_id_sec">ID:</label><span id="id_sx_id_sec">
+                                        {% if detail_startex_plan %}
+                                            {{ detail_startex_plan.id }}
+                                        {% endif %}
+                                    </span>
                                 </div>
                                 <div class="col">
-                                  <label class="col-sm-4 col-form-label" for="id_sx_brigade_sec">Brigade:</label><span id="id_sx_brigade_sec">{{ detail_startex_plan.brigade }}</span>
+                                    <label class="col-sm-4 col-form-label" for="id_sx_brigade_sec">Brigade:</label><span id="id_sx_brigade_sec">
+                                        {% if detail_startex_plan %}
+                                            {{ detail_startex_plan.brigade }}
+                                        {% endif %}
+                                    </span>
                                 </div>
                               </div>
 
@@ -77,8 +84,11 @@
 
                             <div class="container">
                                 <div class="p-3 mb-3 bg-light border rounded-3">
-                                    <h5>Description</h5>
-                                    <p class="lead"> {{ detail_startex_plan.description }}</p>
+                                    <h5>Description</h5><p class="lead">
+                                    {% if detail_startex_plan %}
+                                        {{ detail_startex_plan.description }}
+                                    {% endif %}
+                                    </p>
                                 </div>
                             </div>
 
@@ -86,8 +96,12 @@
                             <p hidden id="id_veh_found"></p>
                             <p hidden id="id_veh_total"></p>
                             <p hidden id="id_btn_cmd">{{ btn_cmd }}</p>
-                            <p hidden id="id_sx_pk">{{ detail_startex_plan.id }}</p>
-                            {% endif %}
+                            <p hidden id="id_sx_pk">
+                                {% if detail_startex_plan %}
+                                    {{ detail_startex_plan.id }}
+                                {% endif %}
+                            </p>
+
                             <div class="container">
                                 <div class="table-responsive">
                                   <table class="table table-bordered" style="text-align: center;">
