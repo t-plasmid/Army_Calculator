@@ -49,7 +49,7 @@
                     {% bootstrap_button button_type="submit" class="btn btn-primary" content="Create" %}
                         {% if sx_guide == 0 %}
                             <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
-                            <a href="#" data-toggle="popover" title="Once the above fields have been filled out, please click here" data-content=""></a>
+                            <a href="#" data-toggle="popover" title="Click here" data-content=""></a>
                         {% endif %}
                 </form>
             </div>
@@ -167,10 +167,10 @@
     }
 
     $(document).ready(function () {
-        var header = "Make a StartEx Plan!";
+        var header = "Create a StartEx Plan!";
         var body = "Populate the fields with the relevant information.";
         var extra = "<h5>For example:</h5>";
-        var instruction = "<b>Name: </b> Ex Avon Drive</br><b>Brigade: </b>12 Bde</br><b>Description: </b>This exercise will involve all units from 12 Bde.";
+        var instruction = "<b>Name: </b> Ex Brighton Drive</br><b>Brigade: </b>12 Bde</br><b>Description: </b>All units from 12 Bde will be involved.";
         var furtherinfo = "After you've created the StartEx plan, you can make changes by clicking the \"<code>Delete</code>\" or \"<code>Update</code>\" \
                     buttons. Finally, click the \"<code>Open</code>\" button next to the newly created StartEx plan.";
         alert_guide(header, body, extra, instruction, furtherinfo);
