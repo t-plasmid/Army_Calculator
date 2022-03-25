@@ -626,8 +626,8 @@ class Create_Unit_DetailCreateListView(LoginRequiredMixin, generic.CreateView, g
         context['m_id'] = self.request.session.get('session_m_id', 0)
         context['startex_list'] = sxm.StartEx_Plan.objects.all().order_by('created_at')
         try:
-            context['detail_startex_plan'] = sxm.StartEx_Plan.objects.get(
-                pk=self.request.session.get('session_mud_sx', 1))
+            context['detail_startex_plan'] = sxm.StartEx_Plan.objects.filter(
+                pk=self.request.session.get('session_mud_sx', 1))[0]
         except:
             pass
         context["sx_vehicle_data"] = sxm.SX_Vehicle_Data.objects.all().order_by('name')

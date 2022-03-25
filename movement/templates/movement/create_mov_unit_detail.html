@@ -54,7 +54,7 @@
                     </br> <button class="btn_text_change btn btn-outline-dark" id="id_btn_text_change">{{ btn_text }}</button>
                 </div>
 
-                    {% if detail_startex_plan %}
+
                         <div id="id_startex_plan_div" class = "border border-secondary border-4 p-3 mb-2 bg-light text-dark">
                             <div class="container">
                                 <label class="col-sm-4 col-form-label" for="id_sx_plan_sec">StartEx Plan:</label>
@@ -63,6 +63,7 @@
                                         <option value="{{ sx_l.id }}" class="sel_sx">{{ sx_l.name }}</option>
                                     {% endfor %}
                                 </select>
+                            {% if detail_startex_plan %}
                               <div class="row">
                                 <div class="col">
                                     <label class="col-sm-2 col-form-label" for="id_sx_id_sec">ID:</label><span id="id_sx_id_sec">{{ detail_startex_plan.id }}</span>
@@ -71,6 +72,7 @@
                                   <label class="col-sm-4 col-form-label" for="id_sx_brigade_sec">Brigade:</label><span id="id_sx_brigade_sec">{{ detail_startex_plan.brigade }}</span>
                                 </div>
                               </div>
+
                             </div>
 
                             <div class="container">
@@ -85,6 +87,7 @@
                             <p hidden id="id_veh_total"></p>
                             <p hidden id="id_btn_cmd">{{ btn_cmd }}</p>
                             <p hidden id="id_sx_pk">{{ detail_startex_plan.id }}</p>
+                            {% endif %}
                             <div class="container">
                                 <div class="table-responsive">
                                   <table class="table table-bordered" style="text-align: center;">
@@ -137,7 +140,6 @@
                                 </div>
                             </div>
                         </div>
-                    {% endif %}
             </div>
 
             <div class="mt-5 alert alert-secondary lead" role="alert">
