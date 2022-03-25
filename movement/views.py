@@ -633,12 +633,16 @@ class Create_Unit_DetailCreateListView(LoginRequiredMixin, generic.CreateView, g
                 context['detail_startex_plan'] = sxm.StartEx_Plan.objects.all().first()
             except:
                 context['detail_startex_plan'] = None
-
         context["sx_vehicle_data"] = sxm.SX_Vehicle_Data.objects.all().order_by('name')
         context["sx_vehicle_detail"] = sxm.SX_Vehicle_Detail.objects.all().order_by('id')
-        context["sx_unit_detail"] = sxm.SX_Unit_Detail.objects.filter(
-            sx_id__id=self.request.session.get('session_mud_sx', 1)
-        ).order_by('id')
+        try:
+            context["sx_unit_detail"] = sxm.SX_Unit_Detail.objects.filter(
+                sx_id__id=self.request.session.get('session_mud_sx', 1)).order_by('id')
+        except:
+            try:
+                context["sx_unit_detail"] = sxm.SX_Unit_Detail.objects.all().first()
+            except:
+                context["sx_unit_detail"] = None
         context["btn_text"] = self.request.session.get('session_btn_text', "Hide StartEx Plan")
         context["btn_cmd"] = self.request.session.get('session_btn_cmd', "show")
         search_post = self.request.GET.get('search')
