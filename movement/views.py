@@ -285,7 +285,7 @@ class Movement_PlanListView(LoginRequiredMixin, generic.ListView):
 
 class Movement_PlanDetailView(LoginRequiredMixin, generic.DetailView):
     model = models.Movement_Data
-    template_name = 'movement/movement_detail.html'
+    template_name = 'movement/unit_detail.html'
     context_object_name = 'movement_detail_detail'
 
     def get_queryset(self):
@@ -313,7 +313,7 @@ class Movement_PlanDetailView(LoginRequiredMixin, generic.DetailView):
 
 class Unit_DetailView(LoginRequiredMixin, generic.DetailView):
     model = models.Unit_Detail
-    template_name = 'movement/unit_detail.html'
+    template_name = 'movement/subunit_detail.html'
     context_object_name = 'unit_detail'
 
     def get_queryset(self):
@@ -599,7 +599,7 @@ class Create_Unit_DetailCreateListView(LoginRequiredMixin, generic.CreateView, g
     form_class = forms.Unit_DetailForm
     context_object_name = 'unit_detail_create_list'
     paginate_by = 5
-    success_url = '/movement/create_list_mov_packet_detail'
+    success_url = '/movement/create_list_mov_unit_detail'
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
@@ -621,7 +621,7 @@ class Create_Unit_DetailCreateListView(LoginRequiredMixin, generic.CreateView, g
         context["sx_vehicle_data"] = sxm.SX_Vehicle_Data.objects.all().order_by('name')
         context["sx_vehicle_detail"] = sxm.SX_Vehicle_Detail.objects.all().order_by('id')
         context["sx_unit_detail"] = sxm.SX_Unit_Detail.objects.filter(
-            sx_id__id__iexact=self.request.session.get('session_mud_sx', 0)
+            sx_id__id__iexact=self.request.session.get('session_mud_sx', 1)
         ).order_by('id')
         context["btn_text"] = self.request.session.get('session_btn_text', "Hide StartEx Plan")
         context["btn_cmd"] = self.request.session.get('session_btn_cmd', "show")

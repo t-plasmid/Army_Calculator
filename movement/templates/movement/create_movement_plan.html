@@ -57,7 +57,7 @@
                     {% bootstrap_button button_type="submit" class="btn btn-primary" content="Create" %}
                     {% if sx_guide == 0 %}
                             <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
-                            <a href="#" data-toggle="popover" title="Once the above fields have been filled out, please click here" data-content=""></a>
+                            <a href="#" data-toggle="popover" title="Click here" data-content=""></a>
                         {% endif %}
                 </form>
             </div>
@@ -190,12 +190,12 @@
     }
 
     $(document).ready(function () {
-        var header = "Make a StartEx Plan!";
+        var header = "Create a Movement Plan!";
         var body = "Populate the fields with the relevant information.";
         var extra = "<h5>For example:</h5>";
-        var instruction = "<b>Name: </b> Ex Avon Drive</br><b>Brigade: </b>12 Bde</br><b>Description: </b>This exercise will involve all units from 12 Bde.";
+        var instruction = "<b>Route name: </b> 12X Road Movement From Southampton to Bde AA</br><b>Exercise name: </b> Ex Brighton Drive</br><b>Serial: </b> Serial 8a to</br><b>Description: </b>This is one of the largest exercises ever carried out by the 101st Log Brigade.</br><b>Start time: </b>09:00</br><b>Start date: </b>13/05/2022</br><b>Average speed (km/h): </b>50</br><b>Traffic density (veh/km): </b>10</br><b>Packet gap (min): </b>2</br><b>Unit gap (min): </b>10</br><b>Route type: </b>Motorway</br><b>Brigade: </b>12 Bde</br>";
         var furtherinfo = "After you've created the StartEx plan, you can make changes by clicking the \"<code>Delete</code>\" or \"<code>Update</code>\" \
-                    buttons. Finally, click the \"<code>Open</code>\" button next to the newly created StartEx plan.";
+                    buttons. Finally, click the \"<code>Open</code>\" button next to the newly created Movement plan.";
         alert_guide(header, body, extra, instruction, furtherinfo);
     });
     // Alert - End

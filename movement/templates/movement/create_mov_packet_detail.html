@@ -5,7 +5,7 @@
     <li class="breadcrumb-item active"><a href="{% url 'movement:create_movement_plan' %}">Create Movement Plan</a></li>
     <li class="breadcrumb-item active"><a href="{% url 'movement:create_list_mov_cp_detail' %}">CP Allocation</a></li>
     <li class="breadcrumb-item active"><a href="{% url 'movement:create_list_mov_unit_detail' %}">Unit Allocate</a></li>
-    <li class="breadcrumb-item active">Packet Allocate</li>
+    <li class="breadcrumb-item active">Subunit Allocation</li>
 {% endblock %}
 
 {% block searchbar %}
@@ -39,7 +39,7 @@
         {% endif %}
 
     <div class="container">
-      <div class="alert alert-info lead" role="alert">Packet Allocation</div>
+      <div class="alert alert-info lead" role="alert">Subunit Allocation</div>
       {% load django_bootstrap5 %}
         <div class="container">
             <form method="POST" class="form">
@@ -248,14 +248,14 @@
     }
 
     $(document).ready(function () {
-        var header = "Finally, a packet allocation for subunits!";
-        var body = "Enter a subunit name, a packet number, and the vehicle quantity, and then click the \"<code>Add</code>\" \
-                button to add a new subunit's packet detail to the unit you've selected. Repeat the process to add more subunits' packet details to \
-                the unit you've selected.";
+        var header = "Finally, allocate subunits!";
+        var body = "Enter a subunit name, its packet number and vehicle quantity, and then click the \"<code>Add</code>\" \
+                button to allocate the new subunit to the unit you've opened. Repeat the process to allocate more subunits \
+                the unit you've opened.";
         var extra = "<h5>For example:</h5>";
         var instruction = "<b>Subunit: </b>11 Signal Regiment</br><b>Packet no: </b>1</br><b>Vehicle qty: </b>10";
-        var furtherinfo = "After you've added the subunit's packet detail, you can make changes by clicking the \"<code>Delete</code>\" or \"<code>Update</code>\" \
-                    buttons. Finally, please select \"<code>Movement Plan</code>\" from the \"<code>View</code>\" dropdown menu on the left vertical \
+        var furtherinfo = "After subunits have been added, you can make changes to them by clicking the \"<code>Delete</code>\" or \"<code>Update</code>\" \
+                    buttons. In the meantime, click on the \"<code>Back</code>\" button to allocate subunits to other units. Alternatively, you can use the dropdown. Finally, please select \"<code>Movement Plan</code>\" from the \"<code>View</code>\" dropdown menu on the left vertical \
                     navbar to view your Movement plan.";
         alert_guide(header, body, extra, instruction, furtherinfo);
     });

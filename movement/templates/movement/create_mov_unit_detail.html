@@ -4,7 +4,7 @@
     <li class="breadcrumb-item active"><a href="{% url 'movement:movement_plan_base' %}">Movement</a></li>
     <li class="breadcrumb-item active"><a href="{% url 'movement:create_movement_plan' %}">Create Movement Plan</a></li>
     <li class="breadcrumb-item active"><a href="{% url 'movement:create_list_mov_cp_detail' %}">CP Allocation</a></li>
-    <li class="breadcrumb-item active">Unit Allocate</li>
+    <li class="breadcrumb-item active">Unit Allocation</li>
 {% endblock %}
 
 {% block searchbar %}
@@ -421,11 +421,11 @@
     }
 
     $(document).ready(function () {
-        var header = "Then, a unit allocation!";
-        var body = "Select a relevant unit from the dropdown box and populate its parameters, then click the \"<code>Add</code>\" button to add the unit to the Movement plan created earlier. Repeat the process to add more units to the plan.";
+        var header = "Then, allocate units!";
+        var body = "Select a unit from the dropdown box, enter its packet number and vehicle quantity, and then click the \"<code>Add</code>\" button to allocate the unit to the Movement plan you created earlier. Repeat the process to allocate more units to the plan.";
         var extra = "<h5>For example:</h5>";
-        var instruction = "<b>Unit: </b> 1 MERC</br><b>Packet no: </b> 1</br><b>Vehicle qty: </b> 10";
-        var furtherinfo = "After you've added the unit, you can make changes by clicking the \"<code>Delete</code>\" or \"<code>Update</code>\" \
+        var instruction = "<b>Unit: </b> 1 MERC</br><b>Packet no: </b> 1</br><b>Vehicle qty: </b> 20";
+        var furtherinfo = "Alternatively, click the \"<code>Show StartEx Plan\"</code> button to display the StartEx Plan box. Then, using the dropdown box, select a StartEx Plan. You will now see various units and vehicles assigned to them. Finally, you can populate your units here by referring to these vehicle allocations by units.</br></br>After you've added the unit, you can make changes by clicking the \"<code>Delete</code>\" or \"<code>Update</code>\" \
                     buttons. Finally, click the \"<code>Open</code>\" button next to the newly created unit to allocate packet details for its subunits.";
         alert_guide(header, body, extra, instruction, furtherinfo);
     });

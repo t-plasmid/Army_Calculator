@@ -21,7 +21,7 @@
     			  <div class="card-body">
     			    <h5 class="card-title">{{ movement_data.route_name }}</h5>
     			    <p class="card-text">{{movement_data.description}}</p>
-    					<p class="mb-0 card-text">Created at: {{movement_data.created_at}}</p>
+    					<p class="mb-0 card-text">Created at: {{ movement_data.created_at|time:"H:i:s" }} ({{ movement_data.created_at|date:"j/n/y" }})</p>
     					<p class="mt-0 card-text">Created by: {{movement_data.created_by}}</p>
     			    	<a href="{{ movement_data.get_absolute_url }}" class="btn btn-primary">View</a>
 					  {% if forloop.counter == 1 %}

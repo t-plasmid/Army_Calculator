@@ -19,7 +19,7 @@
 						  <div class="card-body">
 							<h5 class="card-title">{{ startex_plan.brigade }}</h5>
 							<p class="card-text">{{startex_plan.description}}</p>
-								<p class="mb-0 card-text">Created at: {{startex_plan.created_at}}</p>
+								<p class="mb-0 card-text">Created at: {{ startex_plan.created_at|time:"H:i:s"  }} ({{ startex_plan.created_at|date:"j/n/y"  }})</p>
 								<p class="mt-0 card-text">Created by: {{startex_plan.created_by}}</p>
 							  <a href="{{ startex_plan.get_detailview_url }}" class="btn btn-primary">View</a>
 							  {% if forloop.counter == 1 %}
@@ -65,8 +65,8 @@
     }
 
     $(document).ready(function () {
-        var header = "View StartEx Plan!";
-        var body = "Click on the \"<code>View</code>\" button highlighted below to view the StartEx Plan you have just created.";
+        var header = "View your StartEx Plan!";
+        var body = "Click on the \"<code>View</code>\" button, highlighted below, to view the StartEx Plan you have just created.";
         var extra = "";
         var instruction = "";
         var furtherinfo = "";

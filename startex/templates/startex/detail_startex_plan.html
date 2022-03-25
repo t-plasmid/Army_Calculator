@@ -19,7 +19,7 @@
 				<table class = 'table table-borderless'>
 					<tr>
 						<td width="95px" class = "mb-0"><small>Created At:</small></td>
-						<td><small>{{ detail_startex_plan.created_at }}</small></td>
+						<td><small>{{ detail_startex_plan.created_at|time:"H:i:s"  }} ({{ detail_startex_plan.created_at|date:"j/n/y"  }})</small></td>
 					</tr>
 					<tr>
 						<td><small>Created By:</small></td>
@@ -120,7 +120,7 @@
         var header = "Congratulation!";
         var body = "You have just successfully created and viewed a StartEx plan.";
         var extra = "Next, we will create a Movement plan based on the StartEx plan we just created. For this, please click the \"<code>Movement</code>\" link from the Navbar above.";
-        var instruction = "</br></br><b>Note: </b>You can also create your new Movement plan without using the StartEx plan.";
+        var instruction = "</br></br><b>Note: </b>You can also create a Movement plan without using a StartEx plan.";
         var furtherinfo = "";
         alert_guide(header, body, extra, instruction, furtherinfo);
     });
