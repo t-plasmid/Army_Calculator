@@ -114,44 +114,47 @@
                                             <th>Total</th>
                                         </tr>
                                       </thead>
-                                      <tbody id='main_tbody'>
-                                        {% for unit_detail in sx_unit_detail %}
-                                            {% if unit_detail.sx_id.id == detail_startex_plan.id  %}
-                                                <tr>
-                                                    <td class = "table-secondary"><strong>{{ unit_detail.u_id }}</strong></td>
-                                                    {% for vehicle_data in sx_vehicle_data %}
 
-                                                        {% for vehicle_detail in sx_vehicle_detail %}
-                                                            {% if vehicle_detail.sx_u_id.id == unit_detail.id and vehicle_data.id == vehicle_detail.sx_v_id.id %}
-                                                                <td class="bg-info text-white">{{vehicle_detail.qty}}</td>
-                                                                <script>
-                                                                    if ({{vehicle_detail.qty}} > 0){
-                                                                        $("#id_veh_found").text('set');
-                                                                    }
+                                      {% if detail_startex_plan %}
+                                          <tbody id='main_tbody'>
+                                            {% for unit_detail in sx_unit_detail %}
+                                                {% if unit_detail.sx_id.id == detail_startex_plan.id  %}
+                                                    <tr>
+                                                        <td class = "table-secondary"><strong>{{ unit_detail.u_id }}</strong></td>
+                                                        {% for vehicle_data in sx_vehicle_data %}
 
-                                                                    var total = Number(document.getElementById("id_veh_total").textContent);
-                                                                    total = total + {{vehicle_detail.qty}};
-                                                                    document.getElementById("id_veh_total").textContent = total;
-                                                                </script>
-                                                            {% endif %}
+                                                            {% for vehicle_detail in sx_vehicle_detail %}
+                                                                {% if vehicle_detail.sx_u_id.id == unit_detail.id and vehicle_data.id == vehicle_detail.sx_v_id.id %}
+                                                                    <td class="bg-info text-white">{{vehicle_detail.qty}}</td>
+                                                                    <script>
+                                                                        if ({{vehicle_detail.qty}} > 0){
+                                                                            $("#id_veh_found").text('set');
+                                                                        }
+
+                                                                        var total = Number(document.getElementById("id_veh_total").textContent);
+                                                                        total = total + {{vehicle_detail.qty}};
+                                                                        document.getElementById("id_veh_total").textContent = total;
+                                                                    </script>
+                                                                {% endif %}
+                                                            {% endfor %}
+
+                                                            <script>
+                                                                if ($("#id_veh_found").text() != 'set'){
+                                                                    document.write("<td></td>");
+                                                                }
+                                                                $("#id_veh_found").text('');
+                                                            </script>
                                                         {% endfor %}
-
                                                         <script>
-                                                            if ($("#id_veh_found").text() != 'set'){
-                                                                document.write("<td></td>");
-                                                            }
-                                                            $("#id_veh_found").text('');
+                                                            var total = document.getElementById("id_veh_total").textContent;
+                                                            document.write("<td><b>" + total + "</b></td>");
+                                                            document.getElementById("id_veh_total").textContent = 0
                                                         </script>
-                                                    {% endfor %}
-                                                    <script>
-                                                        var total = document.getElementById("id_veh_total").textContent;
-                                                        document.write("<td><b>" + total + "</b></td>");
-                                                        document.getElementById("id_veh_total").textContent = 0
-                                                    </script>
-                                                </tr>
-                                            {% endif %}
-                                        {% endfor %}
-                                      </tbody>
+                                                    </tr>
+                                                {% endif %}
+                                            {% endfor %}
+                                          </tbody>
+                                      {% endif %}
                                   </table>
                                 </div>
                             </div>
