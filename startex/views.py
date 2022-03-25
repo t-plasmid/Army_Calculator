@@ -19,9 +19,11 @@ User = get_user_model()
 # Create your views here.
 
 # FBV
+def is_ajax(request):
+    return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
 
 def post_StartEx_Plan(request):
-    if request.is_ajax and request.method == "POST":
+    if is_ajax(request) and request.method == "POST":
         sx_plan_id = request.POST.get('sx_plan_id', None)
         request.session['session_sx_id'] = sx_plan_id
         request.session['session_chain'] = 1
@@ -32,7 +34,7 @@ def post_StartEx_Plan(request):
 
 
 def post_Unit_Detail(request):
-    if request.is_ajax and request.method == "POST":
+    if is_ajax(request) and request.method == "POST":
         sx_unit_id = request.POST.get('sx_unit_id', None)
         sx_plan_id = request.POST.get('sx_plan_id', None)
         request.session['session_sx_u_id'] = sx_unit_id
@@ -45,7 +47,7 @@ def post_Unit_Detail(request):
 
 
 def get_Unit_Detail(request):
-    if request.is_ajax and request.method == "GET":
+    if is_ajax(request) and request.method == "GET":
         if request.GET.get('sx_id'):
             sx_id = request.GET.get('sx_id', None)
         else:
@@ -61,7 +63,7 @@ def get_Unit_Detail(request):
 
 
 def get_Vehicle_Detail(request):
-    if request.is_ajax and request.method == "GET":
+    if is_ajax(request) and request.method == "GET":
         if request.GET.get('sx_unit_id'):
             sx_unit_id = request.GET.get('sx_unit_id', None)
         else:

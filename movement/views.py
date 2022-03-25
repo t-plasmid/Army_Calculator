@@ -30,7 +30,7 @@ User = get_user_model()
 # FBV
 
 def post_Movement_Plan(request):
-    if request.is_ajax and request.method == "POST":
+    if is_ajax(request) and request.method == "POST":
         movement_plan_id = request.POST.get('movement_plan_id', None)
         request.session['session_m_id'] = movement_plan_id
         request.session['session_chain'] = 1
@@ -41,7 +41,7 @@ def post_Movement_Plan(request):
 
 
 def post_CP_Detail(request):
-    if request.is_ajax and request.method == "POST":
+    if is_ajax(request) and request.method == "POST":
         m_cp_id = request.POST.get('m_cp_id', None)
         m_plan_id = request.POST.get('m_plan_id', None)
         request.session['session_cp_id'] = m_cp_id
@@ -54,7 +54,7 @@ def post_CP_Detail(request):
 
 
 def post_Unit_Detail(request):
-    if request.is_ajax and request.method == "POST":
+    if is_ajax(request) and request.method == "POST":
         m_unit_id = request.POST.get('m_unit_id', None)
         m_plan_id = request.POST.get('m_plan_id', None)
         request.session['session_u_id'] = m_unit_id
@@ -67,7 +67,7 @@ def post_Unit_Detail(request):
 
 
 def get_SX_Plan(request):
-    if request.is_ajax and request.method == "GET":
+    if is_ajax(request) and request.method == "GET":
         sx_id = request.GET.get('sx_id')
         data = {
             'is_taken': sxm.StartEx_Plan.objects.filter(id__iexact=sx_id).exists()
@@ -79,7 +79,7 @@ def get_SX_Plan(request):
 
 
 def get_Btn_Text(request):
-    if request.is_ajax and request.method == "GET":
+    if is_ajax(request) and request.method == "GET":
         if request.GET.get('btn_txt'):
             if request.GET.get('btn_txt') == "Show StartEx Plan":
                 print("a")
@@ -96,7 +96,7 @@ def get_Btn_Text(request):
 
 
 def get_CP_Detail(request):
-    if request.is_ajax and request.method == "GET":
+    if is_ajax(request) and request.method == "GET":
         if request.GET.get('m_id'):
             m_id = request.GET.get('m_id', None)
         else:
@@ -112,7 +112,7 @@ def get_CP_Detail(request):
 
 
 def get_Unit_Detail(request):
-    if request.is_ajax and request.method == "GET":
+    if is_ajax(request) and request.method == "GET":
         if request.GET.get('m_id'):
             m_id = request.GET.get('m_id', None)
         else:
@@ -128,7 +128,7 @@ def get_Unit_Detail(request):
 
 
 def get_Packet_Detail(request):
-    if request.is_ajax and request.method == "GET":
+    if is_ajax(request) and request.method == "GET":
         if request.GET.get('u_id'):
             u_id = request.GET.get('u_id', None)
         else:

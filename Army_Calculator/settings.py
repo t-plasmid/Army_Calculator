@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'accounts',
     'movement',
     'startex',
+    'corsheaders',
     'django_bootstrap5',
 ]
 
@@ -54,6 +55,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
@@ -124,3 +126,7 @@ LOGOUT_REDIRECT_URL = 'thanks'
 
 # Activate Django-Heroku.
 django_heroku.settings(locals())
+
+
+ALLOWED_HOSTS=['*']
+CORS_ORIGIN_ALLOW_ALL = True

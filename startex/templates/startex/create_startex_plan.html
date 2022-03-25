@@ -138,8 +138,13 @@
                 window.location = url
             },
             error: function (response) {
-                // alert the error if any error occured
-                alert(response["responseJSON"]["error"]);
+                // alert the error if any error occurred
+                try {
+                    alert(response["responseJSON"]["error"]);
+                } catch (err) {
+                    alert(err.message);
+                }
+
             }
         })
     })
