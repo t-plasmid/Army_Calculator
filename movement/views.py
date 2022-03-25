@@ -32,6 +32,7 @@ User = get_user_model()
 def is_ajax(request):
     return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
 
+
 def post_Movement_Plan(request):
     if is_ajax(request) and request.method == "POST":
         movement_plan_id = request.POST.get('movement_plan_id', None)
@@ -149,7 +150,8 @@ def get_Packet_Detail(request):
 def validate_Mov_Veh_Qty(request):
     mov_veh_qty = request.GET.get('mov_veh_qty', None)
     u_id = request.GET.get('u_id', None)
-    sum_mov_veh_qty = models.Packet_Detail.objects.filter(u_id__id=u_id).aggregate(Sum('vehicle_qty'))['vehicle_qty__sum']
+    sum_mov_veh_qty = models.Packet_Detail.objects.filter(u_id__id=u_id).aggregate(Sum('vehicle_qty'))[
+        'vehicle_qty__sum']
     sum_mov_veh_qty = sum_mov_veh_qty + int(mov_veh_qty)
     unit_veh_qty = models.Unit_Detail.objects.filter(id=u_id).aggregate(Sum('vehicle_qty'))['vehicle_qty__sum']
     if sum_mov_veh_qty > unit_veh_qty:
@@ -162,7 +164,9 @@ def validate_Mov_Veh_Qty(request):
         }
 
     if data['qty_invalid']:
-        data['error_message'] = "The matching unit have been allocated " + str(unit_veh_qty) + " vehicles. So the number of vehicles assigned to its subunits has exceeded by " + str((sum_mov_veh_qty - unit_veh_qty)) + "."
+        data['error_message'] = "The matching unit have been allocated " + str(
+            unit_veh_qty) + " vehicles. So the number of vehicles assigned to its subunits has exceeded by " + str(
+            (sum_mov_veh_qty - unit_veh_qty)) + "."
     return JsonResponse(data)
 
 
@@ -330,7 +334,7 @@ class Unit_DetailView(LoginRequiredMixin, generic.DetailView):
         context["packet_detail"] = models.Packet_Detail.objects.filter(u_id__exact=self.kwargs.get("pk")
                                                                        ).order_by('packet_no')
         context["packet_detail_first"] = models.Packet_Detail.objects.filter(u_id__exact=self.kwargs.get("pk")
-                                                                       ).order_by('packet_no').first()
+                                                                             ).order_by('packet_no').first()
         context["cp_detail"] = models.CP_Detail.objects.all().order_by('cp_no')
         context['title'] = 'Movement - Movement Plan Unit Detail'
         context['sidebar'] = 'Movement'
@@ -410,7 +414,8 @@ class Edit_Movement_PlanListView(LoginRequiredMixin, generic.ListView):
                 Q(serial__icontains=search_post) | Q(exercise_name__icontains=search_post) | Q(
                     route_name__icontains=search_post) | Q(description__icontains=search_post) | Q(
                     speed__icontains=search_post) | Q(traffic_density__icontains=search_post) | Q(
-                    packet_gap__icontains=search_post) | Q(unit_gap__icontains=search_post) | Q(route_type__route_type__icontains=search_post) | Q(
+                    packet_gap__icontains=search_post) | Q(unit_gap__icontains=search_post) | Q(
+                    route_type__route_type__icontains=search_post) | Q(
                     route_type__acronym__icontains=search_post) | Q(brigade__brigade__icontains=search_post) | Q(
                     brigade__acronym__icontains=search_post) | Q(id__icontains=search_post))
             context['searchbool'] = 1
@@ -534,7 +539,8 @@ class Create_Movement_PlanView(LoginRequiredMixin, generic.CreateView, generic.L
                 Q(serial__icontains=search_post) | Q(exercise_name__icontains=search_post) | Q(
                     route_name__icontains=search_post) | Q(description__icontains=search_post) | Q(
                     speed__icontains=search_post) | Q(traffic_density__icontains=search_post) | Q(
-                    packet_gap__icontains=search_post) | Q(unit_gap__icontains=search_post) | Q(route_type__route_type__icontains=search_post) | Q(
+                    packet_gap__icontains=search_post) | Q(unit_gap__icontains=search_post) | Q(
+                    route_type__route_type__icontains=search_post) | Q(
                     route_type__acronym__icontains=search_post) | Q(brigade__brigade__icontains=search_post) | Q(
                     brigade__acronym__icontains=search_post) | Q(id__icontains=search_post))
             context['searchbool'] = 1
@@ -619,8 +625,11 @@ class Create_Unit_DetailCreateListView(LoginRequiredMixin, generic.CreateView, g
         context['year'] = datetime.now().year
         context['m_id'] = self.request.session.get('session_m_id', 0)
         context['startex_list'] = sxm.StartEx_Plan.objects.all().order_by('created_at')
-        context['detail_startex_plan'] = sxm.StartEx_Plan.objects.get(
-            pk=self.request.session.get('session_mud_sx', 1))
+        try:
+            context['detail_startex_plan'] = sxm.StartEx_Plan.objects.get(
+                pk=self.request.session.get('session_mud_sx', 1))
+        except:
+            pass
         context["sx_vehicle_data"] = sxm.SX_Vehicle_Data.objects.all().order_by('name')
         context["sx_vehicle_detail"] = sxm.SX_Vehicle_Detail.objects.all().order_by('id')
         context["sx_unit_detail"] = sxm.SX_Unit_Detail.objects.filter(
