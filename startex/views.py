@@ -82,7 +82,7 @@ def get_Vehicle_Detail(request):
 def validate_Vehicle_Name(request):
     vehicle_name = request.GET.get('vehicle_name', None)
     data = {
-        'is_taken': models.SX_Vehicle_Data.objects.filter(name__iexact=vehicle_name).exists()
+        'is_taken': models.SX_Vehicle_Data.objects.filter(name=vehicle_name).exists()
     }
     if data['is_taken']:
         data['error_message'] = 'A vehicle with this name already exists.'
@@ -92,7 +92,7 @@ def validate_SX_Unit_Name(request):
     sx_unit_name = request.GET.get('sx_unit_name', None)
     sx_id = request.GET.get('sx_id', None)
     data = {
-        'is_taken': models.SX_Unit_Detail.objects.filter(u_id__id__iexact=sx_unit_name, sx_id__id__iexact=sx_id).exists()
+        'is_taken': models.SX_Unit_Detail.objects.filter(u_id__id=sx_unit_name, sx_id__id=sx_id).exists()
     }
     if data['is_taken']:
         data['error_message'] = 'A unit with this name already exists.'
@@ -102,7 +102,7 @@ def validate_SX_Vehicle_Name(request):
     sx_vehicle_name = request.GET.get('sx_vehicle_name', None)
     sx_u_id = request.GET.get('sx_u_id', None)
     data = {
-        'is_taken': models.SX_Vehicle_Detail.objects.filter(sx_v_id__id__iexact=sx_vehicle_name, sx_u_id__id__iexact=sx_u_id).exists()
+        'is_taken': models.SX_Vehicle_Detail.objects.filter(sx_v_id__id=sx_vehicle_name, sx_u_id__id=sx_u_id).exists()
     }
     if data['is_taken']:
         data['error_message'] = 'A vehicle with this name already exists.'
@@ -148,7 +148,7 @@ class Detail_StartEx_PlanView(LoginRequiredMixin, generic.DetailView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        return queryset.filter(id__iexact=self.kwargs.get("pk")
+        return queryset.filter(id=self.kwargs.get("pk")
         )
 
     def get_context_data(self, **kwargs):

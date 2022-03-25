@@ -70,7 +70,7 @@ def get_SX_Plan(request):
     if is_ajax(request) and request.method == "GET":
         sx_id = request.GET.get('sx_id')
         data = {
-            'is_taken': sxm.StartEx_Plan.objects.filter(id__iexact=sx_id).exists()
+            'is_taken': sxm.StartEx_Plan.objects.filter(id=sx_id).exists()
         }
         if data['is_taken']:
             request.session['session_mud_sx'] = sx_id
@@ -146,9 +146,9 @@ def get_Packet_Detail(request):
 def validate_Mov_Veh_Qty(request):
     mov_veh_qty = request.GET.get('mov_veh_qty', None)
     u_id = request.GET.get('u_id', None)
-    sum_mov_veh_qty = models.Packet_Detail.objects.filter(u_id__id__iexact=u_id).aggregate(Sum('vehicle_qty'))['vehicle_qty__sum']
+    sum_mov_veh_qty = models.Packet_Detail.objects.filter(u_id__id=u_id).aggregate(Sum('vehicle_qty'))['vehicle_qty__sum']
     sum_mov_veh_qty = sum_mov_veh_qty + int(mov_veh_qty)
-    unit_veh_qty = models.Unit_Detail.objects.filter(id__iexact=u_id).aggregate(Sum('vehicle_qty'))['vehicle_qty__sum']
+    unit_veh_qty = models.Unit_Detail.objects.filter(id=u_id).aggregate(Sum('vehicle_qty'))['vehicle_qty__sum']
     if sum_mov_veh_qty > unit_veh_qty:
         data = {
             'qty_invalid': True
@@ -166,7 +166,7 @@ def validate_Mov_Veh_Qty(request):
 def validate_Brigade_Name(request):
     brigade_name = request.GET.get('brigade_name', None)
     data = {
-        'is_taken': models.Brigade.objects.filter(brigade__iexact=brigade_name).exists()
+        'is_taken': models.Brigade.objects.filter(brigade=brigade_name).exists()
     }
     if data['is_taken']:
         data['error_message'] = 'A brigade with this name already exists.'
@@ -176,7 +176,7 @@ def validate_Brigade_Name(request):
 def validate_Brigade_Acronym_Name(request):
     brigade_acronym_name = request.GET.get('brigade_acronym_name', None)
     data = {
-        'is_taken': models.Brigade.objects.filter(acronym__iexact=brigade_acronym_name).exists()
+        'is_taken': models.Brigade.objects.filter(acronym=brigade_acronym_name).exists()
     }
     if data['is_taken']:
         data['error_message'] = 'A brigade acronym with this name already exists.'
@@ -186,7 +186,7 @@ def validate_Brigade_Acronym_Name(request):
 def validate_Unit_Name(request):
     unit_name = request.GET.get('unit_name', None)
     data = {
-        'is_taken': models.Unit.objects.filter(unit__iexact=unit_name).exists()
+        'is_taken': models.Unit.objects.filter(unit=unit_name).exists()
     }
     if data['is_taken']:
         data['error_message'] = 'A unit with this name already exists.'
@@ -196,7 +196,7 @@ def validate_Unit_Name(request):
 def validate_Unit_Acronym_Name(request):
     unit_acronym_name = request.GET.get('unit_acronym_name', None)
     data = {
-        'is_taken': models.Unit.objects.filter(acronym__iexact=unit_acronym_name).exists()
+        'is_taken': models.Unit.objects.filter(acronym=unit_acronym_name).exists()
     }
     if data['is_taken']:
         data['error_message'] = 'A unit acronym with this name already exists.'
@@ -207,7 +207,7 @@ def validate_Mov_CP_No(request):
     mov_cp_no = request.GET.get('mov_cp_no', None)
     mov_id = request.GET.get('mov_id', None)
     data = {
-        'is_taken': models.CP_Detail.objects.filter(cp_no__iexact=mov_cp_no, m_id__id__iexact=mov_id).exists()
+        'is_taken': models.CP_Detail.objects.filter(cp_no=mov_cp_no, m_id__id=mov_id).exists()
     }
     if data['is_taken']:
         data['error_message'] = 'A CP with this number already exists.'
@@ -218,7 +218,7 @@ def validate_Mov_Unit_Name(request):
     mov_unit_name = request.GET.get('mov_unit_name', None)
     mov_id = request.GET.get('mov_id', None)
     data = {
-        'is_taken': models.Unit_Detail.objects.filter(unit__id__iexact=mov_unit_name, m_id__id__iexact=mov_id).exists()
+        'is_taken': models.Unit_Detail.objects.filter(unit__id=mov_unit_name, m_id__id=mov_id).exists()
     }
     if data['is_taken']:
         data['error_message'] = 'A unit with this name already exists.'
@@ -229,8 +229,8 @@ def validate_Mov_SubUnit_Name(request):
     mov_subunit_name = request.GET.get('mov_subunit_name', None)
     u_id = request.GET.get('u_id', None)
     data = {
-        'is_taken': models.Packet_Detail.objects.filter(subunit__iexact=mov_subunit_name,
-                                                        u_id__id__iexact=u_id).exists()
+        'is_taken': models.Packet_Detail.objects.filter(subunit=mov_subunit_name,
+                                                        u_id__id=u_id).exists()
     }
     if data['is_taken']:
         data['error_message'] = 'A subunit with this name already exists.'
@@ -242,8 +242,8 @@ def validate_Mov_SubUnit_Pkt_No(request):
     print(mov_subunit_pkt_no)
     u_id = request.GET.get('u_id', None)
     data = {
-        'is_taken': models.Packet_Detail.objects.filter(packet_no__iexact=mov_subunit_pkt_no,
-                                                        u_id__id__iexact=u_id).exists()
+        'is_taken': models.Packet_Detail.objects.filter(packet_no=mov_subunit_pkt_no,
+                                                        u_id__id=u_id).exists()
     }
     if data['is_taken']:
         data['error_message'] = 'A packet with this number already exists.'
@@ -291,7 +291,7 @@ class Movement_PlanDetailView(LoginRequiredMixin, generic.DetailView):
     def get_queryset(self):
         queryset = super().get_queryset()
         return queryset.filter(
-            id__iexact=self.kwargs.get("pk")
+            id=self.kwargs.get("pk")
         )
 
     def get_context_data(self, **kwargs):
@@ -319,7 +319,7 @@ class Unit_DetailView(LoginRequiredMixin, generic.DetailView):
     def get_queryset(self):
         queryset = super().get_queryset()
         return queryset.filter(
-            id__iexact=self.kwargs.get("pk")
+            id=self.kwargs.get("pk")
         )
 
     def get_context_data(self, **kwargs):
@@ -617,11 +617,11 @@ class Create_Unit_DetailCreateListView(LoginRequiredMixin, generic.CreateView, g
         context['m_id'] = self.request.session.get('session_m_id', 0)
         context['startex_list'] = sxm.StartEx_Plan.objects.all().order_by('created_at')
         context['detail_startex_plan'] = sxm.StartEx_Plan.objects.get(
-            pk__iexact=self.request.session.get('session_mud_sx', 1))
+            pk=self.request.session.get('session_mud_sx', 1))
         context["sx_vehicle_data"] = sxm.SX_Vehicle_Data.objects.all().order_by('name')
         context["sx_vehicle_detail"] = sxm.SX_Vehicle_Detail.objects.all().order_by('id')
         context["sx_unit_detail"] = sxm.SX_Unit_Detail.objects.filter(
-            sx_id__id__iexact=self.request.session.get('session_mud_sx', 1)
+            sx_id__id=self.request.session.get('session_mud_sx', 1)
         ).order_by('id')
         context["btn_text"] = self.request.session.get('session_btn_text', "Hide StartEx Plan")
         context["btn_cmd"] = self.request.session.get('session_btn_cmd', "show")
